@@ -1,0 +1,145 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    height: 100vh;
+    background: url("../images/background.jpg") no-repeat center center/cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+/* Overlay */
+.background-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.35);
+}
+
+/* Card */
+.signup-container {
+    position: relative;
+    background: #ffffff;
+    width: 500px;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    text-align: center;
+    z-index: 1;
+}
+
+/* Logo */
+.logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    color: #1e3a5f;
+    margin-bottom: 10px;
+}
+
+.logo i {
+    font-size: 28px;
+}
+
+.logo h2 {
+    font-size: 18px;
+}
+
+h3 {
+    font-size: 22px;
+    color: #1e3a5f;
+}
+
+p {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 20px;
+}
+
+/* Grid */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+/* Input */
+.input-group {
+    text-align: left;
+}
+
+.input-group label {
+    font-size: 12px;
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    outline: none;
+    transition: 0.3s;
+}
+
+.input-group input:focus {
+    border-color: #1e3a5f;
+}
+
+/* Button */
+button {
+    width: 100%;
+    padding: 12px;
+    background: #1e3a5f;
+    border: none;
+    color: white;
+    font-size: 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #16324d;
+}
+
+/* Login link */
+.login-link {
+    margin-top: 15px;
+    font-size: 13px;
+}
+
+.login-link a {
+    color: #1e3a5f;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* ============================= */
+/* 🔵 SINGLE MEDIA QUERY */
+/* ============================= */
+@media (max-width: 600px) {
+
+    .signup-container {
+        width: 90%;
+        padding: 25px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    h3 {
+        font-size: 18px;
+    }
+}

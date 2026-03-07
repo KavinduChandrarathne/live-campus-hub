@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Campus Hub - Admin Login</title>
+
+  <link rel="stylesheet" href="styles/login.css" />
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="login-container">
+    <div class="login-card">
+      
+      <!-- Header -->
+      <div class="login-header">
+        <div class="logo">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <h1>CAMPUS HUB</h1>
+        <h2>Welcome Back</h2>
+        <p>Please sign in to your Admin account</p>
+      </div>
+
+      <!-- Form -->
+      <form id="loginForm" class="login-form">
+        
+        <!-- Email Input -->
+        <div class="form-group">
+          <input 
+            id="email" 
+            type="email" 
+            placeholder="Enter your email"
+            required 
+          />
+        </div>
+
+        <!-- Password Input -->
+        <div class="form-group">
+          <input 
+            id="password" 
+            type="password" 
+            placeholder="Enter your password"
+            required 
+          />
+        </div>
+
+        <!-- Forgot Password Link -->
+        <a href="#" class="forgot-link">Forgot password?</a>
+
+        <!-- Login Button -->
+        <button type="submit" class="login-btn">Login</button>
+
+      </form>
+
+    </div>
+  </div>
+
+  <script src="javascript/auth.js"></script>
+  <script src="javascript/login.js"></script>
+
+</body>
+</html>

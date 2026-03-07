@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Campus Hub - Bus Routes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <base href="./">
+  <link rel="stylesheet" href="./styles/dashboard.css" />
+  <link rel="stylesheet" href="./styles/transit.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<div class="dashboard">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="brand">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <span>CAMPUS HUB</span>
+        </div>
+
+        <nav>
+            <a href="dashboard.html"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
+            <a href="facility.html"><i class="fa-solid fa-bullhorn"></i> Facility & Event</a>
+            <a class="active" href="transit.html"><i class="fa-solid fa-bus"></i> Transit</a>
+            <a href="clubs.html"><i class="fa-solid fa-users"></i> Campus Clubs</a>
+            <a href="updates.html"><i class="fa-solid fa-message"></i> Updates Feed</a>
+            <a href="rewards.html"><i class="fa-solid fa-star"></i> Rewards</a>
+        </nav>
+
+        <div class="sidebar-user-bottom">
+          <a class="user-profile-btn" href="profile.html" title="View Profile">
+            <img id="sidebar-picture" src="" alt="User">
+            <div class="user-info-text">
+              <strong id="sidebar-name"></strong>
+              <small id="sidebar-email"></small>
+            </div>
+          </a>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="content">
+        <button id="hamburger" class="hamburger" aria-label="Menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <header class="page-title">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <h2 id="route-title">Shuttle</h2>
+              <span id="status-badge" class="badge on-time">On time</span>
+            </div>
+        </header>
+
+        <section class="updates-section">
+            <h3 style="margin-bottom:16px; color:#11223b; font-size:18px; font-weight:600;">Shuttle Updates</h3>
+            
+            <div class="updates-list">
+                <div class="update">
+                    <i class="fa-solid fa-bus"></i>
+                    <div>
+                        <strong id="update-1-title">Shuttle departed Gampaha terminal.</strong>
+                        <p id="update-1-desc">The shuttle left on time with full capacity.</p>
+                        <small class="muted">Today 2:15 PM</small>
+                    </div>
+                </div>
+
+                <div class="update">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <div>
+                        <strong id="update-2-title">Route update: Minor delay.</strong>
+                        <p id="update-2-desc">Delay of 3 minutes due to traffic. Expected to reach on time.</p>
+                        <small class="muted">Today 1:50 PM</small>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+</div>
+
+<script>
+  function getQueryParam(name) {
+    const params = new URLSearchParams(window.location.search);
+    return params.get(name);
+  }
+
+  const loc = getQueryParam('loc') || 'Gampaha';
+  document.getElementById('route-title').textContent = `${loc} Shuttle`;
+
+  // Location-specific content for updates
+  const contentMap = {
+    'Gampaha': {
+      update1: 'Shuttle departed Gampaha terminal.',
+      update1Desc: 'The shuttle left on time with full capacity.',
+      update2: 'Route update: Minor delay.',
+      update2Desc: 'Delay of 3 minutes due to traffic. Expected to reach on time.'
+    },
+    'Negombo': {
+      update1: 'Shuttle departed Negombo terminal.',
+      update1Desc: 'All passengers onboard. Proceeding to main campus.',
+      update2: 'Received: On schedule.',
+      update2Desc: 'No delays reported. Estimated arrival in 25 minutes.'
+    },
+    'Moratuwa': {
+      update1: 'Shuttle departed Moratuwa terminal.',
+      update1Desc: 'Shuttle is currently on route with 18 passengers.',
+      update2: 'Traffic alert: Minor congestion.',
+      update2Desc: 'Slight delay expected. Rerouting to faster lane.'
+    },
+    'Wattala': {
+      update1: 'Shuttle departed Wattala terminal.',
+      update1Desc: 'The shuttle left 5 minutes due to heavy traffic.',
+      update2: 'Delay reported earlier.',
+      update2Desc: 'Minor delay of 8 minutes, now resolved.'
+    }
+  };
+
+  const content = contentMap[loc] || contentMap['Gampaha'];
+  document.getElementById('update-1-title').textContent = content.update1;
+  document.getElementById('update-1-desc').textContent = content.update1Desc;
+  document.getElementById('update-2-title').textContent = content.update2;
+  document.getElementById('update-2-desc').textContent = content.update2Desc;
+</script>
+<script src="./javascript/common.js"></script>
+</body>
+</html>

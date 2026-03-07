@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Campus Hub - Profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="./">
+
+    <!-- shared sidebar/layout styles -->
+    <link rel="stylesheet" href="./styles/dashboard.css">
+    <!-- page-specific styles -->
+    <link rel="stylesheet" href="./styles/profile.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<div class="dashboard">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="brand">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <span>CAMPUS HUB</span>
+        </div>
+
+        <nav>
+            <a href="dashboard.html"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
+            <a href="facility.html"><i class="fa-solid fa-bullhorn"></i> Facility & Event</a>
+            <a href="transit.html"><i class="fa-solid fa-bus"></i> Transit</a>
+            <a href="clubs.html"><i class="fa-solid fa-users"></i> Campus Clubs</a>
+            <a href="updates.html"><i class="fa-solid fa-message"></i> Updates Feed</a>
+            <a href="rewards.html"><i class="fa-solid fa-star"></i> Rewards</a>
+        </nav>
+
+        <div class="sidebar-user-bottom">
+            <a class="user-profile-btn" href="profile.html" title="View Profile">
+                <img id="sidebar-picture" src="./images/naveen.png" alt="User">
+                <div class="user-info-text">
+                    <strong id="sidebar-name">User Name</strong>
+                    <small id="sidebar-email">user@email.com</small>
+                </div>
+            </a>
+        </div>
+    <style>
+    .user-dropdown {
+        margin-top: auto;
+        margin-bottom: 0;
+        padding-top: 20px;
+    }
+    .user-dropdown img#sidebar-picture {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #fff;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+        background: #e6e6e6;
+    }
+    .user-main {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        width: 100%;
+    }
+    .user-info-text {
+        min-width: 0;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .user-info-text strong {
+        font-size: 14px;
+        font-weight: 600;
+        color: white;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .user-info-text small {
+        color: #b8c4d6;
+        font-size: 12px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin-top: 2px;
+    }
+    .dropdown-caret {
+        margin-left: 8px;
+        color: #b8c4d6;
+        font-size: 14px;
+        transition: transform 0.2s;
+    }
+    .user-dropdown.open .dropdown-caret {
+        transform: rotate(180deg);
+    }
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        left: 0;
+        bottom: 48px;
+        background: #223a5f;
+        border-radius: 8px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.13);
+        min-width: 160px;
+        z-index: 1001;
+        flex-direction: column;
+        padding: 8px 0;
+        animation: fadeIn 0.2s;
+    }
+    .user-dropdown.open .dropdown-menu {
+        display: flex;
+    }
+    .dropdown-menu a, .dropdown-menu button {
+        color: #cfd8e3;
+        background: none;
+        border: none;
+        width: 100%;
+        text-align: left;
+        padding: 10px 18px;
+        font-size: 15px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: background 0.18s, color 0.18s;
+    }
+    .dropdown-menu a:hover, .dropdown-menu button:hover {
+        background: #2d4a7a;
+        color: #fff;
+    }
+    .logout-btn {
+        color: #ff4757;
+        font-weight: 600;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    </style>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="content">
+        <button id="hamburger" class="hamburger" aria-label="Menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <header class="page-title">Profile Information</header>
+
+        <section style="padding: 24px 0;">
+            <div class="profile-card">
+
+                <div class="profile-left">
+                    <img id="profile-picture" src="./images/naveen.png" alt="Profile">
+                </div>
+                <div class="profile-right">
+                    <div class="form-group">
+                        <label>First Name:</label>
+                        <div class="input-edit">
+                            <input id="profile-firstname" type="text" value="">
+                            <i class="fa-solid fa-pen"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Last Name:</label>
+                        <div class="input-edit">
+                            <input id="profile-lastname" type="text" value="">
+                            <i class="fa-solid fa-pen"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Student ID:</label>
+                        <div class="input-edit">
+                            <input id="profile-studentid" type="text" value="">
+                            <i class="fa-solid fa-pen"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Faculty:</label>
+                        <div class="input-edit">
+                            <input id="profile-faculty" type="text" value="">
+                            <i class="fa-solid fa-caret-down"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Date of birth:</label>
+                        <div class="input-edit">
+                            <input id="profile-dob" type="text" value="">
+                            <i class="fa-solid fa-pen"></i>
+                        </div>
+                    </div>
+
+                    <button class="password-btn">Change Password <i class="fa-solid fa-lock"></i></button>
+
+                    <div class="button-row">
+                        <button class="save-btn">Save Changes</button>
+                        <button class="cancel-btn">Cancel</button>
+                    </div>
+                    <div class="logout-row" style="display: flex; justify-content: flex-start; margin-top: 18px; margin-left: 160px; width: calc(100% - 160px);">
+                        <button id="logoutBtn" class="logout-btn-centered" style="background: #ff5e5e; color: #fff; border: none; border-radius: 8px; padding: 12px 36px; font-size: 18px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.10); transition: background 0.18s, box-shadow 0.18s, transform 0.12s; margin-left: 100px;" title="Log out">
+                            <i class="fa-solid fa-right-from-bracket"></i> Log out
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+</div>
+
+<script src="javascript/common.js"></script>
+<script src="javascript/profile.js"></script>
+</body>
+</html>

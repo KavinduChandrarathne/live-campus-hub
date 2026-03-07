@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Facility & Event Updates</title>
+    <link rel="stylesheet" href="styles/facility-event-updates.css">
+    <style>
+        /* Basic notification styling, adjust as needed */
+        .notification {
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 16px;
+            background: #f9f9f9;
+        }
+        .notification h3 {
+            margin: 0 0 8px 0;
+        }
+        .notification small {
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <h2>Facility & Event Updates</h2>
+    <div id="notifications"></div>
+    <script>
+    fetch('get-notifications.php')
+      .then(response => response.json())
+      .then(data => {
+        const container = document.getElementById('notifications');
+        if (!Array.isArray(data) || data.length === 0) {
+          container.innerHTML = '<p>No notifications yet.</p>';
+          return;
+        }
+        container.innerHTML = data.map(n => `
+          <div class="notification">
+            <h3>${n.title}</h3>
+            <p>${n.message}</p>
+            <small>${n.datetime}</small>
+          </div>
+        `).join('');
+      })
+      .catch(err => {
+        document.getElementById('notifications').innerHTML = '<p>Error loading notifications.</p>';
+      });
+    </script>
+</body>
+</html>

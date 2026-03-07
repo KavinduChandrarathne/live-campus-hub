@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Campus Hub - Updates Feed</title>
+
+  <link rel="stylesheet" href="styles/updates-feed.css" />
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="bg-overlay"></div>
+
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <i class="fa-solid fa-graduation-cap"></i>
+        <h2>CAMPUS HUB</h2>
+      </div>
+
+      <div class="user">
+        <a href="admin-profile.html">
+          <img src="images/naveen.png" alt="user">
+        </a>
+        <div>
+          <p>Naveen Hasaranga</p>
+          <small>naveenhasaranga@chub.com</small>
+        </div>
+        <div class="user-menu">
+          <button id="logoutBtn" class="logout-btn">Logout</button>
+        </div>
+      </div>
+
+      <nav class="menu">
+        <a href="dashboard.html"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
+        <a href="facility-event-admin.html"><i class="fa-solid fa-bullhorn"></i> Facility &amp; Event</a>
+        <a href="transit.html"><i class="fa-solid fa-bus"></i> Transit</a>
+        <a href="campus-clubs.html"><i class="fa-solid fa-users"></i> Campus Clubs</a>
+        <a class="active" href="updates-feed.html"><i class="fa-solid fa-message"></i> Updates Feed</a>
+        <a href="add-notification.html"><i class="fa-solid fa-bell"></i> Notification</a>
+      </nav>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+
+      <!-- Title bar -->
+      <header class="page-title">
+        <button class="hamburger" id="hamburger"><i class="fa-solid fa-bars"></i></button>
+        Updates Feed
+      </header>
+
+      <!-- Feed -->
+      <section class="feed" id="feed">
+
+        <!-- 1 -->
+        <article class="feed-card">
+          <div class="feed-icon"><i class="fa-solid fa-envelope"></i></div>
+
+          <div class="feed-text">
+            <h3>The gym will be closed at 10.00 PM</h3>
+            <p>Due to scheduled maintenance, the campus gym will close early today</p>
+          </div>
+
+          <div class="feed-actions">
+            <button class="mini edit"><i class="fa-solid fa-pen"></i> Edit</button>
+            <button class="mini delete"><i class="fa-solid fa-trash"></i> Delete</button>
+          </div>
+
+          <div class="feed-time">Today 2.15 PM</div>
+        </article>
+
+        <!-- 2 -->
+        <article class="feed-card">
+          <div class="feed-icon"><i class="fa-solid fa-envelope"></i></div>
+
+          <div class="feed-text">
+            <h3>Library hours extended.</h3>
+            <p>The main library will remain open until 11 PM during exam weeks.</p>
+          </div>
+
+          <div class="feed-actions">
+            <button class="mini edit"><i class="fa-solid fa-pen"></i> Edit</button>
+            <button class="mini delete"><i class="fa-solid fa-trash"></i> Delete</button>
+          </div>
+
+          <div class="feed-time">Yesterday 4.15 PM</div>
+        </article>
+
+        <!-- 3 -->
+        <article class="feed-card">
+          <div class="feed-icon"><i class="fa-solid fa-envelope"></i></div>
+
+          <div class="feed-text">
+            <h3>Library hours extended.</h3>
+            <p>The main library will remain open until 11 PM during exam weeks.</p>
+          </div>
+
+          <div class="feed-actions">
+            <button class="mini edit"><i class="fa-solid fa-pen"></i> Edit</button>
+            <button class="mini delete"><i class="fa-solid fa-trash"></i> Delete</button>
+          </div>
+
+          <div class="feed-time">Yesterday 4.15 PM</div>
+        </article>
+
+      </section>
+
+    </main>
+  </div>
+
+  <script src="javascript/auth.js"></script>
+  <script src="javascript/updates-feed.js"></script>
+  <div class="mobile-backdrop" id="mobileBackdrop"></div>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Campus Hub - Dashboard</title>
+
+  <link rel="stylesheet" href="styles/dashboard.css" />
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="bg-overlay"></div>
+
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <i class="fa-solid fa-graduation-cap"></i>
+        <h2>CAMPUS HUB</h2>
+      </div>
+
+      <nav class="menu">
+        <a class="active" href="dashboard.html"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
+        <a href="facility-event-admin.html"><i class="fa-solid fa-bullhorn"></i> Facility &amp; Event</a>
+        <a href="transit.html"><i class="fa-solid fa-bus"></i> Transit</a>
+        <a href="campus-clubs.html"><i class="fa-solid fa-users"></i> Campus Clubs</a>
+        <a href="updates-feed.html"><i class="fa-solid fa-message"></i> Updates Feed</a>
+        <a href="add-notification.html"><i class="fa-solid fa-bell"></i> Notification</a>
+      </nav>
+
+      <div class="user">
+        <a href="admin-profile.html">
+          <img src="images/naveen.png" alt="user">
+        </a>
+        <div>
+          <p>Naveen Hasaranga</p>
+          <small>naveenhasaranga@chub.com</small>
+        </div>
+        <div class="user-menu">
+          <button id="logoutBtn" class="logout-btn">Logout</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+
+      <!-- Top bar (matches campus clubs layout) -->
+      <header class="topbar">
+        <button class="hamburger" id="hamburger"><i class="fa-solid fa-bars"></i></button>
+        <h1>Dashboard</h1>
+
+        <div class="top-actions">
+          <!-- add dashboard-specific controls here (search, buttons) -->
+        </div>
+      </header>
+
+      <!-- Cards -->
+      <section class="grid">
+
+        <article class="card" data-page="facility">
+          <div class="icon"><i class="fa-solid fa-bullhorn"></i></div>
+          <h3>Faculty &amp; Event</h3>
+          <p>Stay informed about campus facility statuses and upcoming events.</p>
+        </article>
+
+        <article class="card" data-page="transit">
+          <div class="icon"><i class="fa-solid fa-bus"></i></div>
+          <h3>Transit</h3>
+          <p>Check live shuttle updates with real-time status information.</p>
+        </article>
+
+        <article class="card" data-page="clubs">
+          <div class="icon"><i class="fa-solid fa-users"></i></div>
+          <h3>Campus Clubs</h3>
+          <p>Explore clubs and view the latest updates from each community.</p>
+        </article>
+
+        <article class="card" data-page="updates">
+          <div class="icon"><i class="fa-solid fa-message"></i></div>
+          <h3>Updates Feed</h3>
+          <p>See the newest announcements from facilities, events, and clubs in one place.</p>
+        </article>
+
+        <article class="card" data-page="notifications">
+          <div class="icon"><i class="fa-solid fa-bell"></i></div>
+          <h3>Notifications</h3>
+          <p>Track your university notifications and alerts.</p>
+        </article>
+
+        <article class="card" data-page="calendar">
+          <div class="icon"><i class="fa-solid fa-calendar-days"></i></div>
+          <h3>Calendar</h3>
+          <p>View upcoming classes, events, and campus activities in one place.</p>
+        </article>
+
+      </section>
+
+
+    </main>
+  </div>
+
+  <script src="javascript/auth.js"></script>
+  <script src="javascript/dashboard.js"></script>
+  <div class="mobile-backdrop" id="mobileBackdrop"></div>
+</body>
+</html>

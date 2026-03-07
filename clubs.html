@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Campus Hub | Campus Clubs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="./">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="./styles/dashboard.css">
+    <style>
+        .clubs-header {
+            background: linear-gradient(135deg, #1f3556 0%, #2d4a6f 100%);
+            color: white;
+            padding: 28px 32px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+            margin-bottom: 28px;
+        }
+
+        .clubs-header h2 {
+            margin: 0;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #fff;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            flex: 0 1 300px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .search-bar input {
+            background: transparent;
+            border: none;
+            color: #333;
+            outline: none;
+            font-size: 14px;
+            flex: 1;
+        }
+
+        .search-bar input::placeholder {
+            color: #999;
+        }
+
+        .search-bar i {
+            color: #666;
+            cursor: pointer;
+            font-size: 16px;
+            transition: color 0.2s ease;
+        }
+
+        .search-bar:hover {
+            border-color: #999;
+        }
+
+        .search-bar:focus-within {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .search-bar i:hover {
+            color: #333;
+        }
+
+        .clubs-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .club-card {
+            background: white;
+            border-radius: 12px;
+            padding: 28px 24px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .club-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+        }
+
+        .club-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 16px;
+            background: #f0f3f7;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: #7b9fc4;
+        }
+
+        .club-card h3 {
+            margin: 0 0 12px 0;
+            font-size: 18px;
+            font-weight: 600;
+            color: #11223b;
+        }
+
+        .club-card p {
+            margin: 0;
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 1200px) {
+            .clubs-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .clubs-header {
+                flex-direction: column;
+                padding: 24px;
+                gap: 16px;
+            }
+
+            .clubs-header h2 {
+                font-size: 28px;
+            }
+
+            .search-bar {
+                flex: 1;
+                width: 100%;
+                max-width: none;
+            }
+
+            .clubs-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .clubs-header {
+                padding: 20px;
+            }
+
+            .clubs-header h2 {
+                font-size: 24px;
+            }
+
+            .clubs-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .club-card {
+                padding: 20px 16px;
+            }
+
+            .club-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 28px;
+            }
+
+            .club-card h3 {
+                font-size: 16px;
+            }
+
+            .club-card p {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="brand">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <span>CAMPUS HUB</span>
+        </div>
+
+        <nav>
+            <a href="dashboard.html"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
+            <a href="facility.html"><i class="fa-solid fa-bullhorn"></i> Facility & Event</a>
+            <a href="transit.html"><i class="fa-solid fa-bus"></i> Transit</a>
+            <a class="active" href="clubs.html"><i class="fa-solid fa-users"></i> Campus Clubs</a>
+            <a href="updates.html"><i class="fa-solid fa-message"></i> Updates Feed</a>
+            <a href="rewards.html"><i class="fa-solid fa-star"></i> Rewards</a>
+        </nav>
+
+        <div class="sidebar-user-bottom">
+            <a class="user-profile-btn" href="profile.html" title="View Profile">
+                <img id="sidebar-picture" src="./images/naveen.png" alt="User">
+                <div class="user-info-text">
+                    <strong id="sidebar-name">User Name</strong>
+                    <small id="sidebar-email">user@email.com</small>
+                </div>
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="content">
+        <!-- Mobile hamburger menu -->
+        <button id="hamburger" class="hamburger" aria-label="Menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <section class="clubs-header">
+            <h2>Campus Clubs</h2>
+            <div class="search-bar">
+                <input type="text" placeholder="Search...">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+        </section>
+
+        <section class="clubs-grid">
+            <a href="club-detail.html?club=coding" class="club-card">
+                <div class="club-icon">
+                    <i class="fa-solid fa-code"></i>
+                </div>
+                <h3>Coding Club</h3>
+                <p>Explore clubs and view the latest updates from each community.</p>
+            </a>
+
+            <a href="club-detail.html?club=rotaract" class="club-card">
+                <div class="club-icon">
+                    <i class="fa-solid fa-bus"></i>
+                </div>
+                <h3>Rotaract Club</h3>
+                <p>Explore clubs and view the latest updates from each community.</p>
+            </a>
+
+            <a href="club-detail.html?club=sports" class="club-card">
+                <div class="club-icon">
+                    <i class="fa-solid fa-baseball"></i>
+                </div>
+                <h3>Sports Society</h3>
+                <p>Explore clubs and view the latest updates from each community.</p>
+            </a>
+
+            <a href="club-detail.html?club=leo" class="club-card">
+                <div class="club-icon">
+                    <i class="fa-solid fa-user-secret"></i>
+                </div>
+                <h3>Leo Club</h3>
+                <p>Explore clubs and view the latest updates from each community.</p>
+            </a>
+
+            <a href="club-detail.html?club=media" class="club-card">
+                <div class="club-icon">
+                    <i class="fa-solid fa-music"></i>
+                </div>
+                <h3>Media Society</h3>
+                <p>Explore clubs and view the latest updates from each community.</p>
+            </a>
+
+            <a href="club-detail.html?club=photography" class="club-card">
+                <div class="club-icon">
+                    <i class="fa-solid fa-camera"></i>
+                </div>
+                <h3>Photography Club</h3>
+                <p>Explore clubs and view the latest updates from each community.</p>
+            </a>
+        </section>
+    </main>
+
+</div>
+
+<button id="scrollTop" class="scroll-top" aria-label="Scroll to top">
+    <i class="fa-solid fa-arrow-up"></i>
+</button>
+
+<script src="javascript/common.js"></script>
+<script src="javascript/dashboard.js"></script>
+<script>
+    // Search functionality
+    const searchInput = document.querySelector('.search-bar input');
+    const clubCards = document.querySelectorAll('.club-card');
+
+    searchInput.addEventListener('keyup', (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        
+        clubCards.forEach(card => {
+            const clubName = card.querySelector('h3').textContent.toLowerCase();
+            const clubDesc = card.querySelector('p').textContent.toLowerCase();
+            
+            if (clubName.includes(searchTerm) || clubDesc.includes(searchTerm)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+</script>
+<script>
+// ...dropdown logic removed...
+</script>
+</html>

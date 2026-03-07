@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Campus Hub - Admin Profile</title>
+
+  <link rel="stylesheet" href="styles/admin-profile.css" />
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="bg-overlay"></div>
+
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <i class="fa-solid fa-graduation-cap"></i>
+        <h2>CAMPUS HUB</h2>
+      </div>
+
+      <div class="user active">
+        <a href="admin-profile.html">
+          <img src="images/naveen.png" alt="user">
+        </a>
+        <div>
+          <p>Naveen Hasaranga</p>
+          <small>naveenhasaranga@chub.com</small>
+        </div>
+        <div class="user-menu">
+          <button id="logoutBtn" class="logout-btn">Logout</button>
+        </div>
+      </div>
+
+      <nav class="menu">
+        <a href="dashboard.html"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
+        <a href="facility-event-admin.html"><i class="fa-solid fa-bullhorn"></i> Facility &amp; Event</a>
+        <a href="transit.html"><i class="fa-solid fa-bus"></i> Transit</a>
+        <a href="campus-clubs.html"><i class="fa-solid fa-users"></i> Campus Clubs</a>
+        <a href="updates-feed.html"><i class="fa-solid fa-message"></i> Updates Feed</a>
+        <a href="add-notification.html"><i class="fa-solid fa-bell"></i> Notifications</a>
+      </nav>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+
+      <!-- Title bar -->
+      <header class="page-title">
+        <button class="hamburger" id="hamburger"><i class="fa-solid fa-bars"></i></button>
+        Profile Information
+      </header>
+
+      <!-- Profile card -->
+      <section class="profile-card">
+
+        <!-- Left photo -->
+        <div class="profile-left">
+          <img src="images/naveen2.png" alt="Profile Photo" />
+        </div>
+
+        <!-- Right form -->
+        <div class="profile-right">
+
+          <div class="row">
+            <label>First Name:</label>
+            <div class="input-edit">
+              <input id="firstName" type="text" value="Naveen" />
+              <i class="fa-solid fa-pen edit-icon"></i>
+            </div>
+          </div>
+
+          <div class="row">
+            <label>Last Name:</label>
+            <div class="input-edit">
+              <input id="lastName" type="text" value="Hasaranga" />
+              <i class="fa-solid fa-pen edit-icon"></i>
+            </div>
+          </div>
+
+          <div class="row">
+            <label>Student ID:</label>
+            <div class="input-edit">
+              <input id="studentId" type="text" value="1234567" />
+              <i class="fa-solid fa-pen edit-icon"></i>
+            </div>
+          </div>
+
+          <div class="row">
+            <label>Role:</label>
+            <div class="input-edit">
+              <input id="role" type="text" value="Admin" readonly />
+            </div>
+          </div>
+
+          <div class="row">
+            <label>Date of birth:</label>
+            <div class="input-edit">
+              <input id="dob" type="text" value="10/02/2001" />
+              <i class="fa-solid fa-pen edit-icon"></i>
+            </div>
+          </div>
+
+          <button class="btn password" id="passwordBtn">
+            Change Password
+          </button>
+
+          <div class="actions">
+            <button class="btn save" id="saveBtn">Save Changes</button>
+            <button class="btn cancel" id="cancelBtn">Cancel</button>
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <script src="javascript/auth.js"></script>
+  <script src="javascript/admin-profile.js"></script>
+  <div class="mobile-backdrop" id="mobileBackdrop"></div>
+</body>
+</html>

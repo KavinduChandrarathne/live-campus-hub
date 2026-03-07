@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Campus Hub - Transit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />    <base href="./">
+  <!-- Font Awesome -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <link rel="stylesheet" href="./styles/dashboard.css" />
+  <link rel="stylesheet" href="./styles/transit.css" />
+</head>
+<body>
+
+<div class="dashboard">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="brand">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <span>CAMPUS HUB</span>
+        </div>
+
+        <nav>
+            <a href="dashboard.html"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
+            <a href="facility.html"><i class="fa-solid fa-bullhorn"></i> Facility & Event</a>
+            <a class="active" href="transit.html"><i class="fa-solid fa-bus"></i> Transit</a>
+            <a href="clubs.html"><i class="fa-solid fa-users"></i> Campus Clubs</a>
+            <a href="updates.html"><i class="fa-solid fa-message"></i> Updates Feed</a>
+            <a href="rewards.html"><i class="fa-solid fa-star"></i> Rewards</a>
+        </nav>
+
+        <div class="sidebar-user-bottom">
+            <a class="user-profile-btn" href="profile.html" title="View Profile">
+                <img id="sidebar-picture" src="./images/naveen.png" alt="User">
+                <div class="user-info-text">
+                    <strong id="sidebar-name">User Name</strong>
+                    <small id="sidebar-email">user@email.com</small>
+                </div>
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="content">
+        <!-- Mobile hamburger menu -->
+        <button id="hamburger" class="hamburger" aria-label="Menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <header class="page-title">
+            Transit and Navigation
+        </header>
+
+        <section class="transit-cards">
+
+            <!-- Card 1 -->
+            <article class="transit-card" data-location="Gampaha">
+                <div class="card-top">
+                    <div class="place">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <h3>Gampaha</h3>
+                    </div>
+                    <button class="btn-route">View location updates</button>
+                </div>
+
+                <div class="map">
+                    <img src="./images/gampaha.png" alt="Gampaha Map">
+                </div>
+
+                <button class="btn-update">View live location</button>
+            </article>
+
+            <!-- Card 2 -->
+            <article class="transit-card" data-location="Negombo">
+                <div class="card-top">
+                    <div class="place">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <h3>Negombo</h3>
+                    </div>
+                    <button class="btn-route">View location updates</button>
+                </div>
+
+                <div class="map">
+                    <img src="./images/Negombo.png" alt="Negombo Map">
+                </div>
+
+                <button class="btn-update">View live location</button>
+            </article>
+
+            <!-- Card 3 -->
+            <article class="transit-card" data-location="Moratuwa">
+                <div class="card-top">
+                    <div class="place">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <h3>Moratuwa</h3>
+                    </div>
+                    <button class="btn-route">View location updates</button>
+                </div>
+
+                <div class="map">
+                    <img src="./images/Moratuwa.png" alt="Moratuwa Map">
+                </div>
+
+                <button class="btn-update">View live location</button>
+            </article>
+
+            <!-- Card 4 -->
+            <article class="transit-card" data-location="Wattala">
+                <div class="card-top">
+                    <div class="place">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <h3>Wattala</h3>
+                    </div>
+                    <button class="btn-route">View location updates</button>
+                </div>
+
+                <div class="map">
+                    <img src="./images/Wattala.png" alt="Wattala Map">
+                </div>
+
+                <button class="btn-update">View live location</button>
+            </article>
+
+        </section>
+    </main>
+
+</div>
+
+<!-- Scroll to top (mobile) -->
+<button id="scrollTop" class="scroll-top" aria-label="Scroll to top">
+    <i class="fa-solid fa-arrow-up"></i>
+</button>
+
+<script src="javascript/common.js"></script>
+<script src="javascript/dashboard.js"></script>
+<script src="javascript/transit.js"></script>
+</body>
+<script>
+// User dropdown logic for logout/profile
+document.addEventListener('DOMContentLoaded', function () {
+    const userDropdown = document.getElementById('userDropdown');
+    const userMainBtn = document.getElementById('userMainBtn');
+    const userDropdownMenu = document.getElementById('userDropdownMenu');
+    if (userDropdown && userMainBtn && userDropdownMenu) {
+        userMainBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            userDropdown.classList.toggle('open');
+        });
+        document.addEventListener('click', function (e) {
+            if (!userDropdown.contains(e.target)) {
+                userDropdown.classList.remove('open');
+            }
+        });
+    }
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function () {
+            sessionStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
+        });
+    }
+});
+</script>
+</html>

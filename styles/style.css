@@ -1,0 +1,158 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    height: 100vh;
+    background: url("../images/background.jpg") no-repeat center center/cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+/* Dark overlay */
+.background-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.35);
+}
+
+/* Login Card */
+.login-container {
+    position: relative;
+    background: #ffffff;
+    width: 380px;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    text-align: center;
+    z-index: 1;
+}
+
+/* Logo */
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #1e3a5f;
+    margin-bottom: 15px;
+}
+
+.logo i {
+    font-size: 30px;
+}
+
+.logo h2 {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* Heading */
+h3 {
+    margin-top: 10px;
+    font-size: 22px;
+    color: #1e3a5f;
+}
+
+p {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 20px;
+}
+
+/* Input Fields */
+.input-group {
+    position: relative;
+    margin-bottom: 18px;
+}
+
+.input-group i {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    color: #999;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 12px 12px 40px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    outline: none;
+    transition: 0.3s;
+}
+
+.input-group input:focus {
+    border-color: #1e3a5f;
+}
+
+/* Forgot password */
+.forgot {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.forgot a {
+    text-decoration: none;
+    font-size: 13px;
+    color: #1e3a5f;
+}
+
+/* Button */
+button {
+    width: 100%;
+    padding: 12px;
+    background: #1e3a5f;
+    border: none;
+    color: white;
+    font-size: 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #16324d;
+}
+
+/* Sign up */
+.signup-link {
+    margin-top: 18px;
+    font-size: 14px;
+}
+
+.signup-link a {
+    text-decoration: none;
+    color: #1e3a5f;
+    font-weight: bold;
+}
+
+/* ============================= */
+/* 🔵 SINGLE MEDIA QUERY */
+/* ============================= */
+@media (max-width: 480px) {
+
+    .login-container {
+        width: 90%;
+        padding: 25px;
+    }
+
+    h3 {
+        font-size: 18px;
+    }
+
+    .logo h2 {
+        font-size: 16px;
+    }
+
+    button {
+        font-size: 14px;
+    }
+}

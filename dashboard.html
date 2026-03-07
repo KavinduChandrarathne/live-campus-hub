@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Campus Hub | Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="./">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <link rel="stylesheet" href="./styles/dashboard.css">
+</head>
+<body>
+
+<div class="dashboard">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="brand">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <span>CAMPUS HUB</span>
+        </div>
+
+        <nav>
+            <a class="active" href="dashboard.html"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
+            <a href="facility.html"><i class="fa-solid fa-bullhorn"></i> Facility & Event</a>
+            <a href="transit.html"><i class="fa-solid fa-bus"></i> Transit</a>
+            <a href="clubs.html"><i class="fa-solid fa-users"></i> Campus Clubs</a>
+            <a href="updates.html"><i class="fa-solid fa-message"></i> Updates Feed</a>
+            <a href="rewards.html"><i class="fa-solid fa-star"></i> Rewards</a>
+        </nav>
+
+        <div class="sidebar-user-bottom">
+            <a class="user-profile-btn" href="profile.html" title="View Profile">
+                <img id="sidebar-picture" src="./images/naveen.png" alt="User">
+                <div class="user-info-text">
+                    <strong id="sidebar-name">User Name</strong>
+                    <small id="sidebar-email">user@email.com</small>
+                </div>
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="content">
+        <!-- Mobile hamburger menu -->
+        <button id="hamburger" class="hamburger" aria-label="Menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <section class="welcome">
+            <h2>Welcome, <span id="welcome-name">User</span></h2>
+            <p>Here are the latest updates and information for you</p>
+
+            <div class="welcome-right">
+                <!-- Notification button -->
+                <button id="notifyBtn" class="notify-btn" aria-label="Notifications" title="Notifications">
+                    <i class="fa-solid fa-bell"></i>
+                    <span class="badge" id="notifyCount">3</span>
+                </button>
+
+                <!-- User profile photo (same as sidebar) -->
+                <a href="profile.html" title="View Profile">
+                    <img id="welcome-picture" class="welcome-profile" src="images/naveen.png" alt="User Profile">
+                </a>
+            </div>
+        </section>
+
+        <section class="cards">
+
+            <!-- CARD TEMPLATE -->
+            <div class="card" onclick="window.location.href='facility.html'" style="cursor: pointer;">
+                <i class="fa-solid fa-bullhorn"></i>
+                <h3>Faculty & Event</h3>
+                <p class="desc">Stay informed about campus facility statuses and upcoming events.</p>
+            </div>
+
+            <div class="card" onclick="window.location.href='transit.html'" style="cursor: pointer;">
+                <i class="fa-solid fa-bus"></i>
+                <h3>Transit</h3>
+                <p class="desc">Check live shuttle updates with real-time status information.</p>
+            </div>
+
+            <div class="card" onclick="window.location.href='clubs.html'" style="cursor: pointer;">
+                <i class="fa-solid fa-users"></i>
+                <h3>Campus Clubs</h3>
+                <p class="desc">Explore clubs and view the latest updates from each community.</p>
+            </div>
+
+            <div class="card" onclick="window.location.href='updates.html'" style="cursor: pointer;">
+                <i class="fa-solid fa-message"></i>
+                <h3>Updates Feed</h3>
+                <p class="desc">See the newest announcements from facilities, events, and clubs in one place.</p>
+            </div>
+
+            <div class="card" onclick="window.location.href='rewards.html'" style="cursor: pointer;">
+                <i class="fa-solid fa-star"></i>
+                <h3>Rewards</h3>
+                <p class="desc">Track your points, badges and engagement rewards.</p>
+            </div>
+
+            <div class="card" onclick="window.location.href='calendar.html'" style="cursor: pointer;">
+                <i class="fa-solid fa-calendar"></i>
+                <h3>Calendar</h3>
+                <p class="desc">View upcoming classes, events, and campus activities in one place.</p>
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+    <!-- Scroll to top (mobile) -->
+    <button id="scrollTop" class="scroll-top" aria-label="Scroll to top">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <script src="javascript/dashboard.js"></script>
+
+</body>
+</html>

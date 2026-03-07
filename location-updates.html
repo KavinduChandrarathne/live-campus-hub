@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Campus Hub - Location Updates</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <base href="./">
+  <link rel="stylesheet" href="./styles/dashboard.css" />
+  <link rel="stylesheet" href="./styles/transit.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<div class="dashboard">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="brand">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <span>CAMPUS HUB</span>
+        </div>
+
+        <nav>
+            <a href="dashboard.html"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
+            <a href="facility.html"><i class="fa-solid fa-bullhorn"></i> Facility & Event</a>
+            <a class="active" href="transit.html"><i class="fa-solid fa-bus"></i> Transit</a>
+            <a href="clubs.html"><i class="fa-solid fa-users"></i> Campus Clubs</a>
+            <a href="updates.html"><i class="fa-solid fa-message"></i> Updates Feed</a>
+            <a href="rewards.html"><i class="fa-solid fa-star"></i> Rewards</a>
+        </nav>
+
+        <div class="sidebar-user-bottom">
+            <a class="user-profile-btn" href="profile.html" title="View Profile">
+                <img id="sidebar-picture" src="" alt="User">
+                <div class="user-info-text">
+                    <strong id="sidebar-name"></strong>
+                    <small id="sidebar-email"></small>
+                </div>
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="content">
+        <button id="hamburger" class="hamburger" aria-label="Menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <header class="page-title">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <h2 id="updates-title">Shuttle Location</h2>
+              <span id="status-badge" class="badge on-time">On time</span>
+            </div>
+        </header>
+
+        <section class="updates-panel">
+            <div class="updates-map">
+                <img id="map-img" src="images/gampaha.png" alt="Map" style="width:100%;border-radius:6px;">
+                <div class="map-meta"><small>Last updated: 2 mins ago</small></div>
+                <div class="map-caption">Current location: <strong id="current-location">Miriiswatta Junction</strong></div>
+            </div>
+
+            <div class="updates-list">
+                <div class="update">
+                    <i class="fa-solid fa-bus"></i>
+                    <div>
+                        <strong>Shuttle departed Gampaha terminal.</strong>
+                        <p>The shuttle left 5 minutes due to heavy traffic.</p>
+                        <small class="muted">Today 2:15 PM</small>
+                    </div>
+                </div>
+
+                <div class="update">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <div>
+                        <strong>Delay reported earlier.</strong>
+                        <p>Minor delay of 8 minutes, now resolved.</p>
+                        <small class="muted">Yesterday 4:15 PM</small>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+</div>
+
+<script>
+  function getQueryParam(name) {
+    const params = new URLSearchParams(window.location.search);
+    return params.get(name);
+  }
+
+    const loc = getQueryParam('loc') || 'Gampaha';
+    document.getElementById('updates-title').textContent = `${loc} Shuttle`;
+    document.getElementById('current-location').textContent = loc;
+
+    // Choose the correct map image for the selected location
+    const mapImages = {
+        'Gampaha': 'gampaha.png',
+        'Negombo': 'Negombo.png',
+        'Moratuwa': 'Moratuwa.png',
+        'Wattala': 'Wattala.png'
+    };
+
+    const mapImg = document.getElementById('map-img');
+    const fileName = mapImages[loc] || mapImages['Gampaha'];
+    mapImg.src = `images/${fileName}`;
+    mapImg.alt = `${loc} Map`;
+</script>
+<script src="javascript/common.js"></script>
+</body>
+</html>

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Campus Hub | Updates Feed</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="./">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="./styles/dashboard.css">
+    <style>
+        main.content {
+            padding: 40px;
+            padding-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .welcome {
+            margin-bottom: 18px;
+            flex-shrink: 0;
+        }
+
+        .updates-feed {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 8px;
+            overflow-x: hidden;
+        }
+
+        .updates-feed::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .updates-feed::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .updates-feed::-webkit-scrollbar-thumb {
+            background: #23395d;
+            border-radius: 4px;
+        }
+
+        .updates-feed::-webkit-scrollbar-thumb:hover {
+            background: #1a2846;
+        }
+
+        .update-box {
+            background: white;
+            border-left: 5px solid #23395d;
+            padding: 16px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .update-box:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .update-box-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: #f0f3f7;
+            border-radius: 6px;
+            color: #23395d;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .update-box h3 {
+            margin: 0 0 6px 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: #11223b;
+        }
+
+        .update-box p {
+            margin: 0 0 8px 0;
+            font-size: 13px;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .update-date {
+            font-size: 11px;
+            color: #999;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -240px;
+                top: 0;
+                height: 100vh;
+                z-index: 999;
+                box-shadow: 2px 0 10px rgba(0,0,0,0.15);
+                transition: left 0.3s ease;
+                overflow: hidden;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+            main.content {
+                padding: 70px 16px 20px 16px;
+                position: relative;
+                max-height: 100vh;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+
+            .welcome {
+                margin-bottom: 16px;
+            }
+
+            .update-box {
+                padding: 14px;
+            }
+
+            .update-box h3 {
+                font-size: 15px;
+            }
+
+            .update-box p {
+                font-size: 12px;
+            }
+
+            .updates-feed {
+                gap: 12px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            main.content {
+                padding: 70px 16px 16px 16px;
+            }
+            .update-box {
+                padding: 14px;
+            }
+            .update-box h3 {
+                font-size: 15px;
+            }
+            .update-box p {
+                font-size: 12px;
+            }
+            .updates-feed {
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="brand">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <span>CAMPUS HUB</span>
+        </div>
+
+        <nav>
+            <a href="dashboard.html"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
+            <a href="facility.html"><i class="fa-solid fa-bullhorn"></i> Facility & Event</a>
+            <a href="transit.html"><i class="fa-solid fa-bus"></i> Transit</a>
+            <a href="clubs.html"><i class="fa-solid fa-users"></i> Campus Clubs</a>
+            <a class="active" href="updates.html"><i class="fa-solid fa-message"></i> Updates Feed</a>
+            <a href="rewards.html"><i class="fa-solid fa-star"></i> Rewards</a>
+        </nav>
+
+        <div class="sidebar-user-bottom">
+            <a class="user-profile-btn" href="profile.html" title="View Profile">
+                <img id="sidebar-picture" src="./images/naveen.png" alt="User">
+                <div class="user-info-text">
+                    <strong id="sidebar-name">User Name</strong>
+                    <small id="sidebar-email">user@email.com</small>
+                </div>
+            </a>
+        </div>
+    <style>
+    .user-dropdown {
+        margin-top: auto;
+        margin-bottom: 0;
+        padding-top: 20px;
+    }
+    .user-main {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        width: 100%;
+    }
+    .user-info-text {
+        min-width: 0;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .user-info-text strong {
+        font-size: 14px;
+        font-weight: 600;
+        color: white;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .user-info-text small {
+        color: #b8c4d6;
+        font-size: 12px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin-top: 2px;
+    }
+    .dropdown-caret {
+        margin-left: 8px;
+        color: #b8c4d6;
+        font-size: 14px;
+        transition: transform 0.2s;
+    }
+    .user-dropdown.open .dropdown-caret {
+        transform: rotate(180deg);
+    }
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        left: 0;
+        bottom: 48px;
+        background: #223a5f;
+        border-radius: 8px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.13);
+        min-width: 160px;
+        z-index: 1001;
+        flex-direction: column;
+        padding: 8px 0;
+        animation: fadeIn 0.2s;
+    }
+    .user-dropdown.open .dropdown-menu {
+        display: flex;
+    }
+    .dropdown-menu a, .dropdown-menu button {
+        color: #cfd8e3;
+        background: none;
+        border: none;
+        width: 100%;
+        text-align: left;
+        padding: 10px 18px;
+        font-size: 15px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: background 0.18s, color 0.18s;
+    }
+    .dropdown-menu a:hover, .dropdown-menu button:hover {
+        background: #2d4a7a;
+        color: #fff;
+    }
+    .logout-btn {
+        color: #ff4757;
+        font-weight: 600;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    </style>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="content">
+        <!-- Mobile hamburger menu -->
+        <button id="hamburger" class="hamburger" aria-label="Menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <section class="welcome">
+            <h2>Updates Feed</h2>
+            <p>Latest announcements and campus news</p>
+        </section>
+
+        <section class="updates-feed">
+            <div class="update-box">
+                <div class="update-box-icon">
+                    <i class="fa-solid fa-bullhorn"></i>
+                </div>
+                <h3>Spring Semester Registration</h3>
+                <p>Registration for Spring semester is now open. Deadline: January 15. Visit the registrar's office for more information.</p>
+                <span class="update-date">Today 10:30 AM</span>
+            </div>
+
+            <div class="update-box">
+                <div class="update-box-icon">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <h3>Campus Safety Alert</h3>
+                <p>Be aware of construction near the South Campus. Use alternative routes. Expected to conclude by March 31.</p>
+                <span class="update-date">Yesterday 2:15 PM</span>
+            </div>
+
+            <div class="update-box">
+                <div class="update-box-icon">
+                    <i class="fa-solid fa-calendar"></i>
+                </div>
+                <h3>Exam Schedule Released</h3>
+                <p>Final exam schedule for spring semester is now available online. Download your personalized schedule from the student portal.</p>
+                <span class="update-date">February 25, 2026</span>
+            </div>
+
+            <div class="update-box">
+                <div class="update-box-icon">
+                    <i class="fa-solid fa-star"></i>
+                </div>
+                <h3>Awards & Recognition Ceremony</h3>
+                <p>Join us for the Annual Awards Ceremony on March 15th at the Main Auditorium. Register by March 10th to attend.</p>
+                <span class="update-date">February 24, 2026</span>
+            </div>
+
+            <div class="update-box">
+                <div class="update-box-icon">
+                    <i class="fa-solid fa-utensils"></i>
+                </div>
+                <h3>Cafeteria Maintenance Notice</h3>
+                <p>The main cafeteria will be closed for maintenance on March 1-3. Alternative dining will be available in the Student Center.</p>
+                <span class="update-date">February 23, 2026</span>
+            </div>
+
+            <div class="update-box">
+                <div class="update-box-icon">
+                    <i class="fa-solid fa-book"></i>
+                </div>
+                <h3>Library Extended Hours</h3>
+                <p>During exam season, the library will remain open until 11 PM on weekdays and 10 PM on weekends. Study hard!</p>
+                <span class="update-date">February 22, 2026</span>
+            </div>
+
+            <div class="update-box">
+                <div class="update-box-icon">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+                <h3>New Club Registration Now Open</h3>
+                <p>Interested in starting a new club? Registration is now open for the next semester. Submit your proposal by March 10th.</p>
+                <span class="update-date">February 20, 2026</span>
+            </div>
+
+            <div class="update-box">
+                <div class="update-box-icon">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <h3>Graduation Ceremony Details</h3>
+                <p>Graduation will be held on May 15th, 2026. Tickets are free for graduates and limited seats for guests.</p>
+                <span class="update-date">February 18, 2026</span>
+            </div>
+        </section>
+    </main>
+
+</div>
+
+<button id="scrollTop" class="scroll-top" aria-label="Scroll to top">
+    <i class="fa-solid fa-arrow-up"></i>
+</button>
+
+<script src="javascript/common.js"></script>
+    <script src="javascript/dashboard.js"></script>
+
+</body>
+<script>
+// User dropdown logic for logout/profile
+document.addEventListener('DOMContentLoaded', function () {
+    const userDropdown = document.getElementById('userDropdown');
+    const userMainBtn = document.getElementById('userMainBtn');
+    const userDropdownMenu = document.getElementById('userDropdownMenu');
+    if (userDropdown && userMainBtn && userDropdownMenu) {
+        userMainBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            userDropdown.classList.toggle('open');
+        });
+        document.addEventListener('click', function (e) {
+            if (!userDropdown.contains(e.target)) {
+                userDropdown.classList.remove('open');
+            }
+        });
+    }
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function () {
+            sessionStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
+        });
+    }
+});
+</script>
+</html>

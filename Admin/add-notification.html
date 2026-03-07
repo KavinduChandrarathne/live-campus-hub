@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Campus Hub - Add Notification</title>
+
+  <link rel="stylesheet" href="styles/add-notification.css" />
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="bg-overlay"></div>
+
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <i class="fa-solid fa-graduation-cap"></i>
+        <h2>CAMPUS HUB</h2>
+      </div>
+
+      <div class="user">
+        <a href="admin-profile.html">
+          <img src="images/naveen.png" alt="user">
+        </a>
+        <div>
+          <p>Naveen Hasaranga</p>
+          <small>naveenhasaranga@chub.com</small>
+        </div>
+        <div class="user-menu">
+          <button id="logoutBtn" class="logout-btn">Logout</button>
+        </div>
+      </div>
+
+      <nav class="menu">
+        <a href="dashboard.html"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
+        <a href="facility-event-admin.html"><i class="fa-solid fa-bullhorn"></i> Facility &amp; Event</a>
+        <a href="transit.html"><i class="fa-solid fa-bus"></i> Transit</a>
+        <a href="campus-clubs.html"><i class="fa-solid fa-users"></i> Campus Clubs</a>
+        <a href="updates-feed.html"><i class="fa-solid fa-message"></i> Updates Feed</a>
+        <a class="active" href="add-notification.html"><i class="fa-solid fa-bell"></i> Notification</a>
+      </nav>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+
+      <!-- Title -->
+      <header class="page-title">
+        <button class="hamburger" id="hamburger"><i class="fa-solid fa-bars"></i></button>
+        Add Notification
+      </header>
+
+      <!-- Form Box -->
+      <section class="box">
+        <h3 class="box-title">Create new notification</h3>
+
+        <form id="notifyForm" class="form" action="php/add-notification.php" method="POST">
+
+          <div class="row">
+            <label>Notification Title:</label>
+            <input id="titleInput" name="title" type="text" placeholder="Enter title for the notification" required />
+          </div>
+
+          <div class="row">
+            <label>Message:</label>
+            <textarea id="msgInput" name="message" placeholder="Type your message..." required>The gym will be closed at 10.00 PM</textarea>
+          </div>
+
+          <div class="row">
+            <label>Select icon:</label>
+            <div class="select-wrap">
+              <i id="iconPreview" class="fa-solid fa-bell"></i>
+              <select id="iconSelect" name="icon" required>
+                <option value="fa-bell" selected>Choose an icon</option>
+                <option value="fa-envelope">Message</option>
+                <option value="fa-bullhorn">Announcement</option>
+                <option value="fa-triangle-exclamation">Warning</option>
+                <option value="fa-calendar-days">Event</option>
+                <option value="fa-bus">Transit</option>
+              </select>
+              <i class="fa-solid fa-caret-down caret"></i>
+            </div>
+          </div>
+
+          <div class="checks">
+            <label class="check">
+              <input id="allStudents" name="allStudents" type="checkbox" checked>
+              Send to all students
+            </label>
+
+            <label class="check">
+              <input id="pushNotify" name="pushNotify" type="checkbox" checked>
+              Send as push notification
+            </label>
+          </div>
+
+          <div class="actions">
+            <button type="submit" class="send-btn">Send Notification</button>
+          </div>
+
+        </form>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="javascript/auth.js"></script>
+  <script src="javascript/add-notification.js"></script>
+  <div class="mobile-backdrop" id="mobileBackdrop"></div>
+</body>
+</html>

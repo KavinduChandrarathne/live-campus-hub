@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Club Updates - Admin</title>
+
+  <link rel="stylesheet" href="styles/club-updates-admin.css" />
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="bg-overlay"></div>
+
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <i class="fa-solid fa-graduation-cap"></i>
+        <h2>CAMPUS HUB</h2>
+      </div>
+
+      <div class="user">
+        <a href="admin-profile.html">
+          <img src="images/naveen.png" alt="user">
+        </a>
+        <div>
+          <p>Naveen Hasaranga</p>
+          <small>naveenhasaranga@chub.com</small>
+        </div>
+        <div class="user-menu">
+          <button id="logoutBtn" class="logout-btn">Logout</button>
+        </div>
+      </div>
+
+      <nav class="menu">
+        <a href="#"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
+        <a href="#"><i class="fa-solid fa-bullhorn"></i> Facility &amp; Event</a>
+        <a href="#"><i class="fa-solid fa-bus"></i> Transit</a>
+        <a class="active" href="#"><i class="fa-solid fa-users"></i> Campus Clubs</a>
+        <a href="#"><i class="fa-solid fa-message"></i> Updates Feed</a>
+        <a href="#"><i class="fa-solid fa-bell"></i> Notifications</a>
+      </nav>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+
+      <!-- Title Bar -->
+      <header class="page-title">
+        <button class="hamburger" id="hamburger"><i class="fa-solid fa-bars"></i></button>
+        Club Updates
+      </header>
+
+      <!-- Add New Update Panel -->
+      <section class="panel">
+        <h3 class="panel-title">Add New Update</h3>
+
+        <form id="updateForm" class="form">
+
+          <div class="row">
+            <label>Icon:</label>
+            <div class="select-wrap">
+              <i id="iconPreview" class="fa-solid fa-envelope"></i>
+              <select id="iconSelect" required>
+                <option value="fa-envelope" selected>Select Icon</option>
+                <option value="fa-users">Club</option>
+                <option value="fa-calendar-days">Event</option>
+                <option value="fa-bullhorn">Announcement</option>
+                <option value="fa-triangle-exclamation">Warning</option>
+                <option value="fa-trophy">Achievement</option>
+              </select>
+              <i class="fa-solid fa-caret-down caret"></i>
+            </div>
+          </div>
+
+          <div class="row">
+            <label>Message:</label>
+            <input id="msgInput" type="text" value="The gym will be closed at 10.00 PM" required>
+          </div>
+
+          <div class="row">
+            <label>Description: <span class="optional">(optional)</span></label>
+            <input id="descInput" type="text"
+                   value="Due to the Scheduled maintenance,the campus gym will be close early today">
+          </div>
+
+          <div class="row check-row">
+            <label></label>
+            <label class="check">
+              <input id="sendNotification" type="checkbox" checked>
+              Send as notification
+            </label>
+          </div>
+
+          <div class="actions">
+            <button type="submit" class="btn post">Post Update</button>
+            <button type="button" class="btn cancel" id="cancelBtn">Cancel</button>
+          </div>
+
+        </form>
+      </section>
+
+      <!-- Recent Updates -->
+      <section class="recent">
+        <div class="recent-head">Recent Updates</div>
+
+        <article class="recent-card" id="recentCard">
+          <div class="recent-icon"><i id="recentIcon" class="fa-solid fa-envelope"></i></div>
+
+          <div class="recent-text">
+            <h4 id="recentTitle">The gym will be closed at 10.00 PM</h4>
+            <p id="recentDesc">Due to scheduled maintenance, the campus gym will close early today</p>
+          </div>
+
+          <div class="recent-meta">
+            <div class="recent-buttons">
+              <button class="mini edit" id="editBtn"><i class="fa-solid fa-pen"></i> Edit</button>
+              <button class="mini delete" id="deleteBtn"><i class="fa-solid fa-trash"></i> Delete</button>
+            </div>
+            <div class="recent-time" id="recentTime">Today 2.15 PM</div>
+          </div>
+        </article>
+
+      </section>
+
+    </main>
+  </div>
+
+  <script src="javascript/auth.js"></script>
+  <script src="javascript/club-updates-admin.js"></script>
+  <div class="mobile-backdrop" id="mobileBackdrop"></div>
+</body>
+</html>

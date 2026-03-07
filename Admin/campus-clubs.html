@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Campus Hub - Campus Clubs</title>
+
+  <link rel="stylesheet" href="styles/campus-clubs.css" />
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="bg-overlay"></div>
+
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <i class="fa-solid fa-graduation-cap"></i>
+        <h2>CAMPUS HUB</h2>
+      </div>
+
+      <div class="user">
+        <a href="admin-profile.html">
+          <img src="images/naveen.png" alt="user">
+        </a>
+        <div>
+          <p>Naveen Hasaranga</p>
+          <small>naveenhasaranga@chub.com</small>
+        </div>
+        <div class="user-menu">
+          <button id="logoutBtn" class="logout-btn">Logout</button>
+        </div>
+      </div>
+
+      <nav class="menu">
+        <a href="dashboard.html"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
+        <a href="facility-event-admin.html"><i class="fa-solid fa-bullhorn"></i> Facility &amp; Event</a>
+        <a href="transit.html"><i class="fa-solid fa-bus"></i> Transit</a>
+        <a class="active" href="campus-clubs.html"><i class="fa-solid fa-users"></i> Campus Clubs</a>
+        <a href="updates-feed.html"><i class="fa-solid fa-message"></i> Updates Feed</a>
+        <a href="add-notification.html"><i class="fa-solid fa-bell"></i> Notification</a>
+      </nav>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+
+      <!-- Top bar -->
+      <header class="topbar">
+        <button class="hamburger" id="hamburger"><i class="fa-solid fa-bars"></i></button>
+        <h1>Campus Clubs</h1>
+
+        <div class="top-actions">
+          <div class="search">
+            <input id="searchInput" type="text" placeholder="Search..." />
+            <button class="search-btn" type="button" aria-label="Search">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+          </div>
+
+          <button class="add-btn" id="addClubBtn" type="button">
+            <i class="fa-solid fa-plus"></i> Add Club
+          </button>
+        </div>
+      </header>
+
+      <!-- Cards -->
+      <section class="grid" id="clubGrid">
+
+        <article class="club-card" data-name="coding club">
+          <div class="club-icon"><i class="fa-solid fa-user-group"></i></div>
+          <h3>Coding Club</h3>
+          <p>Explore clubs and view the latest updates from each community.</p>
+          <button class="post-btn"><i class="fa-solid fa-pen-to-square"></i> Post update</button>
+        </article>
+
+        <article class="club-card" data-name="rotaract club">
+          <div class="club-icon"><i class="fa-solid fa-bus"></i></div>
+          <h3>Rotaract Club</h3>
+          <p>Explore clubs and view the latest updates from each community.</p>
+          <button class="post-btn"><i class="fa-solid fa-pen-to-square"></i> Post update</button>
+        </article>
+
+        <article class="club-card" data-name="sports society">
+          <div class="club-icon"><i class="fa-solid fa-basketball"></i></div>
+          <h3>Sports Society</h3>
+          <p>Explore clubs and view the latest updates from each community.</p>
+          <button class="post-btn"><i class="fa-solid fa-pen-to-square"></i> Post update</button>
+        </article>
+
+        <article class="club-card" data-name="leo club">
+          <div class="club-icon"><i class="fa-solid fa-dragon"></i></div>
+          <h3>Leo Club</h3>
+          <p>Explore clubs and view the latest updates from each community.</p>
+          <button class="post-btn"><i class="fa-solid fa-pen-to-square"></i> Post update</button>
+        </article>
+
+        <article class="club-card" data-name="media society">
+          <div class="club-icon"><i class="fa-solid fa-music"></i></div>
+          <h3>Media Society</h3>
+          <p>Explore clubs and view the latest updates from each community.</p>
+          <button class="post-btn"><i class="fa-solid fa-pen-to-square"></i> Post update</button>
+        </article>
+
+        <article class="club-card" data-name="photography club">
+          <div class="club-icon"><i class="fa-solid fa-camera"></i></div>
+          <h3>Photography Club</h3>
+          <p>Explore clubs and view the latest updates from each community.</p>
+          <button class="post-btn"><i class="fa-solid fa-pen-to-square"></i> Post update</button>
+        </article>
+
+      </section>
+
+    </main>
+  </div>
+
+  <script src="javascript/auth.js"></script>
+  <script src="javascript/campus-clubs.js"></script>
+  <div class="mobile-backdrop" id="mobileBackdrop"></div>
+</body>
+</html>
