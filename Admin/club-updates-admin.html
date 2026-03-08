@@ -36,12 +36,12 @@
       </div>
 
       <nav class="menu">
-        <a href="#"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
-        <a href="#"><i class="fa-solid fa-bullhorn"></i> Facility &amp; Event</a>
-        <a href="#"><i class="fa-solid fa-bus"></i> Transit</a>
-        <a class="active" href="#"><i class="fa-solid fa-users"></i> Campus Clubs</a>
-        <a href="#"><i class="fa-solid fa-message"></i> Updates Feed</a>
-        <a href="#"><i class="fa-solid fa-bell"></i> Notifications</a>
+        <a href="dashboard.html"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
+        <a href="facility-event-admin.html"><i class="fa-solid fa-bullhorn"></i> Facility &amp; Event</a>
+        <a href="transit.html"><i class="fa-solid fa-bus"></i> Transit</a>
+        <a class="active" href="campus-clubs.html"><i class="fa-solid fa-users"></i> Campus Clubs</a>
+        <a href="updates-feed.html"><i class="fa-solid fa-message"></i> Updates Feed</a>
+        <a href="add-notification.html"><i class="fa-solid fa-bell"></i> Notification</a>
       </nav>
     </aside>
 
@@ -51,7 +51,7 @@
       <!-- Title Bar -->
       <header class="page-title">
         <button class="hamburger" id="hamburger"><i class="fa-solid fa-bars"></i></button>
-        Club Updates
+        <span id="pageTitle">Club Updates</span>
       </header>
 
       <!-- Add New Update Panel -->
@@ -90,7 +90,7 @@
           <div class="row check-row">
             <label></label>
             <label class="check">
-              <input id="sendNotification" type="checkbox" checked>
+              <input id="sendNotification" type="checkbox">
               Send as notification
             </label>
           </div>
@@ -129,6 +129,15 @@
     </main>
   </div>
 
+  <script>
+    // Read club name from URL query parameter and update page title
+    const urlParams = new URLSearchParams(window.location.search);
+    const clubName = urlParams.get('club');
+    if (clubName) {
+      document.getElementById('pageTitle').textContent = `Club Updates - ${clubName}`;
+      document.title = `Club Updates - ${clubName}`;
+    }
+  </script>
   <script src="javascript/auth.js"></script>
   <script src="javascript/club-updates-admin.js"></script>
   <div class="mobile-backdrop" id="mobileBackdrop"></div>
