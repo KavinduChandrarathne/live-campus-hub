@@ -37,11 +37,11 @@ body, html{
 }
 
 .brand{text-align:center}
-.brand i{font-size:36px;display:block;margin-bottom:10px}
+.brand i{font-size:36px;display:block;margin-bottom:0}
 .brand h2{font-size:18px;letter-spacing:1px}
 
 .menu{
-  margin-top:30px;
+  margin-top:0;
   display:flex;
   flex-direction:column;
   gap:6px;
@@ -125,7 +125,7 @@ body, html{
 .user-menu .logout-btn:hover {
   text-decoration: underline;
 }
-}
+
 .logout-dialog .btn {
   margin: 0 8px;
 } 
