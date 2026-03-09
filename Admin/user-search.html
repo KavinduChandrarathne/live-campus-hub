@@ -8,6 +8,11 @@
   <link rel="stylesheet" href="styles/user-search.css" />
   <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    #userResultCard {
+      display: none;
+    }
+  </style>
 </head>
 <body>
 
@@ -55,7 +60,7 @@
       <section class="search-bar-wrap">
         <div class="search-input-wrap">
           <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="text" id="studentSearchInput" placeholder="Enter Student ID">
+          <input type="text" id="studentSearchInput" placeholder="Enter Student ID, Username, or Name">
         </div>
         <button id="studentSearchBtn" type="button">Search</button>
       </section>
@@ -77,34 +82,14 @@
         </div>
 
         <div class="result-bottom">
-          <div class="info-column">
-            <h3>Clubs Joined</h3>
-
-            <div class="info-pill">
-              <i class="fa-solid fa-flask"></i>
-              <span>Science Club</span>
-            </div>
-
-            <div class="info-pill">
-              <i class="fa-solid fa-camera"></i>
-              <span>Photography Club</span>
-            </div>
+          <div class="info-column" id="clubsContainer">
+            <h3>User Info</h3>
           </div>
 
           <div class="info-divider"></div>
 
-          <div class="info-column">
-            <h3>Shuttles Using</h3>
-
-            <div class="info-pill">
-              <i class="fa-solid fa-bus"></i>
-              <span>Campus Loop Shuttle</span>
-            </div>
-
-            <div class="info-pill">
-              <i class="fa-solid fa-bus"></i>
-              <span>Express Shuttle</span>
-            </div>
+          <div class="info-column" id="shuttlesContainer">
+            <h3>Rewards</h3>
           </div>
         </div>
       </section>
