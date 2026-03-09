@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Campus Hub - Club Join Requests</title>
+
+  <link rel="stylesheet" href="styles/club-requests.css" />
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="bg-overlay"></div>
+
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <i class="fa-solid fa-graduation-cap"></i>
+        <h2>CAMPUS HUB</h2>
+      </div>
+
+      <nav class="menu">
+        <a href="dashboard.html"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
+        <a href="facility-event-admin.html"><i class="fa-solid fa-bullhorn"></i> Facility &amp; Event</a>
+        <a href="transit.html"><i class="fa-solid fa-bus"></i> Transit</a>
+        <a href="campus-clubs.html"><i class="fa-solid fa-users"></i> Campus Clubs</a>
+        <a href="updates-feed.html"><i class="fa-solid fa-message"></i> Updates Feed</a>
+        <a href="add-notification.html"><i class="fa-solid fa-bell"></i> Notification</a>
+      </nav>
+
+      <div class="user">
+        <a href="admin-profile.html">
+          <img src="images/naveen.png" alt="user">
+        </a>
+        <div>
+          <p>Naveen Hasaranga</p>
+          <small>naveenhasaranga@chub.com</small>
+        </div>
+        <div class="user-menu">
+          <button id="logoutBtn" class="logout-btn">Logout</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      
+
+      <section class="requests-shell">
+        <header class="requests-title-bar">
+          <h1>Club Join Requests</h1>
+        </header>
+
+        <div class="requests-tabs">
+          <button class="request-tab" data-filter="all">
+            All
+          </button>
+
+          <button class="request-tab active" data-filter="pending">
+            Pending
+            <span class="tab-count" id="pendingCount">2</span>
+          </button>
+
+          <button class="request-tab" data-filter="accepted">
+            Accepted
+            <span class="tab-count" id="acceptedCount">0</span>
+          </button>
+
+          <button class="request-tab" data-filter="rejected">
+            Rejected
+            <span class="tab-count" id="rejectedCount">0</span>
+          </button>
+        </div>
+
+        <div class="requests-content">
+          <div class="requests-table">
+
+            <div class="requests-header">
+              <div></div>
+              <div>Student Name</div>
+              <div>Student ID</div>
+              <div>Club Name</div>
+              <div></div>
+            </div>
+
+            <div class="request-list" id="requestList">
+
+              <article class="request-card" data-status="pending">
+                <div class="request-main">
+
+                  <div class="request-profile">
+                    <img src="images/s1.jpg" alt="John Silva">
+                  </div>
+
+                  <div class="request-info">
+                    <div class="request-row-top">
+                      <div class="student-name">John Silva</div>
+                      <div class="student-id">ST1234</div>
+                      <div class="club-name">Robotics</div>
+                    </div>
+                  </div>
+
+                  <div class="request-actions">
+                    <button class="accept-btn" type="button">Accept</button>
+                    <button class="reject-btn" type="button">Reject</button>
+                  </div>
+                </div>
+
+                <div class="request-message-row">
+                  <div class="request-message">I am passionate about robotics and want to join.</div>
+                </div>
+              </article>
+
+              <article class="request-card" data-status="pending">
+                <div class="request-main">
+
+                  <div class="request-profile">
+                    <img src="images/s2.jpg" alt="Maya Perera">
+                  </div>
+
+                  <div class="request-info">
+                    <div class="request-row-top">
+                      <div class="student-name">Maya Perera</div>
+                      <div class="student-id">ST5678</div>
+                      <div class="club-name">Drama</div>
+                    </div>
+                  </div>
+
+                  <div class="request-actions">
+                    <button class="accept-btn" type="button">Accept</button>
+                    <button class="reject-btn" type="button">Reject</button>
+                  </div>
+                </div>
+
+                <div class="request-message-row">
+                  <div class="request-message">I love acting and would like to participate.</div>
+                </div>
+              </article>
+
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="javascript/club-requests.js"></script>
+</body>
+</html>

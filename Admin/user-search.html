@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Campus Hub - User Search</title>
+
+  <link rel="stylesheet" href="styles/user-search.css" />
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    #userResultCard {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-overlay"></div>
+
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <i class="fa-solid fa-graduation-cap"></i>
+        <h2>CAMPUS HUB</h2>
+      </div>
+
+      <nav class="menu">
+        <a href="dashboard.html"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
+        <a href="facility-event-admin.html"><i class="fa-solid fa-bullhorn"></i> Facility &amp; Event</a>
+        <a href="transit.html"><i class="fa-solid fa-bus"></i> Transit</a>
+        <a href="campus-clubs.html"><i class="fa-solid fa-users"></i> Campus Clubs</a>
+        <a href="updates-feed.html"><i class="fa-solid fa-message"></i> Updates Feed</a>
+        <a href="add-notification.html"><i class="fa-solid fa-bell"></i> Notification</a>
+      </nav>
+
+      <div class="user">
+        <a href="admin-profile.html">
+          <img src="images/naveen.png" alt="user">
+        </a>
+        <div>
+          <p>Naveen Hasaranga</p>
+          <small>naveenhasaranga@chub.com</small>
+        </div>
+        <div class="user-menu">
+          <button id="logoutBtn" class="logout-btn">Logout</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <header class="page-title">
+        <h1>User Search</h1>
+      </header>
+
+      <!-- Search Bar -->
+      <section class="search-bar-wrap">
+        <div class="search-input-wrap">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="studentSearchInput" placeholder="Enter Student ID (e.g., S1001)">
+        </div>
+        <button id="studentSearchBtn" type="button">Search</button>
+      </section>
+
+      <!-- Result Card -->
+      <section class="result-card" id="userResultCard">
+        <div class="result-top">
+          <div class="result-photo">
+            <img src="images/naveen.png" alt="Student Photo">
+          </div>
+
+          <div class="result-details">
+            <p><strong>First Name:</strong> <span id="resultFirstName">Naveen</span></p>
+            <p><strong>Last Name:</strong> <span id="resultLastName">Hasaranga</span></p>
+            <p><strong>Student ID:</strong> <span id="resultStudentId">1234567</span></p>
+            <p><strong>Faculty:</strong> <span id="resultFaculty">Faculty of Computing</span></p>
+            <p><strong>Date of Birth:</strong> <span id="resultDob">10/02/2001</span></p>
+          </div>
+        </div>
+
+        <div class="result-bottom">
+          <div class="info-column" id="clubsContainer">
+            <h3>User Info</h3>
+          </div>
+
+          <div class="info-divider"></div>
+
+          <div class="info-column" id="shuttlesContainer">
+            <h3>Rewards</h3>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="javascript/user-search.js"></script>
+</body>
+</html>

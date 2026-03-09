@@ -27,7 +27,7 @@ function initAuth() {
   const page = window.location.pathname.split('/').pop();
   const loggedIn = localStorage.getItem('adminLoggedIn') === 'true';
 
-  if (page === 'index.html' || page === '' /* root default */) {
+  if (page === 'index.html') {
     // if already logged in, skip the login page
     if (loggedIn) {
       window.location.href = 'admin-profile.html';
@@ -37,7 +37,6 @@ function initAuth() {
     // protect every other page
     if (!loggedIn) {
       window.location.href = 'index.html';
-      return;
     }
   }
 
@@ -55,7 +54,6 @@ function attachLogoutButton() {
   function performLogout() {
     localStorage.removeItem('adminLoggedIn');
     localStorage.removeItem('adminEmail');
-    localStorage.removeItem('adminUser');
     window.location.href = 'index.html';
   }
 

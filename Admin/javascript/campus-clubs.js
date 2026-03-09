@@ -1,6 +1,27 @@
 const searchInput = document.getElementById("searchInput");
-const cards = document.querySelectorAll(".club-card");
+let cards = []; // will be populated after loading
 const addClubBtn = document.getElementById("addClubBtn");
+const clubGrid = document.getElementById("clubGrid");
+
+// load clubs from JSON file and render them
+function renderClubs(clubs) {
+  clubGrid.innerHTML = clubs.map(club => `
+    <article class="club-card" data-name="${club.name.toLowerCase()}">
+      <button class="join-btn">Join Requests</button>
+      <div class="club-icon"><i class="fa-solid ${club.icon}"></i></div>
+      <h3>${club.name}</h3>
+      <p>${club.desc}</p>
+      <a href="club-updates-admin.html?club=${encodeURIComponent(club.name)}" class="post-btn"><i class="fa-solid fa-pen-to-square"></i> Post update</a>
+    </article>
+  `).join('');
+  cards = clubGrid.querySelectorAll('.club-card');
+}
+
+fetch('json/clubs.json')
+  .then(res => res.json())
+  .then(renderClubs)
+  .catch(err => console.error('Failed to load clubs.json', err));
+
 
 searchInput.addEventListener("input", () => {
   const q = searchInput.value.toLowerCase().trim();
@@ -17,12 +38,15 @@ addClubBtn.addEventListener("click", () => {
   window.location.href = "add-club.html";
 });
 
-// Demo: Post update buttons
-document.querySelectorAll(".post-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    alert("Post update clicked (Demo) - open Club Updates page here.");
-  });
+// Join Requests button navigates to club-join-requests.html
+clubGrid.addEventListener("click", (e) => {
+  if (e.target.closest(".join-btn")) {
+    window.location.href = "club-join-requests.html";
+  }
 });
+
+// Demo: Post update buttons
+// navigation is handled by <a> links, no JS required
 
 // Sidebar toggle for mobile
 const hamburger = document.getElementById("hamburger");
