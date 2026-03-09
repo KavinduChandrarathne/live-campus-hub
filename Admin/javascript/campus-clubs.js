@@ -38,6 +38,13 @@ addClubBtn.addEventListener("click", () => {
   window.location.href = "add-club.html";
 });
 
+// Join Requests button navigates to club-join-requests.html
+clubGrid.addEventListener("click", (e) => {
+  if (e.target.closest(".join-btn")) {
+    window.location.href = "club-join-requests.html";
+  }
+});
+
 // Demo: Post update buttons
 // navigation is handled by <a> links, no JS required
 
