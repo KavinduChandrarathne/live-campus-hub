@@ -51,9 +51,9 @@ function performSearch() {
     return;
   }
 
-  // Search for user by studentId only
+  // Search for user by exact studentId match only
   const foundUser = usersData.find(user => 
-    user.studentId.toLowerCase().includes(searchInput.toLowerCase())
+    user.studentId.toLowerCase() === searchInput.toLowerCase()
   );
 
   if (foundUser) {
