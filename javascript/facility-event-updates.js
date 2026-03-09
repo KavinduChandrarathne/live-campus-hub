@@ -23,10 +23,14 @@ fetch('get-facility-event-updates.php')
   });
 
 function formatDateTime(dt) {
-  const d = new Date(dt);
+  const d = new Date(dt.replace(/-/g, '/'));
   const now = new Date();
+  let h = d.getHours();
+  let m = String(d.getMinutes()).padStart(2, "0");
+  const ampm = h >= 12 ? "PM" : "AM";
+  h = h % 12 || 12;
   if (d.toDateString() === now.toDateString()) {
-    return `Today ${d.getHours()}:${d.getMinutes().toString().padStart(2, '0')}`;
+    return `Today ${h}.${m} ${ampm}`;
   }
-  return d.toLocaleString();
+  return `${d.toLocaleDateString()} ${h}.${m} ${ampm}`;
 }

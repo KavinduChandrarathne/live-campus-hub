@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set('Asia/Colombo'); // Set Sri Lanka timezone
 // Path to the shared facility-event-updates.json file
 $updatesFile = '../../shared/facility-event-updates.json';
 

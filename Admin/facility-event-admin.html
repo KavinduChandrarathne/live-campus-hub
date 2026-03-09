@@ -22,16 +22,11 @@
         <h2>CAMPUS HUB</h2>
       </div>
 
-      <div class="user">
-        <a href="admin-profile.html">
-          <img src="images/naveen.png" alt="user">
-        </a>
+      <div class="user" onclick="window.location='admin-profile.html'">
+        <img src="images/admin.png" alt="user">
         <div>
-          <p>Naveen Hasaranga</p>
-          <small>naveenhasaranga@chub.com</small>
-        </div>
-        <div class="user-menu">
-          <button id="logoutBtn" class="logout-btn">Logout</button>
+          <p>Admin Name</p>
+          <small>admin@example.com</small>
         </div>
       </div>
 
@@ -49,7 +44,7 @@
     <main class="main">
 
       <!-- Title Bar -->
-      <header class="page-title">
+      <header class="page-title sticky-title">
         <button class="hamburger" id="hamburger"><i class="fa-solid fa-bars"></i></button>
         Facility &amp; Event Updates
       </header>
@@ -57,9 +52,7 @@
       <!-- Add New Update Panel -->
       <section class="panel">
         <h3 class="panel-title">Add New Update</h3>
-
         <form id="updateForm" class="form" action="php/add-facility-event-update.php" method="POST">
-
           <div class="row">
             <label>Icon:</label>
             <div class="select-wrap">
@@ -74,18 +67,14 @@
               <i class="fa-solid fa-caret-down caret"></i>
             </div>
           </div>
-
           <div class="row">
             <label>Message:</label>
-            <input id="msgInput" name="message" type="text" value="The gym will be closed at 10.00 PM" required>
+            <input id="msgInput" name="message" type="text" placeholder="Enter update message..." required>
           </div>
-
           <div class="row">
             <label>Description: <span class="optional">(optional)</span></label>
-                 <input id="descInput" name="description" type="text"
-                   value="Due to the Scheduled maintenance,the campus gym will be close early today">
+            <input id="descInput" name="description" type="text" placeholder="Add more details...">
           </div>
-
           <div class="row check-row">
             <label></label>
             <label class="check">
@@ -93,39 +82,57 @@
               Send as notification
             </label>
           </div>
-
           <div class="actions">
             <button type="submit" class="btn post">Post Update</button>
             <button type="button" class="btn cancel" id="cancelBtn">Cancel</button>
           </div>
-
         </form>
       </section>
 
       <!-- Recent Updates -->
       <section class="recent">
         <div class="recent-head">Recent Updates</div>
-
-        <article class="recent-card" id="recentCard">
-          <div class="recent-icon"><i id="recentIcon" class="fa-solid fa-envelope"></i></div>
-
-          <div class="recent-text">
-            <h4 id="recentTitle">The gym will be closed at 10.00 PM</h4>
-            <p id="recentDesc">Due to Scheduled maintenance, the campus gym will be close early today</p>
-          </div>
-
-          <div class="recent-meta">
-            <div class="recent-buttons">
-              <button class="mini edit" id="editBtn"><i class="fa-solid fa-pen"></i> Edit</button>
-              <button class="mini delete" id="deleteBtn"><i class="fa-solid fa-trash"></i> Delete</button>
-            </div>
-            <div class="recent-time" id="recentTime">Today 2.15 PM</div>
-          </div>
-        </article>
-
+        <hr style="border:none;border-top:1px solid #e0e0e0;margin-bottom:16px;">
+        <div id="recentUpdatesContainer"></div>
       </section>
 
     </main>
+
+    <!-- Edit Update Modal -->
+    <div id="editUpdateModal" class="modal" style="display:none;">
+      <div class="modal-content">
+        <span class="close" id="closeEditModal">&times;</span>
+        <h3>Edit Update</h3>
+        <form id="editUpdateForm">
+          <div class="row">
+            <label>Icon:</label>
+            <div class="select-wrap">
+              <i id="editIconPreview" class="fa-solid fa-envelope"></i>
+              <select id="editIconSelect" name="icon" required>
+                <option value="fa-envelope">Envelope</option>
+                <option value="fa-dumbbell">Gym</option>
+                <option value="fa-book">Library</option>
+                <option value="fa-calendar-days">Event</option>
+                <option value="fa-triangle-exclamation">Warning</option>
+              </select>
+              <i class="fa-solid fa-caret-down caret"></i>
+            </div>
+          </div>
+          <div class="row">
+            <label>Message:</label>
+            <input id="editMsgInput" name="message" type="text" required>
+          </div>
+          <div class="row">
+            <label>Description:</label>
+            <input id="editDescInput" name="description" type="text">
+          </div>
+          <div class="actions">
+            <button type="submit" class="btn post">Save Changes</button>
+            <button type="button" class="btn cancel" id="cancelEditBtn">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
 
   </div>
 

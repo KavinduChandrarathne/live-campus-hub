@@ -69,6 +69,7 @@ body, html{
   gap:10px;
   order:2;
   margin-top:auto;
+  cursor: pointer; /* entire block clickable */
 }
 
 .user img{
@@ -121,16 +122,12 @@ body, html{
   font-size: 13px;
   color: #667eea;
   cursor: pointer;
+  margin: 0 8px;
 }
 
 .user-menu .logout-btn:hover {
   text-decoration: underline;
-} 
-  color: #333;
 }
-.logout-dialog .btn {
-  margin: 0 8px;
-} 
 
 /* active user highlight */
 .user.active{background:rgba(255,255,255,0.12);border-radius:8px;} 
@@ -157,6 +154,7 @@ body, html{
   position:relative;
 }
 
+
 .hamburger{
   display:none;
   position:absolute;
@@ -169,6 +167,26 @@ body, html{
   font-size:18px;
   padding:8px;
   cursor:pointer;
+}
+
+/* header logout button */
+.header-logout-btn {
+  position: absolute;
+  right: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #fff;
+  color: #23395d; 
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.header-logout-btn:hover {
+  background: #f2f2f2;
 }
 
 /* Profile card */
