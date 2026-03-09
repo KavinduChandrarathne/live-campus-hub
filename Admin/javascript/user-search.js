@@ -47,24 +47,19 @@ function performSearch() {
   const searchInput = document.getElementById('studentSearchInput').value.trim();
 
   if (!searchInput) {
-    alert('Please enter a Student ID, Username, or Name');
+    alert('Please enter a Student ID');
     return;
   }
 
-  // Search for user by studentId, username, or name
+  // Search for user by studentId only
   const foundUser = usersData.find(user => 
-    user.studentId.toLowerCase().includes(searchInput.toLowerCase()) ||
-    user.username.toLowerCase().includes(searchInput.toLowerCase()) ||
-    user.firstName.toLowerCase().includes(searchInput.toLowerCase()) ||
-    user.lastName.toLowerCase().includes(searchInput.toLowerCase()) ||
-    `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchInput.toLowerCase()) ||
-    user.email.toLowerCase().includes(searchInput.toLowerCase())
+    user.studentId.toLowerCase().includes(searchInput.toLowerCase())
   );
 
   if (foundUser) {
     displayUserDetails(foundUser);
   } else {
-    alert('User not found. Please check the Student ID, Username, or Name.');
+    alert('User not found. Please check the Student ID.');
     clearUserDetails();
   }
 }
