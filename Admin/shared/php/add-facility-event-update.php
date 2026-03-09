@@ -1,7 +1,7 @@
 <?php
 date_default_timezone_set('Asia/Colombo'); // Set Sri Lanka timezone
 // Path to the shared facility-event-updates.json file
-$updatesFile = '../../shared/facility-event-updates.json';
+$updatesFile = '../json/facility-event-updates.json';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get form data
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     file_put_contents($updatesFile, json_encode($updates, JSON_PRETTY_PRINT));
 
     // Redirect back to the form or show success
-    header('Location: ../facility-event-admin.html?success=1');
+    header('Location: ../../facility-event-admin.html?success=1');
     exit;
 } else {
     echo 'Invalid request.';

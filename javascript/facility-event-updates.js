@@ -1,5 +1,5 @@
 // Fetch and display facility & event updates
-fetch('get-facility-event-updates.php')
+fetch('Admin/shared/php/get-facility-event-updates.php')
   .then(response => response.json())
   .then(data => {
     const container = document.querySelector('.facility-cards');

@@ -17,7 +17,7 @@ function renderClubs(clubs) {
   cards = clubGrid.querySelectorAll('.club-card');
 }
 
-fetch('json/clubs.json')
+fetch('shared/json/clubs.json')
   .then(res => res.json())
   .then(renderClubs)
   .catch(err => console.error('Failed to load clubs.json', err));

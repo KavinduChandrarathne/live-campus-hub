@@ -3,7 +3,7 @@ let adminList = [];
 
 // fetch the admin list file and cache it
 function loadAdmins() {
-  return fetch('admins.json')
+  return fetch('../shared/json/admins.json')
     .then(res => res.json())
     .then(data => {
       adminList = data;

@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Function to load users data from JSON
 function loadUsersData() {
-  fetch('../javascript/users.json')
+  fetch('shared/json/users.json')
     .then(response => {
       if (!response.ok) {
         throw new Error('Failed to load users data');

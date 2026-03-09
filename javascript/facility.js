@@ -1,5 +1,5 @@
 // Fetch and display notifications from shared JSON
-fetch('get-notifications.php')
+fetch('../Admin/shared/php/get-notifications.php')
   .then(response => response.json())
   .then(data => {
     const container = document.querySelector('.facility-cards');

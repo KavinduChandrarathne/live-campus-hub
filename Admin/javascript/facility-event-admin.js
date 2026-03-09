@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function() {
       formData.append("icon", editIconSelect.value);
       formData.append("message", editMsgInput.value);
       formData.append("description", editDescInput.value);
-      fetch('/live-campus-hub/Admin/php/edit-facility-event-update.php', {
+      fetch('shared/php/edit-facility-event-update.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: formData.toString()
@@ -113,7 +113,7 @@ document.addEventListener("DOMContentLoaded", function() {
         deleteBtn.innerHTML = '<i class="fa-solid fa-trash"></i> Delete';
         deleteBtn.onclick = function() {
           if (confirm("Are you sure you want to delete this update?")) {
-            fetch('/live-campus-hub/Admin/php/delete-facility-event-update.php', {
+            fetch('shared/php/delete-facility-event-update.php', {
               method: 'POST',
               headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
               body: `index=${idx}`
@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
   function fetchRecentUpdates() {
-    fetch('/live-campus-hub/get-facility-event-updates.php')
+    fetch('shared/php/get-facility-event-updates.php')
       .then(response => response.json())
       .then(updates => {
         renderRecentUpdates(updates);

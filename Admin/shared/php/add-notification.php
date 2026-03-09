@@ -1,6 +1,6 @@
 <?php
 // Path to the shared notifications.json file
-$notificationsFile = '../../shared/notifications.json';
+$notificationsFile = '../json/notifications.json';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get form data
