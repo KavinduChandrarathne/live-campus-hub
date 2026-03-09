@@ -1,8 +1,16 @@
-// Demo admin credentials
-const DEMO_CREDENTIALS = {
-  email: 'admin@campushub.com',
-  password: 'admin123'
-};
+// list of admin users loaded from JSON
+let adminList = [];
+
+// fetch the admin list file and cache it
+function loadAdmins() {
+  return fetch('admins.json')
+    .then(res => res.json())
+    .then(data => {
+      adminList = data;
+      console.log('Loaded admins:', adminList.map(u => u.email).join(', '));
+    })
+    .catch(err => console.error('Failed to load admin list', err));
+}
 
 // Initialize login page
 function initLoginPage() {
@@ -27,14 +35,11 @@ function initLoginPage() {
     submitLogin(email, password);
   });
 
-  // Forgot password
+  // Forgot password (still demo)
   forgotLink.addEventListener('click', (e) => {
     e.preventDefault();
     alert('Password reset feature coming soon!');
   });
-
-  // Log demo credentials for testing
-  console.log('Demo = admin@campushub.com / admin123');
 }
 
 // Submit login
@@ -47,14 +52,15 @@ function submitLogin(email, password) {
 
   // Simulate network delay
   setTimeout(() => {
-    if (email === DEMO_CREDENTIALS.email && password === DEMO_CREDENTIALS.password) {
+    const user = adminList.find(u => u.email === email && u.password === password);
+    if (user) {
       // Success
       localStorage.setItem('adminLoggedIn', 'true');
-      localStorage.setItem('adminEmail', email);
+      localStorage.setItem('adminUser', JSON.stringify(user));
       window.location.href = 'admin-profile.html';
     } else {
       // Failed
-      alert('Invalid credentials\n\nUse: admin@campushub.com / admin123');
+      alert('Invalid credentials\n\nPlease check your email and password.');
       loginBtn.disabled = false;
       loginBtn.textContent = 'Login';
       document.getElementById('password').value = '';
@@ -63,9 +69,8 @@ function submitLogin(email, password) {
 }
 
 // Initialize on load
-// `auth.js` now handles redirecting back to the profile page if the user
-// is already logged in, so we just initialise the form logic here.
+// load the admin list first, then wire up the form
 document.addEventListener('DOMContentLoaded', function() {
-  initLoginPage();
+  loadAdmins().then(initLoginPage);
 });
 

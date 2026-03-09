@@ -1,0 +1,29 @@
+[
+  {
+    "email": "admin1@example.com",
+    "password": "admin123",
+    "firstName": "Alice",
+    "lastName": "Johnson",
+    "studentId": "A1001",
+    "dob": "1990-01-01",
+    "picture": "images/admin.png"
+  },
+  {
+    "email": "admin2@example.com",
+    "password": "admin456",
+    "firstName": "Bob",
+    "lastName": "Smith",
+    "studentId": "A1002",
+    "dob": "1991-02-02",
+    "picture": "images/admin.png"
+  },
+  {
+    "email": "admin3@example.com",
+    "password": "admin789",
+    "firstName": "Carol",
+    "lastName": "Williams",
+    "studentId": "A1003",
+    "dob": "1992-03-03",
+    "picture": "images/admin.png"
+  }
+]

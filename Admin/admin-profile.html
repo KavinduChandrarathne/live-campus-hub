@@ -22,16 +22,11 @@
         <h2>CAMPUS HUB</h2>
       </div>
 
-      <div class="user active">
-        <a href="admin-profile.html">
-          <img src="images/naveen.png" alt="user">
-        </a>
+      <div class="user active" onclick="window.location='admin-profile.html'">
+        <img src="images/admin.png" alt="user">
         <div>
-          <p>Naveen Hasaranga</p>
-          <small>naveenhasaranga@chub.com</small>
-        </div>
-        <div class="user-menu">
-          <button id="logoutBtn" class="logout-btn">Logout</button>
+          <p>Admin Name</p>
+          <small>admin@example.com</small>
         </div>
       </div>
 
@@ -52,6 +47,7 @@
       <header class="page-title">
         <button class="hamburger" id="hamburger"><i class="fa-solid fa-bars"></i></button>
         Profile Information
+        <button id="headerLogoutBtn" class="header-logout-btn">Logout</button>
       </header>
 
       <!-- Profile card -->
@@ -59,7 +55,7 @@
 
         <!-- Left photo -->
         <div class="profile-left">
-          <img src="images/naveen2.png" alt="Profile Photo" />
+          <img src="images/admin.png" alt="Profile Photo" />
         </div>
 
         <!-- Right form -->
@@ -68,7 +64,7 @@
           <div class="row">
             <label>First Name:</label>
             <div class="input-edit">
-              <input id="firstName" type="text" value="Naveen" />
+              <input id="firstName" type="text" value="" />
               <i class="fa-solid fa-pen edit-icon"></i>
             </div>
           </div>
@@ -76,7 +72,7 @@
           <div class="row">
             <label>Last Name:</label>
             <div class="input-edit">
-              <input id="lastName" type="text" value="Hasaranga" />
+              <input id="lastName" type="text" value="" />
               <i class="fa-solid fa-pen edit-icon"></i>
             </div>
           </div>
@@ -84,7 +80,7 @@
           <div class="row">
             <label>Student ID:</label>
             <div class="input-edit">
-              <input id="studentId" type="text" value="1234567" />
+              <input id="studentId" type="text" value="" />
               <i class="fa-solid fa-pen edit-icon"></i>
             </div>
           </div>
@@ -99,7 +95,7 @@
           <div class="row">
             <label>Date of birth:</label>
             <div class="input-edit">
-              <input id="dob" type="text" value="10/02/2001" />
+              <input id="dob" type="text" value="" />
               <i class="fa-solid fa-pen edit-icon"></i>
             </div>
           </div>
