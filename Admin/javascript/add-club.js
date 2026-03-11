@@ -18,7 +18,7 @@ logoCards.forEach(card => {
 
 cancelBtn.addEventListener("click", () => {
   clubForm.reset();
-  alert("Cancelled (Demo)");
+  window.location.href = "campus-clubs.html";
 });
 
 // submit
@@ -27,13 +27,34 @@ clubForm.addEventListener("submit", (e) => {
 
   const name = document.getElementById("clubName").value.trim();
   const desc = document.getElementById("clubDesc").value.trim();
-  const sendNoti = document.getElementById("sendNoti").checked;
 
-  alert(
-    `Club Created! (Demo)\n\nClub Name: ${name}\nDescription: ${desc || "-"}\nLogo: ${selectedClubName}\nSend notification: ${sendNoti}`
-  );
+  if (!name) {
+    alert('Club name is required');
+    return;
+  }
 
-  clubForm.reset();
+  const data = new URLSearchParams();
+  data.append('name', name);
+  data.append('icon', selectedIcon);
+  data.append('desc', desc);
+
+  fetch('shared/php/add-club.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: data.toString()
+  })
+  .then(res => res.json())
+  .then(result => {
+    if (result.success) {
+      alert('Club added successfully!');
+      window.location.href = 'campus-clubs.html';
+    } else {
+      alert('Failed to add club: ' + (result.error || 'Unknown'));
+    }
+  })
+  .catch(() => {
+    alert('Network error creating club.');
+  });
 });
 
 // Sidebar toggle for mobile

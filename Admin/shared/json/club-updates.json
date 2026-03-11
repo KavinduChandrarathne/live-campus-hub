@@ -1,0 +1,58 @@
+[
+    {
+        "clubName": "new test",
+        "icon": "fa-users",
+        "message": "test new",
+        "description": "",
+        "datetime": "2026-03-11 15:41:17"
+    },
+    {
+        "clubName": "Sports Society",
+        "icon": "fa-users",
+        "message": "test new",
+        "description": "Due to the Scheduled maintenance,the campus gym will be close early today",
+        "datetime": "2026-03-11 15:29:01"
+    },
+    {
+        "clubName": "Coding Club",
+        "icon": "fa-users",
+        "message": "task 1",
+        "description": "egfws",
+        "datetime": "2026-03-11 13:27:48"
+    },
+    {
+        "clubName": "Coding Club",
+        "icon": "fa-users",
+        "message": "test new 2",
+        "description": "",
+        "datetime": "2026-03-11 13:27:38"
+    },
+    {
+        "clubName": "Coding Club",
+        "icon": "fa-users",
+        "message": "test new",
+        "description": "",
+        "datetime": "2026-03-11 13:27:18"
+    },
+    {
+        "clubName": "Coding Club",
+        "icon": "fa-users",
+        "message": "Welcome to the Coding Club!",
+        "description": "Check out our new repository of beginner projects.",
+        "datetime": "2026-03-11 09:00:00"
+    },
+    {
+        "clubName": "Rotaract Club",
+        "icon": "fa-bus",
+        "message": "Upcoming Charity Drive",
+        "description": "Join the Rotaract team this Saturday for a community clean-up.",
+        "datetime": "2026-03-11 10:30:00"
+    },
+    {
+        "clubName": "Sports Society",
+        "icon": "fa-basketball",
+        "message": "Spring Tournament Registration",
+        "description": "Sign up your team for the intramural basketball tournament.",
+        "datetime": "2026-03-11 11:15:00"
+    }
+]

@@ -8,7 +8,18 @@ function getCurrentUser() {
         return null;
     }
     try {
-        return JSON.parse(raw);
+        const user = JSON.parse(raw);
+        // asynchronously refresh the session user from authoritative JSON
+        fetch('Admin/shared/json/users.json')
+            .then(r => r.json())
+            .then(users => {
+                const updated = users.find(u => u.username === user.username || u.email === user.email);
+                if (updated) {
+                    sessionStorage.setItem('currentUser', JSON.stringify(updated));
+                }
+            })
+            .catch(() => { /* ignore failures */ });
+        return user;
     } catch (e) {
         console.error('Failed to parse currentUser from sessionStorage', e);
         window.location.href = 'index.html';

@@ -24,7 +24,7 @@
     "username": "bob",
     "password": "securepass",
     "email": "bob@campushub.com",
-    "role": "admin",
+    "role": "student", 
     "firstName": "Bob",
     "lastName": "Brown",
     "studentId": "S1002",
