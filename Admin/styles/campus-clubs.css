@@ -34,6 +34,12 @@ body, html{
   flex-direction:column;
   justify-content:flex-start;
   gap:18px;
+  position:fixed;
+  left:0;
+  top:0;
+  height:100vh;
+  z-index:10;
+  box-shadow:2px 0 12px rgba(0,0,0,0.12);
 }
 
 .brand{text-align:center}
@@ -136,7 +142,13 @@ body, html{
 /* active user highlight */
 .user.active{background:rgba(255,255,255,0.12);border-radius:8px;}
 /* Main */
-.main{flex:1;padding:34px}
+.main{
+  flex:1;
+  padding:34px;
+  margin-left:260px;
+  min-height:100vh;
+  overflow-x:auto;
+}
 
 /* Topbar */
 .topbar{
@@ -306,16 +318,9 @@ body, html{
   .hamburger{display:block}
 
   .sidebar{
-    position:fixed;
     left:-320px;
-    top:0;
-    height:100vh;
-    width:260px;
     transition:left .25s ease;
-    z-index:6;
-    box-shadow:2px 0 12px rgba(0,0,0,0.12);
   }
-
   .layout.show-sidebar .sidebar{left:0}
 
   .mobile-backdrop{display:none}
@@ -327,7 +332,10 @@ body, html{
     z-index:5;
   }
 
-  .main{padding:16px}
+  .main{
+    padding:16px;
+    margin-left:0;
+  }
   .topbar{max-width:100%;flex-direction:column;align-items:flex-start;padding:12px 14px}
   .top-actions{width:100%;justify-content:space-between}
   .search input{width:140px}

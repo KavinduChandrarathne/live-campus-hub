@@ -5,15 +5,18 @@ const clubGrid = document.getElementById("clubGrid");
 
 // load clubs from JSON file and render them
 function renderClubs(clubs) {
-  clubGrid.innerHTML = clubs.map(club => `
-    <article class="club-card" data-name="${club.name.toLowerCase()}">
-      <button class="join-btn">Join Requests</button>
-      <div class="club-icon"><i class="fa-solid ${club.icon}"></i></div>
-      <h3>${club.name}</h3>
-      <p>${club.desc}</p>
-      <a href="club-updates-admin.html?club=${encodeURIComponent(club.name)}" class="post-btn"><i class="fa-solid fa-pen-to-square"></i> Post update</a>
-    </article>
-  `).join('');
+  clubGrid.innerHTML = clubs.map(club => {
+    const clubKey = club.name.toLowerCase();
+    return `
+      <article class="club-card" data-name="${clubKey}">
+        <button class="join-btn">Join Requests</button>
+        <div class="club-icon"><i class="fa-solid ${club.icon}"></i></div>
+        <h3>${club.name}</h3>
+        <p>${club.desc}</p>
+        <a href="club-updates-admin.html?club=${encodeURIComponent(club.name)}" class="post-btn"><i class="fa-solid fa-pen-to-square"></i> Post update</a>
+      </article>
+    `;
+  }).join('');
   cards = clubGrid.querySelectorAll('.club-card');
 }
 
@@ -38,10 +41,22 @@ addClubBtn.addEventListener("click", () => {
   window.location.href = "add-club.html";
 });
 
-// Join Requests button navigates to club-join-requests.html
 clubGrid.addEventListener("click", (e) => {
   if (e.target.closest(".join-btn")) {
     window.location.href = "club-join-requests.html";
+  }
+});
+// Join Requests button navigates to generic join request page with club name
+clubGrid.addEventListener("click", (e) => {
+  const btn = e.target.closest(".join-btn");
+  if (btn) {
+    const card = btn.closest('.club-card');
+    if (card) {
+      const club = card.dataset.name;
+      if (club) {
+        window.location.href = `club-join-requests.html?club=${encodeURIComponent(club)}`;
+      }
+    }
   }
 });
 

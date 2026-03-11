@@ -79,6 +79,7 @@
         }
 
         .club-card {
+            position: relative;
             background: white;
             border-radius: 12px;
             padding: 28px 24px;
@@ -121,6 +122,31 @@
             font-size: 13px;
             color: #666;
             line-height: 1.5;
+        }
+
+        /* join button style */
+        .join-btn{
+          position:absolute;
+          top:10px;
+          right:10px;
+          border:none;
+          background:#28a745;
+          color:#fff;
+          font-weight:700;
+          padding:5px 8px;
+          border-radius:6px;
+          cursor:pointer;
+          font-size:10px;
+          display:inline-flex;
+          align-items:center;
+          gap:4px;
+        }
+        .join-btn:hover{opacity:.92;}
+
+        .card-link {
+            display: block;
+            text-decoration: none;
+            color: inherit;
         }
 
         @media (max-width: 1200px) {
@@ -232,54 +258,8 @@
             </div>
         </section>
 
-        <section class="clubs-grid">
-            <a href="club-detail.html?club=coding" class="club-card">
-                <div class="club-icon">
-                    <i class="fa-solid fa-code"></i>
-                </div>
-                <h3>Coding Club</h3>
-                <p>Explore clubs and view the latest updates from each community.</p>
-            </a>
-
-            <a href="club-detail.html?club=rotaract" class="club-card">
-                <div class="club-icon">
-                    <i class="fa-solid fa-bus"></i>
-                </div>
-                <h3>Rotaract Club</h3>
-                <p>Explore clubs and view the latest updates from each community.</p>
-            </a>
-
-            <a href="club-detail.html?club=sports" class="club-card">
-                <div class="club-icon">
-                    <i class="fa-solid fa-baseball"></i>
-                </div>
-                <h3>Sports Society</h3>
-                <p>Explore clubs and view the latest updates from each community.</p>
-            </a>
-
-            <a href="club-detail.html?club=leo" class="club-card">
-                <div class="club-icon">
-                    <i class="fa-solid fa-user-secret"></i>
-                </div>
-                <h3>Leo Club</h3>
-                <p>Explore clubs and view the latest updates from each community.</p>
-            </a>
-
-            <a href="club-detail.html?club=media" class="club-card">
-                <div class="club-icon">
-                    <i class="fa-solid fa-music"></i>
-                </div>
-                <h3>Media Society</h3>
-                <p>Explore clubs and view the latest updates from each community.</p>
-            </a>
-
-            <a href="club-detail.html?club=photography" class="club-card">
-                <div class="club-icon">
-                    <i class="fa-solid fa-camera"></i>
-                </div>
-                <h3>Photography Club</h3>
-                <p>Explore clubs and view the latest updates from each community.</p>
-            </a>
+        <section class="clubs-grid" id="clubsGrid">
+            <!-- clubs will be injected dynamically via JavaScript -->
         </section>
     </main>
 
@@ -292,26 +272,135 @@
 <script src="javascript/common.js"></script>
 <script src="javascript/dashboard.js"></script>
 <script>
-    // Search functionality
-    const searchInput = document.querySelector('.search-bar input');
-    const clubCards = document.querySelectorAll('.club-card');
+  const searchInput = document.querySelector('.search-bar input');
 
-    searchInput.addEventListener('keyup', (e) => {
-        const searchTerm = e.target.value.toLowerCase();
-        
-        clubCards.forEach(card => {
-            const clubName = card.querySelector('h3').textContent.toLowerCase();
-            const clubDesc = card.querySelector('p').textContent.toLowerCase();
-            
-            if (clubName.includes(searchTerm) || clubDesc.includes(searchTerm)) {
-                card.style.display = 'block';
-            } else {
-                card.style.display = 'none';
+  function renderClubs(clubs) {
+    const grid = document.getElementById('clubsGrid');
+    const user = getCurrentUser();
+    // prefetch user-specific requests so we can disable buttons
+    fetch('Admin/shared/php/get-join-requests.php')
+      .then(res => res.json())
+      .then(requests => {
+        const userReqClubs = [];
+        if (user && user.studentId) {
+          const uid = (user.studentId || '').trim().toLowerCase();
+          requests.forEach(r => {
+            if (r.studentId && r.clubName &&
+                r.studentId.trim().toLowerCase() === uid) {
+              userReqClubs.push(r.clubName.trim().toLowerCase());
             }
-        });
+          });
+        }
+        grid.innerHTML = clubs.map(club => {
+          const clubKey = club.name.toLowerCase();
+          const requested = user && user.studentId && userReqClubs.includes(clubKey);
+          let btnText = 'Join Club';
+          let disabled = '';
+          if (requested) {
+            btnText = 'Requested';
+            disabled = ' disabled';
+          }
+          return `
+      <article class="club-card" data-name="${clubKey}">
+        <button class="join-btn"${disabled}>${btnText}</button>
+        <a href="club-detail.html?club=${encodeURIComponent(club.name.toLowerCase())}" class="card-link">
+          <div class="club-icon">
+            <i class="fa-solid ${club.icon}"></i>
+          </div>
+          <h3>${club.name}</h3>
+          <p>${club.desc}</p>
+        </a>
+      </article>
+    `;
+        }).join('');
+        applySearch();
+        attachJoinHandlers();
+      })
+      .catch(err => {
+        console.error('failed to load join requests', err);
+        const isStudent = user && user.role === 'student';
+        grid.innerHTML = clubs.map(club => {
+          let btnText = 'Join Club';
+          let disabled = '';
+          if (!isStudent) {
+            btnText = 'N/A';
+            disabled = ' disabled';
+          }
+          return `
+      <article class="club-card" data-name="${club.name.toLowerCase()}">
+        <button class="join-btn"${disabled}>${btnText}</button>
+        <a href="club-detail.html?club=${encodeURIComponent(club.name.toLowerCase())}" class="card-link">
+          <div class="club-icon">
+            <i class="fa-solid ${club.icon}"></i>
+          </div>
+          <h3>${club.name}</h3>
+          <p>${club.desc}</p>
+        </a>
+      </article>
+    `;
+        }).join('');
+        applySearch();
+        attachJoinHandlers();
+      });
+  }
+
+  function applySearch() {
+    const q = searchInput.value.toLowerCase().trim();
+    document.querySelectorAll('.club-card').forEach(card => {
+      const name = card.querySelector('h3').textContent.toLowerCase();
+      const desc = card.querySelector('p').textContent.toLowerCase();
+      card.style.display = name.includes(q) || desc.includes(q) ? 'block' : 'none';
     });
-</script>
-<script>
-// ...dropdown logic removed...
+  }
+
+  function attachJoinHandlers() {
+    const grid = document.getElementById('clubsGrid');
+    grid.addEventListener('click', e => {
+      const btn = e.target.closest('.join-btn');
+      if (!btn) return;
+      const card = btn.closest('.club-card');
+      const club = card?.dataset.name;
+      const user = getCurrentUser();
+      if (!user || !user.studentId) return;
+      // no longer gate on role; server will enforce student status itself
+
+      const message = prompt('Enter a message for the club (optional):', '');
+      const data = new URLSearchParams();
+      // server will look up the name/picture by studentId, so we don't send them here
+      data.append('studentId', user.studentId || '');
+      data.append('clubName', club);
+      data.append('message', message || '');
+
+      fetch('Admin/shared/php/add-join-request.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: data.toString()
+      })
+      .then(res => res.json())
+      .then(result => {
+        if (result.success) {
+          alert('Your join request has been submitted.');
+          btn.disabled = true;
+          btn.textContent = 'Requested';
+        } else {
+          alert('Failed to send request: ' + (result.error || 'Unknown'));
+        }
+      })
+      .catch(() => {
+        alert('Network error sending join request.');
+      });
+    });
+  }
+
+  function fetchAndRenderClubs() {
+    fetch('Admin/shared/json/clubs.json')
+      .then(res => res.json())
+      .then(renderClubs)
+      .catch(err => console.error('Failed to load clubs.json', err));
+  }
+  fetchAndRenderClubs();
+  // Auto-refresh every 10 seconds
+  setInterval(fetchAndRenderClubs, 10000);
+  searchInput.addEventListener('input', applySearch);
 </script>
 </html>

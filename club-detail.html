@@ -81,6 +81,22 @@
             overflow-y: auto;
             padding-right: 8px;
         }
+        .not-member-msg {
+            font-size: 16px;
+            padding: 20px;
+            background: #fff5f5;
+            border: 1px solid #f5c6cb;
+            border-radius: 8px;
+            color: #a94442;
+            text-align: center;
+            margin-top: 40px;
+        }
+        .member-notice {
+            margin-top: 8px;
+            font-size: 14px;
+            color: #48a868;
+            font-weight: 600;
+        }
 
         .club-updates::-webkit-scrollbar {
             width: 8px;
@@ -243,193 +259,120 @@
 <script src="./javascript/common.js"></script>
 <script src="./javascript/dashboard.js"></script>
 <script>
-    // Club data mapping
-    const clubData = {
-        'coding': {
-            name: 'Coding Club',
-            icon: '<i class="fa-solid fa-code"></i>',
-            desc: 'Learn programming, build projects & collaborate',
-            updates: [
-                {
-                    icon: '<i class="fa-solid fa-users"></i>',
-                    title: 'Weekly Meeting Tomorrow',
-                    desc: 'Join us tomorrow at 3 PM in Lab B. We\'ll be discussing Python best practices.',
-                    time: 'Today 2:15 PM'
-                },
-                {
-                    icon: '<i class="fa-solid fa-star"></i>',
-                    title: 'Hackathon Registration Open',
-                    desc: 'Sign up now for our annual coding hackathon happening on March 15th.',
-                    time: 'Yesterday 4:30 PM'
-                },
-                {
-                    icon: '<i class="fa-solid fa-book"></i>',
-                    title: 'Resource: Web Development Guide',
-                    desc: 'Check out our new guide on modern web development frameworks.',
-                    time: 'February 25, 2026'
-                }
-            ]
-        },
-        'rotaract': {
-            name: 'Rotaract Club',
-            icon: '<i class="fa-solid fa-bus"></i>',
-            desc: 'Community service & networking for professionals',
-            updates: [
-                {
-                    icon: '<i class="fa-solid fa-heart"></i>',
-                    title: 'Charity Drive This Saturday',
-                    desc: 'Join us for a community cleanup at Central Park. Starting at 9 AM.',
-                    time: 'Today 1:45 PM'
-                },
-                {
-                    icon: '<i class="fa-solid fa-users"></i>',
-                    title: 'Guest Speaker: Local Entrepreneur',
-                    desc: 'Meet with successful entrepreneur discussing sustainable business practices.',
-                    time: 'Yesterday 3:20 PM'
-                },
-                {
-                    icon: '<i class="fa-solid fa-calendar"></i>',
-                    title: 'Monthly Social Hour',
-                    desc: 'Network with fellow members at our monthly gathering next Friday.',
-                    time: 'February 23, 2026'
-                }
-            ]
-        },
-        'sports': {
-            name: 'Sports Society',
-            icon: '<i class="fa-solid fa-baseball"></i>',
-            desc: 'Athletics, tournaments & fitness programs',
-            updates: [
-                {
-                    icon: '<i class="fa-solid fa-trophy"></i>',
-                    title: 'Intramural Football Tournament',
-                    desc: 'Registration for spring tournament now open. Sign up your team today!',
-                    time: 'Today 10:30 AM'
-                },
-                {
-                    icon: '<i class="fa-solid fa-dumbbell"></i>',
-                    title: 'Fitness Training Sessions',
-                    desc: 'New cardio and strength training classes start next Monday.',
-                    time: 'Yesterday 5:00 PM'
-                },
-                {
-                    icon: '<i class="fa-solid fa-person-running"></i>',
-                    title: 'Campus Marathon Coming',
-                    desc: 'Early bird registration for the campus marathon ends March 5th.',
-                    time: 'February 22, 2026'
-                }
-            ]
-        },
-        'leo': {
-            name: 'Leo Club',
-            icon: '<i class="fa-solid fa-user-secret"></i>',
-            desc: 'Leadership development & service initiatives',
-            updates: [
-                {
-                    icon: '<i class="fa-solid fa-brain"></i>',
-                    title: 'Leadership Workshop Next Week',
-                    desc: 'Learn essential leadership skills from industry experts. Limited seats available!',
-                    time: 'Today 2:00 PM'
-                },
-                {
-                    icon: '<i class="fa-solid fa-handshake"></i>',
-                    title: 'Mentorship Program Launch',
-                    desc: 'Become a mentor or find a mentor in our new matching program.',
-                    time: 'Yesterday 11:15 AM'
-                },
-                {
-                    icon: '<i class="fa-solid fa-target"></i>',
-                    title: 'Service Project Planning',
-                    desc: 'Share your ideas for our next community service initiative.',
-                    time: 'February 21, 2026'
-                }
-            ]
-        },
-        'media': {
-            name: 'Media Society',
-            icon: '<i class="fa-solid fa-music"></i>',
-            desc: 'Content creation, media production & events',
-            updates: [
-                {
-                    icon: '<i class="fa-solid fa-video"></i>',
-                    title: 'Video Production Workshop',
-                    desc: 'Learn cinematography basics using professional equipment. Spaces limited to 20.',
-                    time: 'Today 3:30 PM'
-                },
-                {
-                    icon: '<i class="fa-solid fa-podcast"></i>',
-                    title: 'New Podcast Series Launch',
-                    desc: 'Tune in to our new weekly podcast featuring campus interviews and stories.',
-                    time: 'Yesterday 2:45 PM'
-                },
-                {
-                    icon: '<i class="fa-solid fa-film"></i>',
-                    title: 'Film Screening Event',
-                    desc: 'Join us for a screening of award-winning documentaries this Friday.',
-                    time: 'February 20, 2026'
-                }
-            ]
-        },
-        'photography': {
-            name: 'Photography Club',
-            icon: '<i class="fa-solid fa-camera"></i>',
-            desc: 'Photography skills, exhibitions & portfolio building',
-            updates: [
-                {
-                    icon: '<i class="fa-solid fa-camera"></i>',
-                    title: 'Photo Walk: Urban Photography',
-                    desc: 'Explore the city and capture urban landscapes. Saturday 10 AM, meet at Main Gate.',
-                    time: 'Today 12:00 PM'
-                },
-                {
-                    icon: '<i class="fa-solid fa-palette"></i>',
-                    title: 'Photo Editing Masterclass',
-                    desc: 'Advanced editing techniques using Lightroom and Photoshop with pro photographer.',
-                    time: 'Yesterday 6:00 PM'
-                },
-                {
-                    icon: '<i class="fa-solid fa-image"></i>',
-                    title: 'Spring Exhibition Submissions Open',
-                    desc: 'Submit your best work for the annual spring photography exhibition.',
-                    time: 'February 19, 2026'
-                }
-            ]
-        }
-    };
-
+    // no hard‑coded club data any more; we will fetch from clubs.json and updates API
     // Get club from URL parameter
     function getClubFromUrl() {
         const params = new URLSearchParams(window.location.search);
         return params.get('club') || 'coding';
     }
 
-    // Load club data
+    // Utility to check whether current user is an accepted member
+    function checkMembership(clubKey, user) {
+        if (!user) return Promise.resolve(false);
+        return fetch('Admin/shared/php/get-join-requests.php')
+            .then(res => res.json())
+            .then(requests => {
+                const uid = (user.studentId || '').trim().toLowerCase();
+                return requests.some(r => {
+                    if (!(r.studentId && r.clubName && r.status === 'accepted')) return false;
+                    const existingUid = r.studentId.trim().toLowerCase();
+                    const existingClubFull = r.clubName.trim().toLowerCase();
+                    const existingClubFirst = existingClubFull.split(' ')[0];
+                    return existingUid === uid && (existingClubFull === clubKey || existingClubFirst === clubKey);
+                });
+            })
+            .catch(() => false);
+    }
+
+    // helper to format datetime string consistently
+    function formatDateTime(dt) {
+        if (!dt) return '';
+        const d = new Date(dt.replace(/-/g, '/'));
+        const now = new Date();
+        let h = d.getHours();
+        let m = String(d.getMinutes()).padStart(2, "0");
+        const ampm = h >= 12 ? "PM" : "AM";
+        h = h % 12 || 12;
+        if (d.toDateString() === now.toDateString()) {
+            return `Today ${h}.${m} ${ampm}`;
+        }
+        return `${d.toLocaleDateString()} ${h}.${m} ${ampm}`;
+    }
+
+    // Load club data and decide what to display
     function loadClubData() {
-        const club = getClubFromUrl();
-        const data = clubData[club] || clubData['coding'];
-
-        // Set header info
-        document.getElementById('clubIcon').innerHTML = data.icon;
-        document.getElementById('clubName').textContent = data.name;
-        document.getElementById('clubDesc').textContent = data.desc;
-
-        // Generate updates
+        const clubKey = getClubFromUrl();
+        const user = getCurrentUser();
         const updatesContainer = document.getElementById('clubUpdates');
-        updatesContainer.innerHTML = '';
 
-        data.updates.forEach(update => {
-            const updateItem = document.createElement('div');
-            updateItem.className = 'update-item';
-            updateItem.innerHTML = `
-                <div class="update-icon">${update.icon}</div>
-                <div class="update-content">
-                    <h3>${update.title}</h3>
-                    <p>${update.desc}</p>
-                    <span class="update-time">${update.time}</span>
-                </div>
-            `;
-            updatesContainer.appendChild(updateItem);
-        });
+        // fetch list of clubs to get full info
+        fetch('Admin/shared/json/clubs.json')
+            .then(res => res.json())
+            .then(clubs => {
+                // find club by first-word match
+                const clubObj = clubs.find(c => {
+                    const nameNorm = (c.name || '').trim().toLowerCase();
+                    const first = nameNorm.split(' ')[0];
+                    return nameNorm === clubKey || first === clubKey;
+                }) || { name: '', icon: '', desc: '' };
+
+                // set header info
+                document.getElementById('clubIcon').innerHTML = clubObj.icon ? `<i class="fa-solid ${clubObj.icon}"></i>` : '';
+                document.getElementById('clubName').textContent = clubObj.name || '';
+                document.getElementById('clubDesc').textContent = clubObj.desc || '';
+
+                // now membership check
+                checkMembership(clubKey, user).then(isMember => {
+                    if (!isMember) {
+                        updatesContainer.innerHTML = '<div class="not-member-msg">You must join this club before viewing updates.</div>';
+                        return;
+                    }
+
+                    // show a small notice that they're a member
+                    const headerInfo = document.querySelector('.club-header-info');
+                    const notice = document.createElement('div');
+                    notice.className = 'member-notice';
+                    notice.textContent = '🎉 You are a member of this club';
+                    headerInfo.appendChild(notice);
+
+                    // fetch updates
+                    const url = `Admin/shared/php/get-club-updates.php?club=${encodeURIComponent(clubObj.name)}`;
+                    console.log('requesting club updates URL', url);
+                    fetch(url)
+                        .then(r => {
+                            console.log('club updates response status', r.status);
+                            return r.json();
+                        })
+                        .then(updates => {
+                            console.log('club updates data', updates);
+                            updatesContainer.innerHTML = '';
+                            if (Array.isArray(updates) && updates.length) {
+                                updates.forEach(update => {
+                                    const updateItem = document.createElement('div');
+                                    updateItem.className = 'update-item';
+                                    updateItem.innerHTML = `
+                                        <div class="update-icon"><i class="fa-solid ${update.icon}"></i></div>
+                                        <div class="update-content">
+                                            <h3>${update.message}</h3>
+                                            <p>${update.description || ''}</p>
+                                            <span class="update-time">${formatDateTime(update.datetime)}</span>
+                                        </div>
+                                    `;
+                                    updatesContainer.appendChild(updateItem);
+                                });
+                            } else {
+                                updatesContainer.innerHTML = '<div class="not-member-msg">No updates yet.</div>';
+                            }
+                        })
+                        .catch(err => {
+                            console.error('error fetching club updates', err);
+                            updatesContainer.innerHTML = '<div class="not-member-msg">Failed to load updates.</div>';
+                        });
+                });
+            })
+            .catch(err => {
+                console.error('Failed to load club info', err);
+            });
     }
 
     // Load data on page load

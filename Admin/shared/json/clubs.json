@@ -1,32 +1,37 @@
 [
-  {
-    "name": "Coding Club",
-    "icon": "fa-user-group",
-    "desc": "Explore clubs and view the latest updates from each community."
-  },
-  {
-    "name": "Rotaract Club",
-    "icon": "fa-bus",
-    "desc": "Explore clubs and view the latest updates from each community."
-  },
-  {
-    "name": "Sports Society",
-    "icon": "fa-basketball",
-    "desc": "Explore clubs and view the latest updates from each community."
-  },
-  {
-    "name": "Leo Club",
-    "icon": "fa-dragon",
-    "desc": "Explore clubs and view the latest updates from each community."
-  },
-  {
-    "name": "Media Society",
-    "icon": "fa-music",
-    "desc": "Explore clubs and view the latest updates from each community."
-  },
-  {
-    "name": "Photography Club",
-    "icon": "fa-camera",
-    "desc": "Explore clubs and view the latest updates from each community."
-  }
+    {
+        "name": "Coding Club",
+        "icon": "fa-user-group",
+        "desc": "Explore clubs and view the latest updates from each community."
+    },
+    {
+        "name": "Rotaract Club",
+        "icon": "fa-bus",
+        "desc": "Explore clubs and view the latest updates from each community."
+    },
+    {
+        "name": "Sports Society",
+        "icon": "fa-basketball",
+        "desc": "Explore clubs and view the latest updates from each community."
+    },
+    {
+        "name": "Leo Club",
+        "icon": "fa-dragon",
+        "desc": "Explore clubs and view the latest updates from each community."
+    },
+    {
+        "name": "Media Society",
+        "icon": "fa-music",
+        "desc": "Explore clubs and view the latest updates from each community."
+    },
+    {
+        "name": "Photography Club",
+        "icon": "fa-camera",
+        "desc": "Explore clubs and view the latest updates from each community."
+    },
+    {
+        "name": "new test",
+        "icon": "fa-user-group",
+        "desc": ""
+    }
 ]

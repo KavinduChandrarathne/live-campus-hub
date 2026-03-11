@@ -1,27 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Campus Hub - Campus Clubs</title>
-
-  <link rel="stylesheet" href="styles/campus-clubs.css" />
-  <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <title>Leo Club Join Requests</title>
+  <link rel="stylesheet" href="styles/club-requests.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-
   <div class="bg-overlay"></div>
-
   <div class="layout">
-
     <!-- Sidebar -->
     <aside class="sidebar">
       <div class="brand">
         <i class="fa-solid fa-graduation-cap"></i>
         <h2>CAMPUS HUB</h2>
       </div>
-
       <div class="user" onclick="window.location='admin-profile.html'">
         <img src="images/admin.png" alt="user">
         <div>
@@ -29,56 +23,48 @@
           <small>admin@example.com</small>
         </div>
       </div>
-
       <nav class="menu">
         <a href="dashboard.html"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
         <a href="facility-event-admin.html"><i class="fa-solid fa-bullhorn"></i> Facility &amp; Event</a>
         <a href="transit.html"><i class="fa-solid fa-bus"></i> Transit</a>
-        <a class="active" href="campus-clubs.html"><i class="fa-solid fa-users"></i> Campus Clubs</a>
+        <a href="campus-clubs.html"><i class="fa-solid fa-users"></i> Campus Clubs</a>
         <a href="updates-feed.html"><i class="fa-solid fa-message"></i> Updates Feed</a>
         <a href="add-notification.html"><i class="fa-solid fa-bell"></i> Notification</a>
       </nav>
     </aside>
-
     <!-- Main -->
     <main class="main">
-
-      <!-- Top bar -->
       <header class="topbar">
         <button class="hamburger" id="hamburger"><i class="fa-solid fa-bars"></i></button>
-        <h1>Campus Clubs</h1>
-
-        <div class="top-actions">
-          <div class="search">
-            <input id="searchInput" type="text" placeholder="Search..." />
-            <button class="search-btn" type="button" aria-label="Search">
-              <i class="fa-solid fa-magnifying-glass"></i>
-            </button>
-          </div>
-
-          <button class="add-btn" id="addClubBtn" type="button">
-            <i class="fa-solid fa-plus"></i> Add Club
-          </button>
-        </div>
+        <h1>Leo Club Join Requests</h1>
       </header>
-
-      <!-- Cards (populated from clubs.json) -->
-      <section class="grid" id="clubGrid">
-        <!-- loaded dynamically -->
+      <section class="requests-shell">
+        <div class="requests-title-bar">
+          <h1>Join Requests</h1>
+        </div>
+        <div class="requests-tabs">
+          <button class="request-tab active" data-filter="all">All</button>
+          <button class="request-tab" data-filter="pending">Pending <span id="pendingCount" class="tab-count">0</span></button>
+          <button class="request-tab" data-filter="accepted">Accepted <span id="acceptedCount" class="tab-count">0</span></button>
+          <button class="request-tab" data-filter="rejected">Rejected <span id="rejectedCount" class="tab-count">0</span></button>
+        </div>
+        <div class="requests-content">
+          <div class="requests-header">
+            <div></div>
+            <div>Name</div>
+            <div>ID</div>
+            <div>Club</div>
+            <div>Actions</div>
+          </div>
+          <div id="requestList"></div>
+        </div>
       </section>
-
     </main>
   </div>
-
+  <script src="javascript/club-requests.js"></script>
   <script>
-    // show message if coming from add-club
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('success') === '1') {
-      setTimeout(() => alert('Club added successfully'), 50);
-    }
+    renderClubRequests('Leo Club');
   </script>
-  <script src="javascript/auth.js"></script>
-  <script src="javascript/campus-clubs.js"></script>
   <div class="mobile-backdrop" id="mobileBackdrop"></div>
 </body>
 </html>
