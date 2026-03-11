@@ -34,18 +34,14 @@
         <a href="campus-clubs.html"><i class="fa-solid fa-users"></i> Campus Clubs</a>
         <a href="updates-feed.html"><i class="fa-solid fa-message"></i> Updates Feed</a>
         <a href="add-notification.html"><i class="fa-solid fa-bell"></i> Notification</a>
+        <a class="active" href="user-search.html"><i class="fa-solid fa-magnifying-glass"></i> User Search</a>
       </nav>
 
-      <div class="user">
-        <a href="admin-profile.html">
-          <img src="images/naveen.png" alt="user">
-        </a>
+      <div class="user" onclick="window.location='admin-profile.html'">
+        <img src="images/admin.png" alt="user">
         <div>
-          <p>Naveen Hasaranga</p>
-          <small>naveenhasaranga@chub.com</small>
-        </div>
-        <div class="user-menu">
-          <button id="logoutBtn" class="logout-btn">Logout</button>
+          <p>Alice Johnson</p>
+          <small>admin1@example.com</small>
         </div>
       </div>
     </aside>
@@ -60,37 +56,15 @@
       <section class="search-bar-wrap">
         <div class="search-input-wrap">
           <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="text" id="studentSearchInput" placeholder="Enter Student ID (e.g., S1001)">
+          <input type="text" id="studentSearchInput" placeholder="Enter Student ID (e.g., 1001, S1001, A1001)">
         </div>
         <button id="studentSearchBtn" type="button">Search</button>
       </section>
 
-      <!-- Result Card -->
-      <section class="result-card" id="userResultCard">
-        <div class="result-top">
-          <div class="result-photo">
-            <img src="images/naveen.png" alt="Student Photo">
-          </div>
-
-          <div class="result-details">
-            <p><strong>First Name:</strong> <span id="resultFirstName">Naveen</span></p>
-            <p><strong>Last Name:</strong> <span id="resultLastName">Hasaranga</span></p>
-            <p><strong>Student ID:</strong> <span id="resultStudentId">1234567</span></p>
-            <p><strong>Faculty:</strong> <span id="resultFaculty">Faculty of Computing</span></p>
-            <p><strong>Date of Birth:</strong> <span id="resultDob">10/02/2001</span></p>
-          </div>
-        </div>
-
-        <div class="result-bottom">
-          <div class="info-column" id="clubsContainer">
-            <h3>User Info</h3>
-          </div>
-
-          <div class="info-divider"></div>
-
-          <div class="info-column" id="shuttlesContainer">
-            <h3>Rewards</h3>
-          </div>
+      <!-- Search Results List -->
+      <section class="search-results-list" id="searchResultsList" style="display:none;">
+        <div id="resultsContainer" class="results-container">
+          <!-- Results will be populated here -->
         </div>
       </section>
     </main>

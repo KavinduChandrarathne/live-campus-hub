@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Campus Hub - Edit User</title>
+
+  <link rel="stylesheet" href="styles/user-search.css" />
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    #userDetailCard {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-overlay"></div>
+
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <i class="fa-solid fa-graduation-cap"></i>
+        <h2>CAMPUS HUB</h2>
+      </div>
+
+      <nav class="menu">
+        <a href="dashboard.html"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
+        <a href="facility-event-admin.html"><i class="fa-solid fa-bullhorn"></i> Facility &amp; Event</a>
+        <a href="transit.html"><i class="fa-solid fa-bus"></i> Transit</a>
+        <a href="campus-clubs.html"><i class="fa-solid fa-users"></i> Campus Clubs</a>
+        <a href="updates-feed.html"><i class="fa-solid fa-message"></i> Updates Feed</a>
+        <a href="add-notification.html"><i class="fa-solid fa-bell"></i> Notification</a>
+        <a href="user-search.html"><i class="fa-solid fa-magnifying-glass"></i> User Search</a>
+      </nav>
+
+      <div class="user" onclick="window.location='admin-profile.html'">
+        <img src="images/admin.png" alt="user">
+        <div>
+          <p>Alice Johnson</p>
+          <small>admin1@example.com</small>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <header class="page-title">
+        <button class="back-btn" id="backBtn" title="Back to Search">
+          <i class="fa-solid fa-arrow-left"></i>
+        </button>
+        <h1>Edit User</h1>
+      </header>
+
+      <!-- User Detail Card -->
+      <section class="result-card" id="userDetailCard">
+        <div class="result-top">
+          <div class="result-photo">
+            <img src="images/admin.png" alt="Student Photo">
+          </div>
+
+          <div class="result-info">
+            <!-- First Name Field -->
+            <div class="info-field">
+              <label>First Name:</label>
+              <div class="field-content">
+                <div class="field-display">
+                  <input type="text" id="resultFirstName" class="field-input display-mode" readonly />
+                </div>
+                <button class="edit-icon-btn" data-field="firstName" title="Edit">
+                  <i class="fa-solid fa-pen"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Last Name Field -->
+            <div class="info-field">
+              <label>Last Name:</label>
+              <div class="field-content">
+                <div class="field-display">
+                  <input type="text" id="resultLastName" class="field-input display-mode" readonly />
+                </div>
+                <button class="edit-icon-btn" data-field="lastName" title="Edit">
+                  <i class="fa-solid fa-pen"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Student ID Field -->
+            <div class="info-field">
+              <label>Student ID:</label>
+              <div class="field-content">
+                <div class="field-display">
+                  <input type="text" id="resultStudentId" class="field-input display-mode" readonly />
+                </div>
+                <div class="edit-icon-placeholder"></div>
+              </div>
+            </div>
+
+            <!-- Faculty Field -->
+            <div class="info-field">
+              <label>Faculty:</label>
+              <div class="field-content">
+                <div class="field-display">
+                  <select id="resultFaculty" class="field-input display-mode" disabled>
+                    <option value="">Select Faculty</option>
+                    <option value="Engineering">Engineering</option>
+                    <option value="Business">Business</option>
+                    <option value="Arts">Arts</option>
+                    <option value="Science">Science</option>
+                    <option value="Medicine">Medicine</option>
+                    <option value="Law">Law</option>
+                  </select>
+                </div>
+                <button class="edit-icon-btn" data-field="faculty" title="Edit">
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Date of Birth Field -->
+            <div class="info-field">
+              <label>Date of birth:</label>
+              <div class="field-content">
+                <div class="field-display">
+                  <input type="date" id="resultDob" class="field-input display-mode" readonly />
+                </div>
+                <button class="edit-icon-btn" data-field="dob" title="Edit">
+                  <i class="fa-solid fa-pen"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="result-bottom">
+          <div class="info-column" id="clubsContainer">
+            <h3>User Info</h3>
+          </div>
+
+          <div class="info-divider"></div>
+
+          <div class="info-column" id="shuttlesContainer">
+            <h3>Rewards</h3>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="javascript/user-edit.js"></script>
+</body>
+</html>
