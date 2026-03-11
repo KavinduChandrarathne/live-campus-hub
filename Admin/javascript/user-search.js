@@ -1,5 +1,6 @@
 // Load users data from JSON file
 let usersData = [];
+let searchResults = [];
 
 // Load users data when page loads
 document.addEventListener('DOMContentLoaded', function() {
@@ -51,101 +52,54 @@ function performSearch() {
     return;
   }
 
-  // Search for user by exact studentId match only
-  const foundUser = usersData.find(user => 
-    user.studentId.toLowerCase() === searchInput.toLowerCase()
+  // Search for users with partial match (case-insensitive)
+  searchResults = usersData.filter(user => 
+    user.studentId.toLowerCase().includes(searchInput.toLowerCase())
   );
 
-  if (foundUser) {
-    displayUserDetails(foundUser);
+  if (searchResults.length > 0) {
+    displaySearchResults(searchResults);
   } else {
-    alert('User not found. Please check the Student ID.');
-    clearUserDetails();
+    alert('No users found. Please check the Student ID.');
+    clearSearchResults();
   }
 }
 
-// Display user details in the result card
-function displayUserDetails(user) {
-  // Update basic details
-  document.getElementById('resultFirstName').textContent = user.firstName;
-  document.getElementById('resultLastName').textContent = user.lastName;
-  document.getElementById('resultStudentId').textContent = user.studentId;
-  document.getElementById('resultFaculty').textContent = user.faculty;
-  document.getElementById('resultDob').textContent = user.dob;
-
-  // Update user image
-  const imageElement = document.querySelector('.result-photo img');
-  imageElement.src = user.picture;
-  imageElement.onerror = function() {
-    this.src = 'images/default-user.jpg'; // Fallback image
-  };
-
-  // Update clubs joined (using a placeholder message since new data doesn't have this)
-  const clubsContainer = document.getElementById('clubsContainer');
-  const existingClubPills = clubsContainer.querySelectorAll('.info-pill');
-  existingClubPills.forEach(pill => pill.remove());
-
-  const roleInfo = document.createElement('div');
-  roleInfo.className = 'info-pill';
-  roleInfo.innerHTML = `
-    <i class="fa-solid fa-user-tag"></i>
-    <span>${user.role.charAt(0).toUpperCase() + user.role.slice(1)}</span>
-  `;
-  clubsContainer.appendChild(roleInfo);
-
-  const emailInfo = document.createElement('div');
-  emailInfo.className = 'info-pill';
-  emailInfo.innerHTML = `
-    <i class="fa-solid fa-envelope"></i>
-    <span>${user.email}</span>
-  `;
-  clubsContainer.appendChild(emailInfo);
-
-  // Update shuttles with rewards information
-  const shuttlesContainer = document.getElementById('shuttlesContainer');
-  const existingShuttlePills = shuttlesContainer.querySelectorAll('.info-pill');
-  existingShuttlePills.forEach(pill => pill.remove());
-
-  if (user.rewards) {
-    const pointsPill = document.createElement('div');
-    pointsPill.className = 'info-pill';
-    pointsPill.innerHTML = `
-      <i class="fa-solid fa-star"></i>
-      <span>${user.rewards.points} Points</span>
+// Display search results as a list of clickable cards
+function displaySearchResults(results) {
+  const searchResultsList = document.getElementById('searchResultsList');
+  const resultsContainer = document.getElementById('resultsContainer');
+  
+  resultsContainer.innerHTML = ''; // Clear previous results
+  
+  results.forEach((user, index) => {
+    const resultItem = document.createElement('div');
+    resultItem.className = 'result-item';
+    resultItem.innerHTML = `
+      <img src="${user.picture}" alt="${user.firstName}" class="result-item-photo" />
+      <div class="result-item-name">${user.firstName} ${user.lastName}</div>
+      <div class="result-item-id">${user.studentId}</div>
     `;
-    shuttlesContainer.appendChild(pointsPill);
-
-    const tierPill = document.createElement('div');
-    tierPill.className = 'info-pill';
-    tierPill.innerHTML = `
-      <i class="fa-solid fa-trophy"></i>
-      <span>${user.rewards.tier} Tier (${user.rewards.badges} badges)</span>
-    `;
-    shuttlesContainer.appendChild(tierPill);
-
-    const nextTierPill = document.createElement('div');
-    nextTierPill.className = 'info-pill';
-    nextTierPill.innerHTML = `
-      <i class="fa-solid fa-arrow-up"></i>
-      <span>${user.rewards.pointsToNext} pts to ${user.rewards.nextTier}</span>
-    `;
-    shuttlesContainer.appendChild(nextTierPill);
-  }
-
-  // Make result card visible
-  const resultCard = document.getElementById('userResultCard');
-  if (resultCard) {
-    resultCard.style.display = 'block';
-  }
+    
+    resultItem.addEventListener('click', () => {
+      // Navigate to user edit page with student ID as parameter
+      window.location.href = `user-edit.html?id=${user.studentId}`;
+    });
+    
+    resultsContainer.appendChild(resultItem);
+  });
+  
+  searchResultsList.style.display = 'block';
 }
 
-// Clear user details
-function clearUserDetails() {
-  const resultCard = document.getElementById('userResultCard');
-  if (resultCard) {
-    resultCard.style.display = 'none';
+// Clear search results
+function clearSearchResults() {
+  const searchResultsList = document.getElementById('searchResultsList');
+  if (searchResultsList) {
+    searchResultsList.style.display = 'none';
   }
   document.getElementById('studentSearchInput').value = '';
+  searchResults = [];
 }
 
 // Logout functionality

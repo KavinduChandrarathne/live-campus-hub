@@ -1,62 +1,62 @@
 [
-  {
-    "id": 1,
-    "username": "alice",
-    "password": "password123",
-    "email": "alice@campushub.com",
-    "role": "student",
-    "firstName": "Alice",
-    "lastName": "Anderson",
-    "studentId": "S1001",
-    "faculty": "Engineering",
-    "dob": "2000-04-15",
-    "picture": "./images/person1.png",
-    "rewards": {
-      "points": 24,
-      "badges": 5,
-      "tier": "SILVER",
-      "pointsToNext": 26,
-      "nextTier": "GOLD"
+    {
+        "id": 1,
+        "username": "alice",
+        "password": "password123",
+        "email": "alice@campushub.com",
+        "role": "student",
+        "firstName": "Alice",
+        "lastName": "Anderson",
+        "studentId": "S1001",
+        "faculty": "Business",
+        "dob": "2000-03-15",
+        "picture": "./images/person1.png",
+        "rewards": {
+            "points": 24,
+            "badges": 5,
+            "tier": "SILVER",
+            "pointsToNext": 26,
+            "nextTier": "GOLD"
+        }
+    },
+    {
+        "id": 2,
+        "username": "bob",
+        "password": "securepass",
+        "email": "bob@campushub.com",
+        "role": "student",
+        "firstName": "Bob",
+        "lastName": "Brown",
+        "studentId": "A1001",
+        "faculty": "Business",
+        "dob": "1998-10-30",
+        "picture": "./images/person2.png",
+        "rewards": {
+            "points": 75,
+            "badges": 12,
+            "tier": "GOLD",
+            "pointsToNext": 50,
+            "nextTier": "PLATINUM"
+        }
+    },
+    {
+        "id": 3,
+        "username": "charlie",
+        "password": "charliepwd",
+        "email": "charlie@campushub.com",
+        "role": "staff",
+        "firstName": "Charlie",
+        "lastName": "Clark",
+        "studentId": "S1003",
+        "faculty": "Arts",
+        "dob": "1999-07-22",
+        "picture": "./images/person3.png",
+        "rewards": {
+            "points": 12,
+            "badges": 1,
+            "tier": "BRONZE",
+            "pointsToNext": 38,
+            "nextTier": "SILVER"
+        }
     }
-  },
-  {
-    "id": 2,
-    "username": "bob",
-    "password": "securepass",
-    "email": "bob@campushub.com",
-    "role": "student", 
-    "firstName": "Bob",
-    "lastName": "Brown",
-    "studentId": "S1002",
-    "faculty": "Business",
-    "dob": "1998-10-30",
-    "picture": "./images/person2.png",
-    "rewards": {
-      "points": 75,
-      "badges": 12,
-      "tier": "GOLD",
-      "pointsToNext": 50,
-      "nextTier": "PLATINUM"
-    }
-  },
-  {
-    "id": 3,
-    "username": "charlie",
-    "password": "charliepwd",
-    "email": "charlie@campushub.com",
-    "role": "staff",
-    "firstName": "Charlie",
-    "lastName": "Clark",
-    "studentId": "S1003",
-    "faculty": "Arts",
-    "dob": "1999-07-22",
-    "picture": "./images/person3.png",
-    "rewards": {
-      "points": 12,
-      "badges": 1,
-      "tier": "BRONZE",
-      "pointsToNext": 38,
-      "nextTier": "SILVER"
-    }
-  }
 ]
