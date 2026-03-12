@@ -44,7 +44,8 @@
     <main class="main">
 
       <!-- Top Title -->
-      <header class="page-title">
+      <header class="page-title sticky-title">
+        <button class="back-btn" onclick="history.back()" title="Back"><i class="fa-solid fa-arrow-left"></i></button>
         <button class="hamburger" id="hamburger"><i class="fa-solid fa-bars"></i></button>
         Add new Update
       </header>
@@ -56,14 +57,14 @@
         <form id="updateForm" class="form">
 
           <div class="row">
-            <label>Icon:</label>
+            <label>Route:</label>
             <div class="select-wrap">
               <i id="iconPreview" class="fa-solid fa-bus"></i>
-              <select id="iconSelect">
-                <option value="fa-bus" selected>Gampaha</option>
-                <option value="fa-umbrella-beach">Negambo</option>
-                <option value="fa-city">Wattala</option>
-                <option value="fa-monument">Moratuwa</option>
+              <select id="routeSelect">
+                <option value="Gampaha" data-icon="fa-bus" selected>Gampaha</option>
+                <option value="Negombo" data-icon="fa-umbrella-beach">Negombo</option>
+                <option value="Wattala" data-icon="fa-city">Wattala</option>
+                <option value="Moratuwa" data-icon="fa-monument">Moratuwa</option>
               </select>
               <i class="fa-solid fa-caret-down caret"></i>
             </div>
@@ -82,16 +83,16 @@
           <div class="row check-row">
             <label></label>
             <label class="check">
-              <input id="shareLocation" type="checkbox">
-              Share live location
+              <input id="sendLiveLocation" type="checkbox">
+              Send live location
             </label>
           </div>
 
-          <div class="row" id="locationRow">
+          <div class="row" id="liveLinkRow">
             <label></label>
             <div class="location-field">
               <i class="fa-solid fa-location-dot"></i>
-              <input id="locationInput" type="text" placeholder="https://maps.campus-hub.com/gampaha-shuttle-23423">
+              <input id="liveLinkInput" type="text" placeholder="https://maps.campus-hub.com/gampaha-shuttle-23423">
             </div>
           </div>
 
@@ -111,33 +112,39 @@
         </form>
       </section>
 
-      <!-- Recent Updates -->
-      <section class="recent">
-        <div class="recent-head">Recent Updates</div>
-
-        <article class="recent-card" id="recentCard">
-          <div class="recent-icon"><i class="fa-solid fa-bus"></i></div>
-
-          <div class="recent-text">
-            <h4 id="recentTitle">Shuttle departed Gampaha terminal.</h4>
-            <p id="recentDesc">The shuttle left 5 minutes due to heavy traffic.</p>
-          </div>
-
-          <div class="recent-meta">
-            <div class="recent-buttons">
-              <button class="mini edit" id="editBtn"><i class="fa-solid fa-pen"></i> Edit</button>
-              <button class="mini delete" id="deleteBtn"><i class="fa-solid fa-trash"></i> Delete</button>
+      <hr style="border:none;border-top:1px solid #e0e0e0;margin:8px 0;">
+      <div class="panels">
+        <!-- left column (updates) -->
+        <div class="column updates-col">
+          <section class="recent">
+            <div class="recent-head">Recent Updates</div>
+            <div id="recentUpdatesContainer">
+              <div id="recentList"></div>
             </div>
-            <div class="recent-time" id="recentTime">Today 2.15 PM</div>
-          </div>
-        </article>
-      </section>
+          </section>
+        </div>
+
+        <!-- right column (join requests) -->
+        <div class="column join-col">
+          <section class="join-requests">
+            <div class="recent-head">Join Requests</div>
+            <div id="routeTiles" class="request-tiles"></div>
+          </section>
+        </div>
+      </div>
 
     </main>
   </div>
 
   <script src="javascript/auth.js"></script>
   <script src="javascript/transit.js"></script>
+
+  <!-- Success Toast Notification -->
+  <div id="successToast" class="toast-notification">
+    <i class="fa-solid fa-check-circle"></i>
+    <span id="toastMessage">Update posted successfully</span>
+  </div>
+
   <div class="mobile-backdrop" id="mobileBackdrop"></div>
 </body>
 </html>

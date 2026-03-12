@@ -10,7 +10,11 @@
         "studentId": "S1001",
         "faculty": "Business",
         "dob": "2000-03-15",
-        "picture": "./images/person1.png",
+        "picture": ".\/images\/person1.png",
+        "joinedRoutes": [
+            "Gampaha",
+            "Wattala"
+        ],
         "rewards": {
             "points": 24,
             "badges": 5,
@@ -30,7 +34,12 @@
         "studentId": "A1001",
         "faculty": "Business",
         "dob": "1998-10-30",
-        "picture": "./images/person2.png",
+        "picture": ".\/images\/person2.png",
+        "joinedRoutes": [
+            "Negombo",
+            "Gampaha",
+            "Wattala"
+        ],
         "rewards": {
             "points": 75,
             "badges": 12,
@@ -50,7 +59,12 @@
         "studentId": "S1003",
         "faculty": "Arts",
         "dob": "1999-07-22",
-        "picture": "./images/person3.png",
+        "picture": ".\/images\/person3.png",
+        "joinedRoutes": [
+            "Moratuwa",
+            "Gampaha",
+            "Negombo"
+        ],
         "rewards": {
             "points": 12,
             "badges": 1,
@@ -58,13 +72,5 @@
             "pointsToNext": 38,
             "nextTier": "SILVER"
         }
-    
     }
-
-
-
-
-
-
 ]
-
