@@ -1,6 +1,15 @@
 [
     {
         "name": "Bob Brown",
+        "studentId": "A1001",
+        "clubName": "coding club",
+        "picture": ".\/images\/person2.png",
+        "message": "Yoh add me bruh",
+        "status": "rejected",
+        "datetime": "2026-03-12 12:47:01"
+    },
+    {
+        "name": "Bob Brown",
         "studentId": "S1002",
         "clubName": "new test",
         "picture": ".\/images\/person2.png",

@@ -9,13 +9,34 @@ fetch('Admin/shared/php/get-facility-event-updates.php')
       return;
     }
     container.innerHTML = data.map(u => `
-      <div class="card">
+      <div class="card" data-datetime="${u.datetime}" data-message="${u.message}">
         <i class="fa-solid ${u.icon || 'fa-envelope'}"></i>
         <h3>${u.message}</h3>
         <p class="desc">${u.description || ''}</p>
         <small>${formatDateTime(u.datetime)}</small>
       </div>
     `).join('');
+
+    // Check if there's a notification to highlight
+    const highlight = sessionStorage.getItem('highlightUpdate');
+    if (highlight) {
+      try {
+        const highlightData = JSON.parse(highlight);
+        const matchingCard = container.querySelector(
+          `[data-datetime="${highlightData.datetime}"]`
+        );
+        if (matchingCard) {
+          matchingCard.style.backgroundColor = '#fff3cd';
+          matchingCard.style.borderLeft = '4px solid #ffc107';
+          setTimeout(() => {
+            matchingCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }, 100);
+        }
+        sessionStorage.removeItem('highlightUpdate');
+      } catch (e) {
+        console.error('Error highlighting update:', e);
+      }
+    }
   })
   .catch(err => {
     const container = document.querySelector('.facility-cards');

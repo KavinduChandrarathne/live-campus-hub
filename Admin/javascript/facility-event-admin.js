@@ -158,8 +158,50 @@ document.addEventListener("DOMContentLoaded", function() {
       });
   }
   fetchRecentUpdates();
-  updateForm.addEventListener("submit", function() {
-    setTimeout(fetchRecentUpdates, 1000);
+  
+  function showToast(message, duration = 3000) {
+    const toast = document.getElementById('successToast');
+    const toastMessage = document.getElementById('toastMessage');
+    
+    if (!toast) return;
+    
+    toastMessage.textContent = message;
+    toast.classList.remove('hide');
+    toast.classList.add('show');
+    
+    setTimeout(() => {
+      toast.classList.add('hide');
+      setTimeout(() => {
+        toast.classList.remove('show', 'hide');
+      }, 400);
+    }, duration);
+  }
+  
+  updateForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(updateForm);
+    
+    fetch('./shared/php/add-facility-event-update.php', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(result => {
+      if (result.success) {
+        updateForm.reset();
+        iconSelect.value = "fa-envelope";
+        setIconPreview();
+        fetchRecentUpdates();
+        showToast('Update posted successfully', 3000);
+      } else {
+        showToast('Error: ' + (result.error || 'Failed to post update'), 3000);
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      showToast('Network error while posting update', 3000);
+    });
   });
   if (cancelBtn) {
     cancelBtn.addEventListener("click", ()=>{

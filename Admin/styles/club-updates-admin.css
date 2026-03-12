@@ -700,3 +700,57 @@ input:focus, select:focus{border-color:#23395d}
   .recent {height: 180px;}
   #recentUpdatesContainer {max-height: 120px;}
 }
+
+/* Toast Notification Styling */
+.toast-notification {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #4caf50;
+  color: white;
+  padding: 16px 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: none;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 9999;
+  pointer-events: auto;
+}
+
+.toast-notification.show {
+  display: flex;
+  animation: slideInUp 0.4s ease;
+}
+
+.toast-notification i {
+  font-size: 18px;
+}
+
+.toast-notification.hide {
+  animation: slideOutDown 0.4s ease forwards;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideOutDown {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}

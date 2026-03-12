@@ -53,7 +53,7 @@
       <section class="box">
         <h3 class="box-title">Create new notification</h3>
 
-        <form id="notifyForm" class="form" action="php/add-notification.php" method="POST">
+        <form id="notifyForm" class="form">
 
           <div class="row">
             <label>Notification Title:</label>
@@ -101,6 +101,12 @@
       </section>
 
     </main>
+  </div>
+
+  <!-- Success Toast Notification -->
+  <div id="successToast" class="toast-notification">
+    <i class="fa-solid fa-check-circle"></i>
+    <span id="toastMessage">Notification sent successfully</span>
   </div>
 
   <script src="javascript/auth.js"></script>
