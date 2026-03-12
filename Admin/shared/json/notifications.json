@@ -1,37 +1,51 @@
 [
     {
+        "type": "direct",
         "title": "test 2",
         "message": "test message 2",
-        "datetime": "2026-03-07 08:11:30"
+        "datetime": "2026-03-07 08:11:30",
+        "id": "notif_69b25885dc8af"
     },
     {
+        "type": "direct",
         "title": "test",
         "message": "The gym will be closed at 10.00 PM",
-        "datetime": "2026-03-07 08:01:40"
+        "datetime": "2026-03-07 08:01:40",
+        "id": "notif_69b25885dca27"
     },
     {
+        "type": "direct",
         "title": "test message",
         "message": "The gym will be closed at 10.00 PM",
-        "datetime": "2026-03-07 08:01:00"
+        "datetime": "2026-03-07 08:01:00",
+        "id": "notif_69b25885dca28"
     },
     {
+        "type": "direct",
         "title": "test notification",
         "message": "test 123",
-        "datetime": "2026-03-07 07:29:57"
+        "datetime": "2026-03-07 07:29:57",
+        "id": "notif_69b25885dca29"
     },
     {
+        "type": "direct",
         "title": "new notification",
         "message": "The gym will be closed at 10.00 PM",
-        "datetime": "2026-03-06 17:18:22"
+        "datetime": "2026-03-06 17:18:22",
+        "id": "notif_69b25885dca2a"
     },
     {
+        "type": "direct",
         "title": "new task",
         "message": "testing it",
-        "datetime": "2026-03-06 17:15:36"
+        "datetime": "2026-03-06 17:15:36",
+        "id": "notif_69b25885dca2b"
     },
     {
+        "type": "direct",
         "title": "task 1",
         "message": "The gym will be closed at 10.00 PM",
-        "datetime": "2026-03-06 17:03:26"
+        "datetime": "2026-03-06 17:03:26",
+        "id": "notif_69b25885dca2c"
     }
 ]

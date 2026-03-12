@@ -350,6 +350,8 @@
                                 updates.forEach(update => {
                                     const updateItem = document.createElement('div');
                                     updateItem.className = 'update-item';
+                                    updateItem.setAttribute('data-datetime', update.datetime);
+                                    updateItem.setAttribute('data-message', update.message);
                                     updateItem.innerHTML = `
                                         <div class="update-icon"><i class="fa-solid ${update.icon}"></i></div>
                                         <div class="update-content">
@@ -360,6 +362,27 @@
                                     `;
                                     updatesContainer.appendChild(updateItem);
                                 });
+
+                                // Check if there's a notification to highlight
+                                const highlight = sessionStorage.getItem('highlightUpdate');
+                                if (highlight) {
+                                    try {
+                                        const highlightData = JSON.parse(highlight);
+                                        const matchingUpdate = updatesContainer.querySelector(
+                                            `[data-datetime="${highlightData.datetime}"]`
+                                        );
+                                        if (matchingUpdate) {
+                                            matchingUpdate.style.backgroundColor = '#fff3cd';
+                                            matchingUpdate.style.borderLeft = '4px solid #ffc107';
+                                            setTimeout(() => {
+                                                matchingUpdate.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                                            }, 100);
+                                        }
+                                        sessionStorage.removeItem('highlightUpdate');
+                                    } catch (e) {
+                                        console.error('Error highlighting update:', e);
+                                    }
+                                }
                             } else {
                                 updatesContainer.innerHTML = '<div class="not-member-msg">No updates yet.</div>';
                             }

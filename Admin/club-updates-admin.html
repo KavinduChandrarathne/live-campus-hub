@@ -82,7 +82,7 @@
             <div class="row check-row">
               <label></label>
               <label class="check">
-                <input id="sendNotification" type="checkbox">
+                <input id="sendNotification" name="sendNotification" type="checkbox">
                 Send as notification
               </label>
             </div>
@@ -99,6 +99,12 @@
       </div>
 
     </main>
+  </div>
+
+  <!-- Success Toast Notification -->
+  <div id="successToast" class="toast-notification">
+    <i class="fa-solid fa-check-circle"></i>
+    <span id="toastMessage">Update posted successfully</span>
   </div>
 
   <script>

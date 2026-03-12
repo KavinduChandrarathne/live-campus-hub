@@ -52,7 +52,7 @@
       <!-- Add New Update Panel -->
       <section class="panel">
         <h3 class="panel-title">Add New Update</h3>
-        <form id="updateForm" class="form" action="shared/php/add-facility-event-update.php" method="POST">
+        <form id="updateForm" class="form">
           <div class="row">
             <label>Icon:</label>
             <div class="select-wrap">
@@ -78,7 +78,7 @@
           <div class="row check-row">
             <label></label>
             <label class="check">
-              <input id="sendNotification" type="checkbox">
+              <input id="sendNotification" name="sendNotification" type="checkbox">
               Send as notification
             </label>
           </div>
@@ -97,6 +97,12 @@
       </section>
 
     </main>
+
+    <!-- Success Toast Notification -->
+    <div id="successToast" class="toast-notification">
+      <i class="fa-solid fa-check-circle"></i>
+      <span id="toastMessage">Update posted successfully</span>
+    </div>
 
     <!-- Edit Update Modal -->
     <div id="editUpdateModal" class="modal" style="display:none;">

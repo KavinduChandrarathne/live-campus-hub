@@ -144,26 +144,48 @@ function fetchRecentUpdates() {
     });
 }
 
+function showToast(message, duration = 3000) {
+  const toast = document.getElementById('successToast');
+  const toastMessage = document.getElementById('toastMessage');
+  
+  if (!toast) return;
+  
+  toastMessage.textContent = message;
+  toast.classList.remove('hide');
+  toast.classList.add('show');
+  
+  setTimeout(() => {
+    toast.classList.add('hide');
+    setTimeout(() => {
+      toast.classList.remove('show', 'hide');
+    }, 400);
+  }, duration);
+}
+
 updateForm.addEventListener("submit", function(e) {
   e.preventDefault();
   if (!clubName) {
-    alert('Club name missing');
+    showToast('Club name missing');
     return;
   }
   const msg = document.getElementById("msgInput").value.trim();
   const desc = document.getElementById("descInput").value.trim();
   const icon = iconSelect.value;
+  const sendNotification = document.getElementById("sendNotification").checked;
 
   const data = new URLSearchParams();
   data.append('clubName', clubName);
   data.append('icon', icon);
   data.append('message', msg);
   data.append('description', desc);
+  if (sendNotification) {
+    data.append('sendNotification', 'on');
+  }
 
-  let url = 'shared/php/add-club-update.php';
+  let url = './shared/php/add-club-update.php';
   if (editIndex !== null) {
     data.append('index', editIndex);
-    url = 'shared/php/edit-club-update.php';
+    url = './shared/php/edit-club-update.php';
   }
 
   console.log('posting update to', url, 'payload', data.toString());
@@ -178,13 +200,14 @@ updateForm.addEventListener("submit", function(e) {
     if (result.success) {
       closeEdit();
       fetchRecentUpdates();
+      showToast('Update posted successfully', 3000);
     } else {
-      alert('Failed: ' + (result.error||'Unknown'));
+      showToast('Failed: ' + (result.error||'Unknown'), 3000);
     }
   })
   .catch(e => {
     console.error('network error during post', e);
-    alert('Network error');
+    showToast('Network error', 3000);
   });
 });
 

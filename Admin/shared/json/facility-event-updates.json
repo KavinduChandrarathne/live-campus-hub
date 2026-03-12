@@ -1,11 +1,5 @@
 [
     {
-        "icon": "fa-triangle-exclamation",
-        "message": "final test",
-        "description": "",
-        "datetime": "2026-03-10 00:22:10"
-    },
-    {
         "icon": "fa-envelope",
         "message": "test message",
         "description": "test message",

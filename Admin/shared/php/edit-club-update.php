@@ -1,6 +1,8 @@
 <?php
+header('Content-Type: application/json');
 // Edit a club update by index within its club's list
 $updatesFile = '../json/club-updates.json';
+$notificationsFile = '../json/notifications.json';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $club = isset($_POST['clubName']) ? trim($_POST['clubName']) : '';
     $index = isset($_POST['index']) ? intval($_POST['index']) : -1;
