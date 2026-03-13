@@ -21,7 +21,8 @@
             "tier": "SILVER",
             "pointsToNext": 26,
             "nextTier": "GOLD"
-        }
+        },
+        "joinedClubs": []
     },
     {
         "id": 2,
@@ -46,7 +47,13 @@
             "tier": "GOLD",
             "pointsToNext": 50,
             "nextTier": "PLATINUM"
-        }
+        },
+        "joinedClubs": [
+            "coding club",
+            "rotaract club",
+            "sports society",
+            "leo club"
+        ]
     },
     {
         "id": 3,
@@ -71,6 +78,7 @@
             "tier": "BRONZE",
             "pointsToNext": 38,
             "nextTier": "SILVER"
-        }
+        },
+        "joinedClubs": []
     }
 ]

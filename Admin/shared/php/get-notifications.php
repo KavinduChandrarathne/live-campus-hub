@@ -6,14 +6,18 @@ $studentId = isset($_GET['studentId']) ? trim($_GET['studentId']) : '';
 
 // Get user's club memberships
 $userClubs = [];
-if ($studentId && file_exists($clubJoinFile)) {
-    $clubJoinRequests = json_decode(file_get_contents($clubJoinFile), true);
-    if (is_array($clubJoinRequests)) {
-        foreach ($clubJoinRequests as $request) {
-            // Only include accepted membership requests for this user
-            if (isset($request['studentId']) && $request['studentId'] === $studentId && 
-                isset($request['status']) && $request['status'] === 'accepted') {
-                $userClubs[] = strtolower($request['clubName']);
+if ($studentId) {
+    // Load users to get joinedClubs
+    $usersFile = '../json/users.json';
+    if (file_exists($usersFile)) {
+        $usersJson = file_get_contents($usersFile);
+        $allUsers = json_decode($usersJson, true);
+        if (is_array($allUsers)) {
+            foreach ($allUsers as $u) {
+                if (isset($u['studentId']) && strtoupper(trim($u['studentId'])) === strtoupper($studentId)) {
+                    $userClubs = isset($u['joinedClubs']) && is_array($u['joinedClubs']) ? array_map('strtolower', $u['joinedClubs']) : [];
+                    break;
+                }
             }
         }
     }

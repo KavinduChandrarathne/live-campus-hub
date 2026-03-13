@@ -277,29 +277,58 @@
   function renderClubs(clubs) {
     const grid = document.getElementById('clubsGrid');
     const user = getCurrentUser();
-    // prefetch user-specific requests so we can disable buttons
-    fetch('Admin/shared/php/get-join-requests.php')
+    const isStudent = user && user.role === 'student';
+    const joinedClubs = (user && Array.isArray(user.joinedClubs)) ? user.joinedClubs.map(c => (c || '').toLowerCase()) : [];
+
+    // If the user is not a student, render a readonly view
+    if (!isStudent) {
+      grid.innerHTML = clubs.map(club => {
+        const clubKey = club.name.toLowerCase();
+        return `
+      <article class="club-card" data-name="${clubKey}">
+        <button class="join-btn" disabled>N/A</button>
+        <a href="club-detail.html?club=${encodeURIComponent(club.name.toLowerCase())}" class="card-link">
+          <div class="club-icon">
+            <i class="fa-solid ${club.icon}"></i>
+          </div>
+          <h3>${club.name}</h3>
+          <p>${club.desc}</p>
+        </a>
+      </article>
+    `;
+      }).join('');
+      applySearch();
+      attachJoinHandlers();
+      return;
+    }
+
+    // Fetch current join requests to determine pending/accepted status.
+    fetch('Admin/shared/php/get-join-requests.php?t=' + Date.now())
       .then(res => res.json())
       .then(requests => {
-        const userReqClubs = [];
-        if (user && user.studentId) {
-          const uid = (user.studentId || '').trim().toLowerCase();
-          requests.forEach(r => {
-            if (r.studentId && r.clubName &&
-                r.studentId.trim().toLowerCase() === uid) {
-              userReqClubs.push(r.clubName.trim().toLowerCase());
-            }
-          });
-        }
+        const uid = (user.studentId || '').trim().toLowerCase();
+        const userJoinStatus = {};
+        requests.forEach(r => {
+          if (r.studentId && r.clubName && r.studentId.trim().toLowerCase() === uid) {
+            userJoinStatus[r.clubName.trim().toLowerCase()] = (r.status || '').toLowerCase();
+          }
+        });
+
         grid.innerHTML = clubs.map(club => {
           const clubKey = club.name.toLowerCase();
-          const requested = user && user.studentId && userReqClubs.includes(clubKey);
+          const isMember = joinedClubs.includes(clubKey) || userJoinStatus[clubKey] === 'accepted';
+          const isPending = userJoinStatus[clubKey] === 'pending';
+
           let btnText = 'Join Club';
           let disabled = '';
-          if (requested) {
+          if (isMember) {
+            btnText = 'Member';
+            disabled = ' disabled';
+          } else if (isPending) {
             btnText = 'Requested';
             disabled = ' disabled';
           }
+
           return `
       <article class="club-card" data-name="${clubKey}">
         <button class="join-btn"${disabled}>${btnText}</button>
@@ -318,29 +347,6 @@
       })
       .catch(err => {
         console.error('failed to load join requests', err);
-        const isStudent = user && user.role === 'student';
-        grid.innerHTML = clubs.map(club => {
-          let btnText = 'Join Club';
-          let disabled = '';
-          if (!isStudent) {
-            btnText = 'N/A';
-            disabled = ' disabled';
-          }
-          return `
-      <article class="club-card" data-name="${club.name.toLowerCase()}">
-        <button class="join-btn"${disabled}>${btnText}</button>
-        <a href="club-detail.html?club=${encodeURIComponent(club.name.toLowerCase())}" class="card-link">
-          <div class="club-icon">
-            <i class="fa-solid ${club.icon}"></i>
-          </div>
-          <h3>${club.name}</h3>
-          <p>${club.desc}</p>
-        </a>
-      </article>
-    `;
-        }).join('');
-        applySearch();
-        attachJoinHandlers();
       });
   }
 
@@ -393,10 +399,12 @@
   }
 
   function fetchAndRenderClubs() {
-    fetch('Admin/shared/json/clubs.json')
-      .then(res => res.json())
-      .then(renderClubs)
-      .catch(err => console.error('Failed to load clubs.json', err));
+    refreshCurrentUser().then(() => {
+      fetch('Admin/shared/json/clubs.json')
+        .then(res => res.json())
+        .then(renderClubs)
+        .catch(err => console.error('Failed to load clubs.json', err));
+    });
   }
   fetchAndRenderClubs();
   // Auto-refresh every 10 seconds

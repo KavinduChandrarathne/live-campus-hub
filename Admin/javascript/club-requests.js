@@ -1,6 +1,6 @@
 // Render only requests for a specific club
 function renderClubRequests(clubName) {
-  fetch('shared/php/get-join-requests.php')
+  fetch('shared/php/get-join-requests.php?t=' + Date.now())
     .then(res => res.json())
     .then(requests => {
       // keep global copy with original indexes
@@ -9,12 +9,38 @@ function renderClubRequests(clubName) {
       // wrap each request with its original index
       const wrapped = requests
         .map((r, i) => ({ r, i }))
-        .filter(({ r }) => {
-          const existing = (r.clubName || '').trim().toLowerCase();
-          if (existing === normalized) return true;
-          if (existing.split(' ')[0] === normalized) return true;
-          return false;
-        });
+      .filter(({ r }) => {
+        const existing = (r.clubName || '').trim().toLowerCase();
+        if (existing === normalized) return true;
+        if (existing.split(' ')[0] === normalized) return true;
+        return false;
+      })
+      .reduce((acc, cur) => {
+        // Keep only one request per student per club (latest + accepted priority)
+        const studentId = (cur.r.studentId || '').trim().toLowerCase();
+        const key = `${studentId}::${normalized}`;
+        const existing = acc.find(item => item.key === key);
+        if (!existing) {
+          acc.push({ key, item: cur });
+          return acc;
+        }
+        const statusPriority = status => {
+          if (!status) return 1;
+          const s = status.toLowerCase();
+          if (s === 'accepted') return 4;
+          if (s === 'pending') return 3;
+          if (s === 'rejected') return 2;
+          return 1;
+        };
+        const newScore = statusPriority(cur.r.status);
+        const oldScore = statusPriority(existing.item.r.status);
+        if (newScore > oldScore || (newScore === oldScore && cur.i > existing.item.i)) {
+          existing.item = cur;
+        }
+        return acc;
+      }, [])
+      .map(entry => entry.item);
+
       renderRequests(wrapped);
     })
     .catch(err => {

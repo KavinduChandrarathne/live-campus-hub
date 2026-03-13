@@ -166,7 +166,52 @@ body, html{
 }
 
 /* Feed area */
-.feed{width:100%;max-width:none}
+.updates-container {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+}
+
+.updates-column {
+  flex: 1;
+  min-height: 0; /* allow inner scrolling in flex layout */
+}
+
+.updates-column h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #23395d;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.feed {
+  width: 100%;
+  max-width: none;
+  flex: 1;
+  min-height: 0; /* allow scrolling */
+  max-height: 600px; /* Set a max height for scrolling */
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+/* Custom scrollbar for feed */
+.feed::-webkit-scrollbar {
+  width: 8px;
+}
+
+.feed::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.feed::-webkit-scrollbar-thumb {
+  background: #23395d;
+  border-radius: 4px;
+}
+
+.feed::-webkit-scrollbar-thumb:hover {
+  background: #1a2846;
+}
 
 /* Card */
 .feed-card{
@@ -259,6 +304,11 @@ body, html{
 
   .main{padding:16px}
   .page-title{font-size:20px;padding:12px 14px;text-align:left}
+
+  .updates-container {
+    flex-direction: column;
+    gap: 30px;
+  }
 
   .feed-card{
     grid-template-columns:55px 1fr;
