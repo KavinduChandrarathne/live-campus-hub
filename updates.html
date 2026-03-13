@@ -13,6 +13,7 @@
             padding-bottom: 20px;
             display: flex;
             flex-direction: column;
+            height: 100%;
             overflow: hidden;
         }
 
@@ -21,14 +22,39 @@
             flex-shrink: 0;
         }
 
+        .updates-container {
+            display: flex;
+            gap: 20px;
+            flex: 1;
+            min-height: 0;
+            height: calc(100vh - 220px); /* keep inner boxes contained */
+        }
+
+        .updates-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0; /* allow inner scroll zones to work inside flex */
+        }
+
+        .updates-column h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #11223b;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
         .updates-feed {
             display: flex;
             flex-direction: column;
             gap: 14px;
             flex: 1;
+            min-height: 0; /* allow scrollable content */
             overflow-y: auto;
             padding-right: 8px;
             overflow-x: hidden;
+            max-height: calc(100% - 50px); /* keep feed within column */
         }
 
         .updates-feed::-webkit-scrollbar {
@@ -120,6 +146,11 @@
 
             .welcome {
                 margin-bottom: 16px;
+            }
+
+            .updates-container {
+                flex-direction: column;
+                gap: 30px;
             }
 
             .update-box {
@@ -290,77 +321,18 @@
             <p>Latest announcements and campus news</p>
         </section>
 
-        <section class="updates-feed">
-            <div class="update-box">
-                <div class="update-box-icon">
-                    <i class="fa-solid fa-bullhorn"></i>
+        <section class="updates-container">
+            <div class="updates-column">
+                <h2>Facility & Event Updates</h2>
+                <div class="updates-feed" id="facility-feed">
+                    <!-- Facility updates will be loaded here -->
                 </div>
-                <h3>Spring Semester Registration</h3>
-                <p>Registration for Spring semester is now open. Deadline: January 15. Visit the registrar's office for more information.</p>
-                <span class="update-date">Today 10:30 AM</span>
             </div>
-
-            <div class="update-box">
-                <div class="update-box-icon">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
+            <div class="updates-column">
+                <h2>Club Updates</h2>
+                <div class="updates-feed" id="club-feed">
+                    <!-- Club updates will be loaded here -->
                 </div>
-                <h3>Campus Safety Alert</h3>
-                <p>Be aware of construction near the South Campus. Use alternative routes. Expected to conclude by March 31.</p>
-                <span class="update-date">Yesterday 2:15 PM</span>
-            </div>
-
-            <div class="update-box">
-                <div class="update-box-icon">
-                    <i class="fa-solid fa-calendar"></i>
-                </div>
-                <h3>Exam Schedule Released</h3>
-                <p>Final exam schedule for spring semester is now available online. Download your personalized schedule from the student portal.</p>
-                <span class="update-date">February 25, 2026</span>
-            </div>
-
-            <div class="update-box">
-                <div class="update-box-icon">
-                    <i class="fa-solid fa-star"></i>
-                </div>
-                <h3>Awards & Recognition Ceremony</h3>
-                <p>Join us for the Annual Awards Ceremony on March 15th at the Main Auditorium. Register by March 10th to attend.</p>
-                <span class="update-date">February 24, 2026</span>
-            </div>
-
-            <div class="update-box">
-                <div class="update-box-icon">
-                    <i class="fa-solid fa-utensils"></i>
-                </div>
-                <h3>Cafeteria Maintenance Notice</h3>
-                <p>The main cafeteria will be closed for maintenance on March 1-3. Alternative dining will be available in the Student Center.</p>
-                <span class="update-date">February 23, 2026</span>
-            </div>
-
-            <div class="update-box">
-                <div class="update-box-icon">
-                    <i class="fa-solid fa-book"></i>
-                </div>
-                <h3>Library Extended Hours</h3>
-                <p>During exam season, the library will remain open until 11 PM on weekdays and 10 PM on weekends. Study hard!</p>
-                <span class="update-date">February 22, 2026</span>
-            </div>
-
-            <div class="update-box">
-                <div class="update-box-icon">
-                    <i class="fa-solid fa-users"></i>
-                </div>
-                <h3>New Club Registration Now Open</h3>
-                <p>Interested in starting a new club? Registration is now open for the next semester. Submit your proposal by March 10th.</p>
-                <span class="update-date">February 20, 2026</span>
-            </div>
-
-            <div class="update-box">
-                <div class="update-box-icon">
-                    <i class="fa-solid fa-graduation-cap"></i>
-                </div>
-                <h3>Graduation Ceremony Details</h3>
-                <p>Graduation will be held on May 15th, 2026. Tickets are free for graduates and limited seats for guests.</p>
-                <span class="update-date">February 18, 2026</span>
             </div>
         </section>
     </main>
@@ -373,6 +345,7 @@
 
 <script src="javascript/common.js"></script>
     <script src="javascript/dashboard.js"></script>
+    <script src="javascript/updates.js"></script>
 
 </body>
 <script>

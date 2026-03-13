@@ -268,20 +268,8 @@
 
     // Utility to check whether current user is an accepted member
     function checkMembership(clubKey, user) {
-        if (!user) return Promise.resolve(false);
-        return fetch('Admin/shared/php/get-join-requests.php')
-            .then(res => res.json())
-            .then(requests => {
-                const uid = (user.studentId || '').trim().toLowerCase();
-                return requests.some(r => {
-                    if (!(r.studentId && r.clubName && r.status === 'accepted')) return false;
-                    const existingUid = r.studentId.trim().toLowerCase();
-                    const existingClubFull = r.clubName.trim().toLowerCase();
-                    const existingClubFirst = existingClubFull.split(' ')[0];
-                    return existingUid === uid && (existingClubFull === clubKey || existingClubFirst === clubKey);
-                });
-            })
-            .catch(() => false);
+        if (!user || !user.joinedClubs) return Promise.resolve(false);
+        return Promise.resolve(user.joinedClubs.some(c => c.toLowerCase() === clubKey.toLowerCase()));
     }
 
     // helper to format datetime string consistently

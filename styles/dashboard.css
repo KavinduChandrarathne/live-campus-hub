@@ -63,9 +63,14 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
+html,
+body {
+    height: 100%;
+    overflow: hidden;
+}
+
 body {
     background: #eaf0f7;
-    overflow: hidden;
 }
 
 /* HIDE HAMBURGER BUTTON - shown only on mobile */
