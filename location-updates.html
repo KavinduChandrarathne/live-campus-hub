@@ -47,38 +47,15 @@
         </button>
 
         <header class="page-title">
-            <div style="display:flex;align-items:center;gap:12px;">
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
               <h2 id="updates-title">Shuttle Location</h2>
               <span id="status-badge" class="badge on-time">On time</span>
             </div>
+            <button id="postLiveBtn" class="btn-route" style="margin-top:10px;">Post Live Location</button>
         </header>
 
         <section class="updates-panel">
-            <div class="updates-map">
-                <img id="map-img" src="images/gampaha.png" alt="Map" style="width:100%;border-radius:6px;">
-                <div class="map-meta"><small>Last updated: 2 mins ago</small></div>
-                <div class="map-caption">Current location: <strong id="current-location">Miriiswatta Junction</strong></div>
-            </div>
-
-            <div class="updates-list">
-                <div class="update">
-                    <i class="fa-solid fa-bus"></i>
-                    <div>
-                        <strong>Shuttle departed Gampaha terminal.</strong>
-                        <p>The shuttle left 5 minutes due to heavy traffic.</p>
-                        <small class="muted">Today 2:15 PM</small>
-                    </div>
-                </div>
-
-                <div class="update">
-                    <i class="fa-solid fa-circle-exclamation"></i>
-                    <div>
-                        <strong>Delay reported earlier.</strong>
-                        <p>Minor delay of 8 minutes, now resolved.</p>
-                        <small class="muted">Yesterday 4:15 PM</small>
-                    </div>
-                </div>
-            </div>
+            <div class="live-list"></div>
         </section>
     </main>
 
@@ -90,22 +67,68 @@
     return params.get(name);
   }
 
-    const loc = getQueryParam('loc') || 'Gampaha';
-    document.getElementById('updates-title').textContent = `${loc} Shuttle`;
-    document.getElementById('current-location').textContent = loc;
+  let loc = getQueryParam('loc') || 'Gampaha';
+  document.getElementById('updates-title').textContent = `${loc} Shuttle`;
 
-    // Choose the correct map image for the selected location
-    const mapImages = {
-        'Gampaha': 'gampaha.png',
-        'Negombo': 'Negombo.png',
-        'Moratuwa': 'Moratuwa.png',
-        'Wattala': 'Wattala.png'
-    };
+  const liveListEl = document.querySelector('.live-list');
 
-    const mapImg = document.getElementById('map-img');
-    const fileName = mapImages[loc] || mapImages['Gampaha'];
-    mapImg.src = `images/${fileName}`;
-    mapImg.alt = `${loc} Map`;
+  function renderLive(updates) {
+    liveListEl.innerHTML = '';
+    if (updates.length === 0) {
+      liveListEl.innerHTML = '<div class="update"><div>No updates available.</div></div>';
+      return;
+    }
+
+    updates.forEach(u => {
+      const div = document.createElement('div');
+      div.className = 'update';
+      const iconClass = u.icon || 'fa-location-dot';
+      div.innerHTML = `
+        <i class="fa-solid ${iconClass}"></i>
+        <div>
+          <strong>${u.message}</strong>
+          <p>${u.description || ''}</p>
+          ${u.liveLink ? `<p><a href="${u.liveLink}" target="_blank">Live location</a></p>` : ''}
+          <small class="muted">${u.datetime}</small>
+        </div>
+      `;
+      liveListEl.appendChild(div);
+    });
+  }
+
+  function refreshLive() {
+    fetch('Admin/shared/json/transit-updates.json?t='+Date.now())
+      .then(r => r.json())
+      .then(all => {
+        const filtered = all.filter(u => {
+          const r = (u.route || '').trim().toLowerCase();
+          const desired = loc.trim().toLowerCase();
+          // only live‑location posts (have a non-empty link) belong on this page
+          return r === desired && u.liveLink;
+        });
+        renderLive(filtered);
+      })
+      .catch(err => console.error('Failed to load live locations', err));
+  }
+  refreshLive();
+
+  try {
+    const uname = encodeURIComponent((getCurrentUser() || {}).username || '');
+    const es = new EventSource(`Admin/shared/php/user-updates-sse.php?username=${uname}`);
+    es.addEventListener('transitupdate', () => {
+      refreshLive();
+    });
+    window.addEventListener('beforeunload', () => es.close());
+  } catch (e) {
+    console.warn('Transit SSE not available', e);
+  }
+
+  const postBtn = document.getElementById('postLiveBtn');
+  if (postBtn) {
+    postBtn.addEventListener('click', () => {
+      alert('Only admins can post live locations.');
+    });
+  }
 </script>
 <script src="javascript/common.js"></script>
 </body>

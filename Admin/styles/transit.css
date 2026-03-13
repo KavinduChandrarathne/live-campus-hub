@@ -21,11 +21,15 @@ body, html{
   min-height:100vh;
   width:100%;
   height:100%;
+  overflow-x: auto; /* allow horizontal scrolling on zoom */
 }
 
 /* Sidebar */
 .sidebar{
-  /* keep a max for desktop but allow shrink/expand */
+  position:fixed; /* stay on screen */
+  left:0;
+  top:0;
+  height:100vh;
   width:260px;
   max-width:100%;
   background:#23395d;
@@ -35,6 +39,7 @@ body, html{
   flex-direction:column;
   justify-content:flex-start;
   gap:18px;
+  overflow-y:auto; /* scroll if content too tall */
 }
 
 .brand{text-align:center}
@@ -125,8 +130,6 @@ body, html{
 
 .user-menu .logout-btn:hover {
   text-decoration: underline;
-} 
-  color: #333;
 }
 .logout-dialog .btn {
   margin: 0 8px;
@@ -141,6 +144,9 @@ body, html{
 .main{
   flex:1;
   padding:34px;
+  margin-left:260px; /* account for fixed sidebar */
+  min-width:0; /* allow main to shrink inside flex container */
+  overflow-y: hidden; /* prevent main from scrolling; updates list scrolls instead */
 }
 
 /* Title bar */
@@ -150,17 +156,43 @@ body, html{
   font-size:26px;
   font-weight:700;
   padding:18px 22px;
-  border-radius:10px;
-  margin-bottom:18px;
+  border-radius:0;        /* no rounded corners to avoid white edges */
+  margin-bottom:0;        /* no gap below header */
   text-align:center;
+  position:relative;
+}
+
+/* when header becomes sticky, keep it flush */
+.page-title.sticky-title{
+  border-radius:0;
+  margin-bottom:0;
 }
 
 .page-title{position:relative}
 
+/* back arrow button in title bar */
+.back-btn{
+  position:absolute;
+  left:16px;
+  top:50%;
+  transform:translateY(-50%);
+  background:transparent;
+  border:none;
+  color:#fff;
+  font-size:18px;
+  cursor:pointer;
+  padding:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:opacity .2s ease;
+}
+.back-btn:hover{opacity:.8;}
+
 .hamburger{
   display:none;
   position:absolute;
-  left:12px;
+  right:16px; /* moved to right to free left space for back button */
   top:50%;
   transform:translateY(-50%);
   background:transparent;
@@ -179,6 +211,110 @@ body, html{
   box-shadow:0 10px 22px rgba(0,0,0,0.12);
   width:100%;
   max-width:none; /* allow fluid width */
+}
+
+/* when header sits on top, keep first panel square at top corners */
+.main > .panel:first-child {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+/* previous margin top handled by main padding; remove to eliminate extra gap */
+.main > .panel {
+  margin-top: 0;
+}
+
+/* wrapper box for updates column handles scrolling */
+.updates-col {
+  max-height: 440px;
+  overflow-y: auto;
+  padding-right: 8px;
+  margin-top: 8px;
+}
+
+#recentUpdatesContainer {
+  /* inner container simply holds list, no overflow */
+  margin-top: 8px;
+}
+
+/* join-request tiles should not scroll themselves */
+.join-requests {
+  overflow: visible;
+}
+#recentUpdatesContainer::-webkit-scrollbar {
+  width: 4px;
+  background: #f3f6ff;
+  border-radius: 6px;
+}
+#recentUpdatesContainer::-webkit-scrollbar-thumb {
+  background: #c1d1e8;
+  border-radius: 6px;
+}
+#recentUpdatesContainer:hover::-webkit-scrollbar-thumb {
+  background: #a0b8d6;
+}
+
+/* Sticky title bar (same as facility-event admin) */
+.sticky-title {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #23395d;
+  box-shadow: 0 2px 8px rgba(60,60,90,0.07);
+}
+
+/* Toast Notification Styling (borrowed from other admin pages) */
+.toast-notification {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #4caf50;
+  color: white;
+  padding: 16px 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: none;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 9999;
+  pointer-events: auto;
+}
+
+.toast-notification.show {
+  display: flex;
+  animation: slideInUp 0.4s ease;
+}
+
+.toast-notification i {
+  font-size: 18px;
+}
+
+.toast-notification.hide {
+  animation: slideOutDown 0.4s ease forwards;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideOutDown {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(20px);
+  }
 }
 
 .panel-title{
@@ -216,6 +352,12 @@ input, select{
 
 input:focus, select:focus{
   border-color:#23395d;
+}
+
+select:disabled {
+  background:#f3f3f3;
+  color:#777;
+  cursor:not-allowed;
 }
 
 .select-wrap{
@@ -298,7 +440,13 @@ input:focus, select:focus{
 .recent{
   width:100%;
   max-width:none;
-  margin-top:16px;
+  margin-top:4px;
+  padding-bottom:10px;
+  max-height:320px;
+  overflow-y:auto;
+  overflow-x:hidden;
+  padding-left: 4px;
+  padding-right: 4px;
 }
 
 .recent-head{
@@ -310,13 +458,18 @@ input:focus, select:focus{
 
 .recent-card{
   background:#fff;
-  border-radius:10px;
-  padding:16px;
-  box-shadow:0 10px 22px rgba(0,0,0,0.12);
+  border-radius:14px;
+  padding:22px 24px 18px 20px;
+  box-shadow:0 4px 18px rgba(44,62,80,0.10);
   display:grid;
-  grid-template-columns:60px 1fr 190px;
-  gap:12px;
+  grid-template-columns:60px 1fr 170px;
+  gap:20px;
   align-items:center;
+  margin-bottom:18px;
+  transition:box-shadow 0.2s;
+}
+.recent-card:hover {
+  box-shadow:0 8px 28px rgba(44,62,80,0.16);
 }
 
 .recent-icon{
@@ -331,22 +484,53 @@ input:focus, select:focus{
 }
 
 .recent-text h4{
-  font-size:14px;
+  font-size:16px;
   font-weight:800;
-  color:#222;
-  margin-bottom:4px;
+  color:#23395d;
+  margin-bottom:6px;
+  letter-spacing:0.2px;
 }
 .recent-text p{
-  font-size:12px;
-  color:#666;
+  font-size:13px;
+  color:#444;
+  margin-bottom:0;
 }
 
 .recent-meta{
   display:flex;
   flex-direction:column;
   align-items:flex-end;
-  gap:8px;
+  gap:10px;
 }
+
+/* Join requests styling */
+.join-requests {
+  width:100%;
+  margin-top:16px;
+}
+
+.join-requests .request-card {
+  background:#fff;
+  border-radius:10px;
+  padding:16px;
+  box-shadow:0 10px 22px rgba(0,0,0,0.12);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.request-info { font-size:14px; color:#222; }
+.request-meta small { color:#666; font-size:12px; }
+
+.req-actions button {
+  margin-left:6px;
+  padding:6px 10px;
+  font-size:12px;
+}
+.req-actions .accept { background:#2db07f; color:#fff; }
+.req-actions .reject { background:#f54e4e; color:#fff; }
+.req-actions .accept:hover, .req-actions .reject:hover { opacity:0.9; }
 
 .recent-buttons{
   display:flex;
@@ -371,13 +555,132 @@ input:focus, select:focus{
 }
 
 .recent-time{
-  font-size:11px;
+  font-size:12px;
   color:#888;
+  margin-bottom:2px;
+}
+
+/* panels layout for side-by-side sections */
+.panels {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap; /* allow stacking on narrow screens */
+  align-items: flex-start; /* keep both columns top-aligned */
+}
+
+/* wrapper columns created around each section */
+.column {
+  display: flex;
+  flex-direction: column;
+}
+.updates-col { flex: 1 1 0; }
+.join-col { flex: 0 0 300px; }
+
+/* ensure update column expands, request column fits content */
+
+
+/* keep join requests visible when content scrolls */
+.join-requests {
+  position: sticky;
+  top: 110px; /* just under header bar */
+}
+.panels .recent,
+.panels .join-requests {
+  flex: 1;
+}
+
+/* route tiles above join list */
+.request-tiles {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+/* headers inside join-requests section */
+.join-requests h4 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+/* side-by-side layout for joined and pending lists */
+.join-requests {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.joined-section, .pending-section {
+  flex: 1 1 300px;
+}
+.route-tile {
+  background:#eef6fb;
+  border-radius:8px;
+  padding:10px;
+  text-align:center;
+  cursor:pointer;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  transition:background .2s;
+}
+.route-tile.selected { background:#d0e7fd; }
+.route-tile i { font-size:24px; color:#23395d; }
+.route-tile .tile-count { font-size:12px; color:#55687f; }
+.route-tile .view-btn {
+  margin-top:6px;
+  padding:4px 8px;
+  font-size:11px;
+}
+/* previously had inline request list, removed */
+
+/* ensure join list is visible when triggered */
+/* grids for both pending and joined lists */
+#joinRequestList, #joinedList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px,1fr));
+  gap: 16px;
+  margin-top: 8px;
+}
+
+/* card layout with avatar and information column */
+.request-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.request-card .request-info {
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+}
+.request-card .request-info strong {
+  font-size:14px;
+  color:#222;
+}
+.request-card .request-info small {
+  font-size:12px;
+  color:#666;
+}
+.request-card .avatar {
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  object-fit:cover;
+  background:#ccc;
 }
 
 /* ONE responsive tag */
 @media (max-width: 900px){
+  .panels { flex-direction: column; }
+
   .hamburger{display:block}
+
+  /* On small screens the content should fill full width */
+  .main { margin-left: 0; }
 
   .sidebar{
     position:fixed;

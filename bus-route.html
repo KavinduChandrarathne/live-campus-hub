@@ -47,34 +47,16 @@
         </button>
 
         <header class="page-title">
-            <div style="display:flex;align-items:center;gap:12px;">
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
               <h2 id="route-title">Shuttle</h2>
               <span id="status-badge" class="badge on-time">On time</span>
             </div>
+            <button id="postUpdateBtn" class="btn-route" style="margin-top:10px;">Post an Update</button>
         </header>
 
         <section class="updates-section">
             <h3 style="margin-bottom:16px; color:#11223b; font-size:18px; font-weight:600;">Shuttle Updates</h3>
-            
-            <div class="updates-list">
-                <div class="update">
-                    <i class="fa-solid fa-bus"></i>
-                    <div>
-                        <strong id="update-1-title">Shuttle departed Gampaha terminal.</strong>
-                        <p id="update-1-desc">The shuttle left on time with full capacity.</p>
-                        <small class="muted">Today 2:15 PM</small>
-                    </div>
-                </div>
-
-                <div class="update">
-                    <i class="fa-solid fa-circle-exclamation"></i>
-                    <div>
-                        <strong id="update-2-title">Route update: Minor delay.</strong>
-                        <p id="update-2-desc">Delay of 3 minutes due to traffic. Expected to reach on time.</p>
-                        <small class="muted">Today 1:50 PM</small>
-                    </div>
-                </div>
-            </div>
+            <div class="updates-list"></div>
         </section>
     </main>
 
@@ -86,42 +68,70 @@
     return params.get(name);
   }
 
-  const loc = getQueryParam('loc') || 'Gampaha';
+  let loc = getQueryParam('loc') || 'Gampaha';
   document.getElementById('route-title').textContent = `${loc} Shuttle`;
 
-  // Location-specific content for updates
-  const contentMap = {
-    'Gampaha': {
-      update1: 'Shuttle departed Gampaha terminal.',
-      update1Desc: 'The shuttle left on time with full capacity.',
-      update2: 'Route update: Minor delay.',
-      update2Desc: 'Delay of 3 minutes due to traffic. Expected to reach on time.'
-    },
-    'Negombo': {
-      update1: 'Shuttle departed Negombo terminal.',
-      update1Desc: 'All passengers onboard. Proceeding to main campus.',
-      update2: 'Received: On schedule.',
-      update2Desc: 'No delays reported. Estimated arrival in 25 minutes.'
-    },
-    'Moratuwa': {
-      update1: 'Shuttle departed Moratuwa terminal.',
-      update1Desc: 'Shuttle is currently on route with 18 passengers.',
-      update2: 'Traffic alert: Minor congestion.',
-      update2Desc: 'Slight delay expected. Rerouting to faster lane.'
-    },
-    'Wattala': {
-      update1: 'Shuttle departed Wattala terminal.',
-      update1Desc: 'The shuttle left 5 minutes due to heavy traffic.',
-      update2: 'Delay reported earlier.',
-      update2Desc: 'Minor delay of 8 minutes, now resolved.'
-    }
-  };
+  const updatesListEl = document.querySelector('.updates-list');
 
-  const content = contentMap[loc] || contentMap['Gampaha'];
-  document.getElementById('update-1-title').textContent = content.update1;
-  document.getElementById('update-1-desc').textContent = content.update1Desc;
-  document.getElementById('update-2-title').textContent = content.update2;
-  document.getElementById('update-2-desc').textContent = content.update2Desc;
+  function renderUpdates(updates) {
+    updatesListEl.innerHTML = '';
+    if (updates.length === 0) {
+      updatesListEl.innerHTML = '<div class="update"><div>No updates available.</div></div>';
+      return;
+    }
+
+    updates.forEach(u => {
+      const div = document.createElement('div');
+      div.className = 'update';
+      const iconClass = u.icon || 'fa-bus';
+      div.innerHTML = `
+        <i class="fa-solid ${iconClass}"></i>
+        <div>
+          <strong>${u.message}</strong>
+          <p>${u.description || ''}</p>
+          ${u.liveLink ? `<p><a href="${u.liveLink}" target="_blank">Live location</a></p>` : ''}
+          <small class="muted">${u.datetime}</small>
+        </div>
+      `;
+      updatesListEl.appendChild(div);
+    });
+  }
+
+  // load updates from JSON and filter out live-location entries
+  function refreshUpdates() {
+    fetch('Admin/shared/json/transit-updates.json?t='+Date.now())
+      .then(r => r.json())
+      .then(all => {
+        const filtered = all.filter(u => {
+          const r = (u.route || '').trim().toLowerCase();
+          const desired = loc.trim().toLowerCase();
+          // only regular updates (no liveLink) should appear on the bus-route page
+          return r === desired && !u.liveLink;
+        });
+        renderUpdates(filtered);
+      })
+      .catch(err => console.error('Failed to load transit updates', err));
+  }
+  refreshUpdates();
+
+  // listen for server push notifications
+  try {
+    const uname = encodeURIComponent((getCurrentUser() || {}).username || '');
+    const es = new EventSource(`Admin/shared/php/user-updates-sse.php?username=${uname}`);
+    es.addEventListener('transitupdate', () => {
+      refreshUpdates();
+    });
+    window.addEventListener('beforeunload', () => es.close());
+  } catch (e) {
+    console.warn('Transit SSE not available', e);
+  }
+
+  const postBtn = document.getElementById('postUpdateBtn');
+  if (postBtn) {
+    postBtn.addEventListener('click', () => {
+      alert('Only admins can post updates.');
+    });
+  }
 </script>
 <script src="./javascript/common.js"></script>
 </body>

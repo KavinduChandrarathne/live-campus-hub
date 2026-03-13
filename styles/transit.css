@@ -57,12 +57,12 @@
 
 .map-meta { text-align: right; margin-top:8px; color:#6f86a3; font-size:12px; }
 
-.updates-list { display:flex; flex-direction:column; gap:12px; }
-.updates-list .update { background:#fff; padding:12px; border-radius:8px; display:flex; gap:12px; align-items:flex-start; box-shadow:0 4px 10px rgba(9,30,66,0.05); }
-.updates-list .update i { background:#eef6fb; color:#23395d; padding:10px; border-radius:8px; font-size:18px; min-width:44px; text-align:center; }
-.updates-list .update strong { display:block; color:#11223b; margin-bottom:6px; }
-.updates-list .update p { margin:0; color:#55687f; }
-.updates-list .update small { display:block; margin-top:8px; color:#8b9ab1; }
+.updates-list, .live-list { display:flex; flex-direction:column; gap:12px; }
+.updates-list .update, .live-list .update { background:#fff; padding:12px; border-radius:8px; display:flex; gap:12px; align-items:flex-start; box-shadow:0 4px 10px rgba(9,30,66,0.05); }
+.updates-list .update i, .live-list .update i { background:#eef6fb; color:#23395d; padding:10px; border-radius:8px; font-size:18px; min-width:44px; text-align:center; }
+.updates-list .update strong, .live-list .update strong { display:block; color:#11223b; margin-bottom:6px; }
+.updates-list .update p, .live-list .update p { margin:0; color:#55687f; }
+.updates-list .update small, .live-list .update small { display:block; margin-top:8px; color:#8b9ab1; }
 
 /* Routes section on bus-route page */
 .route-list-section {
@@ -125,6 +125,29 @@
   border-radius: 10px;
   padding: 16px 16px 14px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  position: relative;
+}
+
+/* locked state for cards the user hasn't joined */
+.transit-card.locked {
+  opacity: 0.6;
+}
+.transit-card .lock-overlay {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255,255,255,0.8);
+  justify-content: center;
+  align-items: center;
+  font-size: 48px;
+  color: #555;
+  pointer-events: none;
+}
+.transit-card.locked .lock-overlay {
+  display: flex;
 }
 
 .card-top {

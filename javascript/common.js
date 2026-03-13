@@ -1,30 +1,65 @@
 // common.js - Utilities for pages that need user information
 
+let _userRefreshPromise = null;
+let _lastRefresh = 0;
+const REFRESH_INTERVAL = 10000; // don't refresh more often than every 10s
+
 function getCurrentUser() {
     const raw = sessionStorage.getItem('currentUser');
     if (!raw) {
-        // user not logged in, redirect to login
         window.location.href = 'index.html';
         return null;
     }
     try {
-        const user = JSON.parse(raw);
-        // asynchronously refresh the session user from authoritative JSON
-        fetch('Admin/shared/json/users.json')
-            .then(r => r.json())
-            .then(users => {
-                const updated = users.find(u => u.username === user.username || u.email === user.email);
-                if (updated) {
-                    sessionStorage.setItem('currentUser', JSON.stringify(updated));
-                }
-            })
-            .catch(() => { /* ignore failures */ });
-        return user;
+        return JSON.parse(raw);
     } catch (e) {
         console.error('Failed to parse currentUser from sessionStorage', e);
         window.location.href = 'index.html';
         return null;
     }
+}
+
+/**
+ * Force-refreshes the session user from the JSON file.  Returns a promise
+ * that resolves with the updated user.  Multiple simultaneous calls
+ * will share the same in-flight fetch.  Refreshes are throttled.
+ */
+function refreshCurrentUser() {
+    const now = Date.now();
+    if (_userRefreshPromise && now - _lastRefresh < REFRESH_INTERVAL) {
+        return _userRefreshPromise;
+    }
+
+    _lastRefresh = now;
+    // add timestamp to prevent aggressive browser caching
+    _userRefreshPromise = fetch('Admin/shared/json/users.json?t=' + Date.now())
+        .then(r => r.json())
+        .then(users => {
+            const existing = getCurrentUser();
+            if (!existing) return null;
+            const updated = users.find(u => u.username === existing.username || u.email === existing.email);
+            if (updated) {
+                sessionStorage.setItem('currentUser', JSON.stringify(updated));
+                window.dispatchEvent(new CustomEvent('currentUserUpdated', { detail: updated }));
+                return updated;
+            }
+            return existing;
+        })
+        .catch(err => {
+            console.warn('refreshCurrentUser failed', err);
+            return getCurrentUser();
+        })
+        .finally(() => {
+            // clear promise after a short delay to allow repeat refreshes
+            setTimeout(() => { _userRefreshPromise = null; }, 1000);
+        });
+    return _userRefreshPromise;
+}
+
+// convenience helper that returns a promise resolving to the freshest user data.
+function getCurrentUserAsync() {
+    const current = getCurrentUser();
+    return refreshCurrentUser().then(u => u || current);
 }
 
 function populateSidebar(user) {

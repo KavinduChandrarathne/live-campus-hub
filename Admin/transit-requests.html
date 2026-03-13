@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Campus Hub - Join Requests</title>
+
+  <link rel="stylesheet" href="styles/transit.css" />
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="bg-overlay"></div>
+
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <i class="fa-solid fa-graduation-cap"></i>
+        <h2>CAMPUS HUB</h2>
+      </div>
+
+      <div class="user" onclick="window.location='admin-profile.html'">
+        <img src="images/admin.png" alt="user">
+        <div>
+          <p>Admin Name</p>
+          <small>admin@example.com</small>
+        </div>
+      </div>
+
+      <nav class="menu">
+        <a href="dashboard.html"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
+        <a href="facility-event-admin.html"><i class="fa-solid fa-bullhorn"></i> Facility & Event</a>
+        <a href="transit.html"><i class="fa-solid fa-bus"></i> Transit</a>
+        <a href="campus-clubs.html"><i class="fa-solid fa-users"></i> Campus Clubs</a>
+        <a href="updates-feed.html"><i class="fa-solid fa-message"></i> Updates Feed</a>
+        <a href="add-notification.html"><i class="fa-solid fa-bell"></i> Notification</a>
+      </nav>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+
+      <!-- Top Title -->
+      <header class="page-title">
+        <button class="hamburger" id="hamburger"><i class="fa-solid fa-bars"></i></button>
+        <button id="backBtn" class="back-btn" title="Back">
+          <i class="fa-solid fa-arrow-left"></i>
+        </button>
+        <span id="pageTitle">Join Requests</span>
+      </header>
+
+      <!-- Request list -->
+      <section class="join-requests">
+        <!-- Removed duplicate route header, the page title already shows route -->
+        <div class="joined-section">
+          <h4>Currently Joined</h4>
+          <div id="joinedList"></div>
+        </div>
+
+        <div class="pending-section">
+          <h4>Pending Requests</h4>
+          <div id="joinRequestList"></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="javascript/auth.js"></script>
+  <script src="javascript/transit-requests.js"></script>
+  <div class="mobile-backdrop" id="mobileBackdrop"></div>
+</body>
+</html>
