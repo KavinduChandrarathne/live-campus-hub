@@ -11,7 +11,7 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
     const password = document.querySelector("#loginForm input[type='password']").value;
 
     // fetch the sample users JSON
-    fetch("admin/shared/json/users.json")
+    fetch("Admin/shared/json/users.json")
         .then(resp => resp.json())
         .then(users => {
             const match = users.find(u =>

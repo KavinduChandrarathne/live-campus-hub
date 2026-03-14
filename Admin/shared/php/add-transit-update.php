@@ -10,10 +10,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $message = isset($_POST['message']) ? trim($_POST['message']) : '';
     $description = isset($_POST['description']) ? trim($_POST['description']) : '';
     $liveLink = isset($_POST['liveLink']) ? trim($_POST['liveLink']) : '';
+    $userName = isset($_POST['userName']) ? trim($_POST['userName']) : '';
     $sendNotification = isset($_POST['sendNotification']) && $_POST['sendNotification'] === 'on';
 
     if ($route === '' || $message === '') {
         echo json_encode(['success' => false, 'error' => 'Route and message are required']);
+        exit;
+    }
+    if ($userName === '') {
+        echo json_encode(['success' => false, 'error' => 'User name is required']);
         exit;
     }
 
@@ -23,6 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'message' => $message,
         'description' => $description,
         'liveLink' => $liveLink,
+        'userName' => $userName,
         'datetime' => date('Y-m-d H:i:s')
     ];
 

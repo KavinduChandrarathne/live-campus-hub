@@ -22,7 +22,11 @@
             "pointsToNext": 26,
             "nextTier": "GOLD"
         },
-        "joinedClubs": []
+        "joinedClubs": [
+            "coding club",
+            "rotaract club",
+            "sports society"
+        ]
     },
     {
         "id": 2,
@@ -77,6 +81,100 @@
             "badges": 1,
             "tier": "BRONZE",
             "pointsToNext": 38,
+            "nextTier": "SILVER"
+        },
+        "joinedClubs": []
+    },
+    {
+        "id": 4,
+        "username": "testuser",
+        "password": "test123",
+        "email": "testuser@campushub.com",
+        "role": "student",
+        "firstName": "Test",
+        "lastName": "User",
+        "studentId": "S1006",
+        "faculty": "Business",
+        "dob": "2026-03-25",
+        "picture": "\/live-campus-hub\/images\/profile_e5cf8952c0d1af43cd0d216b10e39962.png",
+        "joinedRoutes": [
+            "Gampaha"
+        ],
+        "rewards": {
+            "points": 0,
+            "badges": 0,
+            "tier": "BRONZE",
+            "pointsToNext": 50,
+            "nextTier": "SILVER"
+        },
+        "joinedClubs": [
+            "coding club"
+        ]
+    },
+    {
+        "id": 5,
+        "username": "testuser 2",
+        "password": "test456",
+        "email": "user2@campushub.com",
+        "role": "student",
+        "firstName": "test",
+        "lastName": "User 2",
+        "studentId": "S1007",
+        "faculty": "Science",
+        "dob": "2026-03-02",
+        "picture": ".\/images\/default.png",
+        "joinedRoutes": [],
+        "rewards": {
+            "points": 0,
+            "badges": 0,
+            "tier": "BRONZE",
+            "pointsToNext": 50,
+            "nextTier": "SILVER"
+        },
+        "joinedClubs": []
+    },
+    {
+        "id": 6,
+        "username": "testuser 3",
+        "password": "test123",
+        "email": "test3@campushub.com",
+        "role": "student",
+        "firstName": "Test",
+        "lastName": "User 3",
+        "studentId": "S1008",
+        "faculty": "Arts",
+        "dob": "2026-03-05",
+        "picture": ".\/images\/default.png",
+        "joinedRoutes": [],
+        "rewards": {
+            "points": 0,
+            "badges": 0,
+            "tier": "BRONZE",
+            "pointsToNext": 50,
+            "nextTier": "SILVER"
+        },
+        "joinedClubs": [
+            "coding club"
+        ]
+    },
+    {
+        "id": 7,
+        "username": "testuser 3",
+        "password": "test123",
+        "email": "test4@campushub.com",
+        "role": "student",
+        "firstName": "test",
+        "lastName": "User 3",
+        "studentId": "S1009",
+        "faculty": "Science",
+        "dob": "2026-03-03",
+        "picture": ".\/images\/default.png",
+        "joinedRoutes": [],
+        "rewards": {
+            "points": 0,
+            "badges": 0,
+            "tier": "BRONZE",
+            "pointsToNext": 50,
             "nextTier": "SILVER"
         },
         "joinedClubs": []

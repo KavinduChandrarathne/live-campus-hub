@@ -68,16 +68,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // prevent duplicates for same student and club
+    $newRequests = [];
+    $duplicate = false;
     foreach ($requests as $existing) {
         if (isset($existing['studentId'], $existing['clubName']) &&
             strcasecmp($existing['studentId'], $studentId) === 0 &&
             strcasecmp(trim($existing['clubName']), trim($clubName)) === 0) {
-            echo json_encode(['success' => false, 'error' => 'Duplicate request']);
-            exit;
+            // If status is pending or accepted, block duplicate
+            if ($existing['status'] === 'pending' || $existing['status'] === 'accepted') {
+                echo json_encode(['success' => false, 'error' => 'Duplicate request']);
+                exit;
+            }
+            // If status is removed or rejected, allow re-request and remove old entry
+            $duplicate = true;
+            continue; // skip adding old entry
         }
+        $newRequests[] = $existing;
     }
-
-    array_unshift($requests, $request);
+    array_unshift($newRequests, $request);
+    file_put_contents($requestsFile, json_encode($newRequests, JSON_PRETTY_PRINT));
+    echo json_encode(['success' => true]);
+    exit;
     file_put_contents($requestsFile, json_encode($requests, JSON_PRETTY_PRINT));
 
     echo json_encode(['success' => true]);
