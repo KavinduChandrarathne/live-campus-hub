@@ -175,24 +175,29 @@
 
 .btn-route {
   border: none;
-  background: #7bb08b;
-  color: #fff;
-  padding: 8px 12px;
-  border-radius: 14px;
+  background: #fff;
+  color: #23395d;
+  padding: 14px 32px;
+  border-radius: 999px;
   cursor: pointer;
-  font-size: 12px;
-  font-weight: 600;
-  transition: all 0.25s ease;
+  font-size: 18px;
+  font-weight: 700;
+  box-shadow: 0 4px 16px rgba(35,57,93,0.12);
+  letter-spacing: 0.5px;
+  transition: background 0.25s, color 0.25s, box-shadow 0.25s, transform 0.2s;
+  display: inline-block;
 }
 
 .btn-route:hover {
-  background: #6ba080;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 10px rgba(123, 176, 139, 0.25);
+  background: #23395d;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(35,57,93,0.18);
 }
 
 .btn-route:active {
   transform: translateY(0);
+  background: #23395d;
 }
 
 

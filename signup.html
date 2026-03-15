@@ -33,42 +33,51 @@
 
             <div class="input-group">
                 <label>First Name</label>
-                <input type="text" placeholder="First Name" required>
+                <input type="text" name="firstName" placeholder="First Name" required>
             </div>
 
             <div class="input-group">
                 <label>Last Name</label>
-                <input type="text" placeholder="Last Name" required>
+                <input type="text" name="lastName" placeholder="Last Name" required>
             </div>
 
             <div class="input-group">
-                <label>Faculty</label>
-                <input type="text" placeholder="Faculty" required>
+                                <label>Faculty</label>
+                                <select name="faculty" required>
+                                    <option value="">Select Faculty</option>
+                                    <option value="Business">Business</option>
+                                    <option value="Arts">Arts</option>
+                                    <option value="Science">Science</option>
+                                    <option value="Engineering">Engineering</option>
+                                    <option value="Medicine">Medicine</option>
+                                    <option value="Law">Law</option>
+                                    <option value="IT">IT</option>
+                                </select>
             </div>
 
             <div class="input-group">
                 <label>ID Number</label>
-                <input type="text" placeholder="ID Number" required>
+                <input type="text" name="studentId" placeholder="ID Number" required>
             </div>
 
             <div class="input-group">
                 <label>Date of Birth</label>
-                <input type="date" required>
+                <input type="date" name="dob" required>
             </div>
 
             <div class="input-group">
                 <label>Email</label>
-                <input type="email" placeholder="Email" required>
+                <input type="email" name="email" placeholder="Email" required>
             </div>
 
             <div class="input-group">
                 <label>Password</label>
-                <input type="password" placeholder="Password" required>
+                <input type="password" name="password" placeholder="Password" required>
             </div>
 
             <div class="input-group">
                 <label>Confirm Password</label>
-                <input type="password" placeholder="Confirm Password" required>
+                <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
             </div>
 
         </div>
@@ -80,6 +89,42 @@
     <div class="login-link">
         Already have an account? <a href="././index.html">Sign in</a>
     </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <style>
+        .toast {
+            visibility: hidden;
+            min-width: 220px;
+            max-width: 90vw;
+            background-color: #223a5f;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 16px 28px;
+            position: fixed;
+            z-index: 2000;
+            left: 50%;
+            top: 40px;
+            transform: translateX(-50%);
+            font-size: 17px;
+            font-weight: 500;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.13);
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        .toast.show {
+            visibility: visible;
+            opacity: 1;
+        }
+        .toast.toast-error {
+            background: #ff4757;
+        }
+        .toast.toast-success {
+            background: #2ecc71;
+        }
+    </style>
 
 </div>
 

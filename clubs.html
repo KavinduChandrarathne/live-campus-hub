@@ -262,6 +262,18 @@
             <!-- clubs will be injected dynamically via JavaScript -->
         </section>
     </main>
+    <!-- Toast Notification -->
+    <div id="toast" style="display:none;position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:#28a745;color:#fff;padding:16px 32px;border-radius:8px;font-size:16px;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,0.15);z-index:1100;transition:opacity 0.3s, bottom 0.3s;opacity:0;">Your join request has been submitted!</div>
+    <!-- Club Join Modal -->
+    <div id="clubJoinModal" class="modal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.35);z-index:1000;align-items:center;justify-content:center;">
+      <div class="modal-content" style="background:#fff;padding:32px 24px;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.18);max-width:400px;width:90%;position:relative;">
+        <button id="closeJoinModal" style="position:absolute;top:12px;right:12px;background:none;border:none;font-size:20px;color:#888;cursor:pointer;">&times;</button>
+        <h3 style="margin-top:0;margin-bottom:16px;font-size:22px;font-weight:700;color:#1f3556;">Request to Join Club</h3>
+        <label for="joinMessage" style="font-size:14px;color:#333;margin-bottom:8px;display:block;">Message to Club (optional):</label>
+        <textarea id="joinMessage" rows="4" style="width:100%;border-radius:8px;border:1px solid #ccc;padding:10px;font-size:14px;margin-bottom:18px;resize:none;"></textarea>
+        <button id="submitJoinRequest" style="background:#28a745;color:#fff;font-weight:700;padding:10px 18px;border:none;border-radius:8px;font-size:15px;cursor:pointer;">Send Request</button>
+      </div>
+    </div>
 
 </div>
 
@@ -370,13 +382,32 @@
       if (!user || !user.studentId) return;
       // no longer gate on role; server will enforce student status itself
 
-      const message = prompt('Enter a message for the club (optional):', '');
+      // Show modal popup
+      const modal = document.getElementById('clubJoinModal');
+      modal.style.display = 'flex';
+      modal.dataset.club = club;
+      // Clear previous message
+      document.getElementById('joinMessage').value = '';
+      // Store user info for later
+      modal.dataset.studentId = user.studentId || '';
+    });
+
+    // Modal event handlers
+    const modal = document.getElementById('clubJoinModal');
+    const closeBtn = document.getElementById('closeJoinModal');
+    closeBtn.onclick = () => { modal.style.display = 'none'; };
+    // Close modal on outside click
+    modal.onclick = e => { if (e.target === modal) modal.style.display = 'none'; };
+
+    const submitBtn = document.getElementById('submitJoinRequest');
+    submitBtn.onclick = () => {
+      const club = modal.dataset.club;
+      const studentId = modal.dataset.studentId;
+      const message = document.getElementById('joinMessage').value;
       const data = new URLSearchParams();
-      // server will look up the name/picture by studentId, so we don't send them here
-      data.append('studentId', user.studentId || '');
+      data.append('studentId', studentId);
       data.append('clubName', club);
       data.append('message', message || '');
-
       fetch('Admin/shared/php/add-join-request.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -384,18 +415,39 @@
       })
       .then(res => res.json())
       .then(result => {
+        modal.style.display = 'none';
+        const toast = document.getElementById('toast');
         if (result.success) {
-          alert('Your join request has been submitted.');
-          btn.disabled = true;
-          btn.textContent = 'Requested';
+          toast.textContent = 'Your join request has been submitted!';
+          toast.style.display = 'block';
+          toast.style.opacity = '1';
+          setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => { toast.style.display = 'none'; }, 400);
+          }, 2600);
+          fetchAndRenderClubs();
         } else {
-          alert('Failed to send request: ' + (result.error || 'Unknown'));
+          toast.textContent = 'Failed to send request: ' + (result.error || 'Unknown');
+          toast.style.display = 'block';
+          toast.style.opacity = '1';
+          setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => { toast.style.display = 'none'; }, 400);
+          }, 2600);
         }
       })
       .catch(() => {
-        alert('Network error sending join request.');
+        modal.style.display = 'none';
+        const toast = document.getElementById('toast');
+        toast.textContent = 'Network error sending join request.';
+        toast.style.display = 'block';
+        toast.style.opacity = '1';
+        setTimeout(() => {
+          toast.style.opacity = '0';
+          setTimeout(() => { toast.style.display = 'none'; }, 400);
+        }, 2600);
       });
-    });
+    };
   }
 
   function fetchAndRenderClubs() {

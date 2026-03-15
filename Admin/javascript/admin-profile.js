@@ -34,8 +34,37 @@ document.querySelectorAll(".edit-icon").forEach(icon => {
 });
 
 // Save / Cancel / Change Password demo
+
 document.getElementById("saveBtn").addEventListener("click", () => {
-  alert("Saved changes (Demo)");
+  const user = JSON.parse(localStorage.getItem('adminUser') || '{}');
+  if (!user || !user.email) {
+    alert('Admin not found.');
+    return;
+  }
+  const fields = ['firstName', 'lastName', 'studentId', 'dob'];
+  const payload = { email: user.email, role: 'admin' };
+  fields.forEach(f => {
+    const el = document.getElementById(f);
+    if (el) payload[f] = el.value;
+  });
+  fetch('shared/php/update-profile.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: Object.entries(payload).map(([k,v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&')
+  })
+  .then(resp => resp.json())
+  .then(result => {
+    if (result.success) {
+      Object.assign(user, payload);
+      localStorage.setItem('adminUser', JSON.stringify(user));
+      alert('Profile updated!');
+    } else {
+      alert(result.error || 'Failed to update profile.');
+    }
+  })
+  .catch(() => {
+    alert('An error occurred while updating profile.');
+  });
 });
 
 document.getElementById("cancelBtn").addEventListener("click", () => {
@@ -43,8 +72,67 @@ document.getElementById("cancelBtn").addEventListener("click", () => {
 });
 
 document.getElementById("passwordBtn").addEventListener("click", () => {
-  alert("Open Change Password page (Demo)");
+  const passwordModal = document.getElementById('password-modal');
+  if (passwordModal) passwordModal.style.display = 'block';
 });
+
+// Modal handlers
+const passwordModal = document.getElementById('password-modal');
+const passwordForm = document.getElementById('password-form');
+const closeBtn = document.querySelector('.close-btn');
+const modalCancelBtn = document.querySelector('.modal .btn.cancel');
+
+if (closeBtn) {
+  closeBtn.addEventListener('click', function() {
+    passwordModal.style.display = 'none';
+    passwordForm.reset();
+  });
+}
+
+if (modalCancelBtn) {
+  modalCancelBtn.addEventListener('click', function() {
+    passwordModal.style.display = 'none';
+    passwordForm.reset();
+  });
+}
+
+if (passwordForm) {
+  passwordForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const user = JSON.parse(localStorage.getItem('adminUser') || '{}');
+    if (!user || !user.email) {
+      alert('Admin not found.');
+      return;
+    }
+    const currentPassword = document.getElementById('current-password').value;
+    const newPassword = document.getElementById('new-password').value;
+    const confirmPassword = document.getElementById('confirm-password').value;
+    if (newPassword !== confirmPassword) {
+      alert('New passwords do not match.');
+      return;
+    }
+    fetch('shared/php/reset-password.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `email=${encodeURIComponent(user.email)}&currentPassword=${encodeURIComponent(currentPassword)}&newPassword=${encodeURIComponent(newPassword)}&role=admin`
+    })
+    .then(resp => resp.json())
+    .then(result => {
+      if (result.success) {
+        user.password = newPassword;
+        localStorage.setItem('adminUser', JSON.stringify(user));
+        alert('Password updated!');
+        passwordModal.style.display = 'none';
+        passwordForm.reset();
+      } else {
+        alert(result.error || 'Failed to update password.');
+      }
+    })
+    .catch(() => {
+      alert('An error occurred while updating password.');
+    });
+  });
+}
 
 // Sidebar toggle for mobile
 const hamburger = document.getElementById("hamburger");

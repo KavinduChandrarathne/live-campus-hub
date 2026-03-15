@@ -141,6 +141,41 @@
         to { opacity: 1; transform: translateY(0); }
     }
     </style>
+
+        <!-- Toast Notification -->
+        <div id="toast" class="toast"></div>
+        <style>
+            .toast {
+                visibility: hidden;
+                min-width: 220px;
+                max-width: 90vw;
+                background-color: #223a5f;
+                color: #fff;
+                text-align: center;
+                border-radius: 8px;
+                padding: 16px 28px;
+                position: fixed;
+                z-index: 2000;
+                left: 50%;
+                top: 40px;
+                transform: translateX(-50%);
+                font-size: 17px;
+                font-weight: 500;
+                box-shadow: 0 4px 16px rgba(0,0,0,0.13);
+                opacity: 0;
+                transition: opacity 0.3s, visibility 0.3s;
+            }
+            .toast.show {
+                visibility: visible;
+                opacity: 1;
+            }
+            .toast.toast-error {
+                background: #ff4757;
+            }
+            .toast.toast-success {
+                background: #2ecc71;
+            }
+        </style>
     </aside>
 
     <!-- MAIN -->
@@ -155,7 +190,55 @@
             <div class="profile-card">
 
                 <div class="profile-left">
-                    <img id="profile-picture" src="./images/naveen.png" alt="Profile">
+                    <img id="profile-picture" src="./images/default.png" alt="Profile" style="border-radius: 50%; width: 120px; height: 120px; box-shadow: 0 2px 8px rgba(0,0,0,0.10); margin-bottom: 16px;">
+                    <form id="profile-photo-form" enctype="multipart/form-data" style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; margin-top: 12px;">
+                        <label for="profile-photo-input" class="custom-file-label">
+                            <i class="fa-solid fa-image"></i> Choose File
+                        </label>
+                        <input type="file" id="profile-photo-input" accept="image/*" style="display:none;">
+                        <button type="submit" id="update-photo-btn" class="custom-update-btn">
+                            <i class="fa-solid fa-upload"></i> Update Profile Photo
+                        </button>
+                        <style>
+                            .custom-file-label {
+                                background: #f5f7fa;
+                                color: #223a5f;
+                                border-radius: 8px;
+                                padding: 8px 18px;
+                                font-size: 15px;
+                                font-weight: 500;
+                                cursor: pointer;
+                                box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+                                display: flex;
+                                align-items: center;
+                                gap: 10px;
+                                transition: background 0.18s, color 0.18s;
+                                margin-bottom: 6px;
+                            }
+                            .custom-file-label:hover {
+                                background: #e6eaf2;
+                                color: #1a2a3a;
+                            }
+                            .custom-update-btn {
+                                background: #223a5f;
+                                color: #fff;
+                                border: none;
+                                border-radius: 8px;
+                                padding: 10px 24px;
+                                font-size: 16px;
+                                font-weight: 600;
+                                cursor: pointer;
+                                box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+                                display: flex;
+                                align-items: center;
+                                gap: 10px;
+                                transition: background 0.18s, box-shadow 0.18s, transform 0.12s;
+                            }
+                            .custom-update-btn:hover {
+                                background: #2d4a7a;
+                            }
+                        </style>
+                    </form>
                 </div>
                 <div class="profile-right">
                     <div class="form-group">
@@ -179,6 +262,14 @@
                         <div class="input-edit">
                             <input id="profile-studentid" type="text" value="">
                             <i class="fa-solid fa-pen"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <div class="input-edit">
+                            <input id="profile-email" type="email" value="">
+                            <i class="fa-solid fa-envelope"></i>
                         </div>
                     </div>
 
@@ -213,6 +304,124 @@
             </div>
         </section>
     </main>
+
+    <!-- Password Change Modal -->
+    <div id="password-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>Change Password</h2>
+            <form id="password-form">
+                <div class="form-group">
+                    <label for="current-password">Current Password:</label>
+                    <input type="password" id="current-password" required>
+                </div>
+                <div class="form-group">
+                    <label for="new-password">New Password:</label>
+                    <input type="password" id="new-password" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Confirm New Password:</label>
+                    <input type="password" id="confirm-password" required>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn cancel">Cancel</button>
+                    <button type="submit" class="btn change">Change Password</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s;
+        }
+        .modal-content {
+            background-color: #fff;
+            margin: 6% auto;
+            padding: 32px 32px 24px 32px;
+            border-radius: 16px;
+            width: 95%;
+            max-width: 520px;
+            min-width: 340px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+            position: relative;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #aaa;
+        }
+        .close-btn:hover {
+            color: #000;
+        }
+        .modal h2 {
+            margin-top: 0;
+            color: #223a5f;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .modal .form-group {
+            margin-bottom: 15px;
+        }
+        .modal label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #223a5f;
+        }
+        .modal input {
+            width: 100%;
+            padding: 14px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 18px;
+            box-sizing: border-box;
+            margin-top: 2px;
+        }
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .modal .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .modal .btn.cancel {
+            background: #f5f7fa;
+            color: #223a5f;
+        }
+        .modal .btn.cancel:hover {
+            background: #e6eaf2;
+        }
+        .modal .btn.change {
+            background: #223a5f;
+            color: #fff;
+        }
+        .modal .btn.change:hover {
+            background: #2d4a7a;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
 
 </div>
 

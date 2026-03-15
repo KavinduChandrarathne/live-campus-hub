@@ -55,22 +55,26 @@ const acceptedCountEl = document.getElementById("acceptedCount");
 const rejectedCountEl = document.getElementById("rejectedCount");
 let requestCards = [];
 let allRequests = [];
+const removedCountEl = document.getElementById("removedCount");
 
 function updateRequestCounts() {
   let pending = 0;
   let accepted = 0;
   let rejected = 0;
+  let removed = 0;
 
   requestCards.forEach(card => {
     const status = card.dataset.status;
     if (status === "pending") pending++;
     if (status === "accepted") accepted++;
     if (status === "rejected") rejected++;
+    if (status === "removed") removed++;
   });
 
   if (pendingCountEl) pendingCountEl.textContent = pending;
   if (acceptedCountEl) acceptedCountEl.textContent = accepted;
   if (rejectedCountEl) rejectedCountEl.textContent = rejected;
+  if (removedCountEl) removedCountEl.textContent = removed;
 }
 
 function filterRequests(filter) {
@@ -79,6 +83,16 @@ function filterRequests(filter) {
       card.classList.remove("hidden");
     } else {
       card.classList.add("hidden");
+    }
+    // Hide action buttons in 'removed' tab
+    if (filter === "removed") {
+      const actions = card.querySelector('.request-actions');
+      if (actions) actions.innerHTML = '';
+    }
+    // Hide action buttons in 'rejected' tab
+    if (filter === "rejected") {
+      const actions = card.querySelector('.request-actions');
+      if (actions) actions.innerHTML = '';
     }
   });
 }
@@ -123,15 +137,15 @@ function attachGlobalHandlers() {
         card.classList.add('rejected-card');
         card.classList.remove('accepted-card');
         changeStatus(card, 'rejected');
-        // if reject from pending, simply remove buttons
-        e.target.closest('.request-actions').innerHTML = '<button class="accept-btn" type="button">Accept</button>';
+        // remove buttons for rejected
+        e.target.closest('.request-actions').innerHTML = '';
       } else if (e.target.matches('.remove-btn')) {
-        // removing a member simply mark as rejected
-        card.dataset.status = 'rejected';
-        card.classList.add('rejected-card');
+        // removing a member marks as removed
+        card.dataset.status = 'removed';
         card.classList.remove('accepted-card');
-        changeStatus(card, 'rejected');
-        e.target.closest('.request-actions').innerHTML = '<button class="accept-btn" type="button">Accept</button>';
+        card.classList.remove('rejected-card');
+        changeStatus(card, 'removed');
+        e.target.closest('.request-actions').innerHTML = '';
       } else {
         return;
       }
@@ -190,7 +204,9 @@ function renderRequests(wrapped) {
         </div>
       </div>
       <div class="request-message-row">
-        <div class="request-message">${req.message || ''}</div>
+        <div class="request-message">
+          ${req.message ? `<strong>Message from ${req.name || 'Unknown'} (${req.studentId || ''}):</strong> ${req.message}` : ''}
+        </div>
       </div>
     `;
     requestList.appendChild(card);
