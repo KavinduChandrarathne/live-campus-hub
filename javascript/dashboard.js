@@ -258,6 +258,25 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    function updateDashboardRewards() {
+        const user = getCurrentUser();
+        if (!user || !user.rewards) return;
+        const r = user.rewards;
+        const pointsEl = document.getElementById('dash-rewards-points');
+        const tierEl = document.getElementById('dash-rewards-tier');
+        const streakEl = document.getElementById('dash-rewards-streak');
+        const dailyEl = document.getElementById('dash-rewards-daily');
+
+        if (pointsEl) pointsEl.textContent = r.points || 0;
+        if (tierEl) tierEl.textContent = r.tier || 'BRONZE';
+        if (streakEl) streakEl.textContent = r.loginStreak || 0;
+        if (dailyEl) dailyEl.textContent = r.dailyUsagePoints || 0;
+        setTierBadge(r.tier || 'BRONZE');
+    }
+
+    updateDashboardRewards();
+    window.addEventListener('currentUserUpdated', updateDashboardRewards);
+
     // Load notifications on page load
     loadNotifications();
     // Refresh notifications every 30 seconds

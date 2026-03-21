@@ -114,57 +114,118 @@
 
         .progress-bar {
             width: 100%;
-            height: 12px;
+            height: 16px;
             background: #f0f0f0;
-            border-radius: 6px;
-            overflow: visible;
+            border-radius: 8px;
+            overflow: hidden;
             margin-bottom: 16px;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
         }
 
         .progress-fill {
             height: 100%;
             background: linear-gradient(90deg, #2dd4a4 0%, #22d3ee 50%, #3b82f6 100%);
             width: 48%;
-            border-radius: 6px;
-            box-shadow: 0 0 6px rgba(45, 212, 164, 0.6), 0 0 12px rgba(34, 211, 238, 0.5), inset 0 0 6px rgba(45, 212, 164, 0.2);
+            border-radius: 8px;
+            box-shadow: 0 0 8px rgba(45, 212, 164, 0.7), 0 0 14px rgba(34, 211, 238, 0.6), inset 0 0 8px rgba(45, 212, 164, 0.3);
             position: relative;
-            animation: fillProgress 2s ease-out forwards;
-            animation-delay: 0.2s;
+            transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            animation: barPulse 2s ease-in-out infinite;
         }
 
         .progress-fill::after {
             content: "";
             position: absolute;
-            right: -2px;
+            right: 0;
             top: 50%;
             transform: translateY(-50%);
-            width: 8px;
-            height: 16px;
-            background: #22d3ee;
+            width: 12px;
+            height: 20px;
+            background: radial-gradient(circle at 30% 40%, #fff, #22d3ee);
             border-radius: 50%;
-            box-shadow: 0 0 5px rgba(34, 211, 238, 0.8), 0 0 10px rgba(45, 212, 164, 0.5);
-            animation: flickering 0.8s infinite alternate;
+            box-shadow: 0 0 8px rgba(34, 211, 238, 1), 0 0 15px rgba(45, 212, 164, 0.6);
+            animation: markerGlow 1.2s ease-in-out infinite;
         }
 
-        @keyframes fillProgress {
-            from {
-                width: 0%;
+        .progress-fill::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            border-radius: 8px;
+            animation: shimmer 2.5s infinite;
+        }
+
+        .points-earned {
+            position: absolute;
+            right: 10%;
+            top: -30px;
+            color: #2dd4a4;
+            font-weight: 700;
+            font-size: 16px;
+            pointer-events: none;
+            opacity: 0;
+            animation: floatPoints 1.5s ease-out forwards;
+            text-shadow: 0 0 8px rgba(45, 212, 164, 0.6);
+        }
+
+        @keyframes barPulse {
+            0%, 100% {
+                box-shadow: 0 0 8px rgba(45, 212, 164, 0.7), 0 0 14px rgba(34, 211, 238, 0.6), inset 0 0 8px rgba(45, 212, 164, 0.3);
             }
-            to {
-                width: 48%;
+            50% {
+                box-shadow: 0 0 12px rgba(45, 212, 164, 0.9), 0 0 20px rgba(34, 211, 238, 0.8), inset 0 0 12px rgba(45, 212, 164, 0.5);
             }
         }
 
-        @keyframes flickering {
-            0%, 20%, 24%, 55%, 100% {
+        @keyframes markerGlow {
+            0%, 100% {
+                box-shadow: 0 0 8px rgba(34, 211, 238, 1), 0 0 15px rgba(45, 212, 164, 0.6);
+                transform: translateY(-50%) scale(1);
+            }
+            50% {
+                box-shadow: 0 0 12px rgba(34, 211, 238, 1), 0 0 25px rgba(45, 212, 164, 0.8);
+                transform: translateY(-50%) scale(1.15);
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                left: -100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+
+        @keyframes floatPoints {
+            0% {
                 opacity: 1;
-                box-shadow: 0 0 5px rgba(34, 211, 238, 0.8), 0 0 10px rgba(45, 212, 164, 0.5);
+                transform: translateY(0) scale(1);
             }
-            22%, 25%, 60% {
-                opacity: 0.5;
-                box-shadow: 0 0 2px rgba(34, 211, 238, 0.4), 0 0 5px rgba(45, 212, 164, 0.3);
+            100% {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.7);
             }
+        }
+
+        .bar-container {
+            position: relative;
+        }
+
+        .bar-underlay {
+            position: absolute;
+            width: 100%;
+            height: 16px;
+            border-radius: 8px;
+            background: rgba(45, 212, 164, 0.1);
+            left: 0;
+            top: 0;
+            pointer-events: none;
         }
 
         @media (max-width: 1200px) {
@@ -370,10 +431,6 @@
                             <span class="label">Points</span>
                         </div>
                         <div class="stat-item">
-                            <span id="rewards-badges" class="value">0</span>
-                            <span class="label">Badges</span>
-                        </div>
-                        <div class="stat-item">
                             <span id="rewards-tier" class="value">BRONZE</span>
                             <span class="label">Tier</span>
                         </div>
@@ -389,8 +446,10 @@
                     <span id="rewards-current-tier">BRONZE Tier</span>
                     <span id="rewards-progress-text">0 / 0 Points to next tier</span>
                 </div>
-                <div class="progress-bar">
-                    <div class="progress-fill"></div>
+                <div class="bar-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
                 </div>
                 <p style="margin: 0; font-size: 13px; color: #999;">Earn more points by attending events, joining clubs, and participating in campus activities.</p>
             </div>
@@ -409,46 +468,90 @@
     <script src="javascript/common.js"></script>
     <script src="javascript/dashboard.js"></script>
     <script>
-        // Update badge based on tier
-        const tierBadgeMap = {
-            'BRONZE': 'images/bronze.png',
-            'SILVER': 'images/silver.png',
-            'GOLD': 'images/gold.png',
-            'PLATINUM': 'images/platinum.png',
-            'DIAMOND': 'images/diamond.png'
-        };
+        let lastKnownPoints = 0;
+        let lastUpdateTime = 0;
+
+        function animatePointsGain(pointsGained) {
+            if (pointsGained <= 0) return;
+            
+            const container = document.querySelector('.bar-container');
+            if (!container) return;
+
+            // Create floating points indicator
+            const indicator = document.createElement('div');
+            indicator.className = 'points-earned';
+            indicator.textContent = `+${pointsGained}`;
+            container.appendChild(indicator);
+
+            // Remove after animation completes
+            setTimeout(() => indicator.remove(), 1500);
+        }
+
+        function updateProgressBarReactive(user) {
+            if (!user || !user.rewards) return;
+            
+            const r = user.rewards;
+            const currentPoints = Number(r.points || 0);
+            const now = Date.now();
+            
+            // Animate points gain
+            if (currentPoints > lastKnownPoints && (now - lastUpdateTime) > 300) {
+                const pointsGained = currentPoints - lastKnownPoints;
+                animatePointsGain(pointsGained);
+            }
+            
+            lastKnownPoints = currentPoints;
+            lastUpdateTime = now;
+
+            // Update all UI elements
+            document.getElementById('rewards-points').textContent = currentPoints;
+            document.getElementById('rewards-tier').textContent = r.tier || 'BRONZE';
+            document.getElementById('rewards-current-tier').textContent = `${r.tier || 'BRONZE'} Tier`;
+            document.getElementById('rewards-progress-text').textContent = `${currentPoints} / ${currentPoints + (r.pointsToNext || 0)} Points to ${r.nextTier || 'next tier'}`;
+            
+            const fill = document.querySelector('.progress-fill');
+            if (fill) {
+                const p = r.pointsToNext > 0 ? ((currentPoints || 0) / ((currentPoints || 0) + (r.pointsToNext || 0))) * 100 : 100;
+                fill.style.width = `${p}%`;
+            }
+            updateBadge(r.tier);
+        }
 
         function updateBadge(tier) {
             tier = (tier || '').toUpperCase();
             const badgeImg = document.getElementById('tierBadge');
-            badgeImg.src = tierBadgeMap[tier] || tierBadgeMap['BRONZE'];
-            badgeImg.alt = `${tier} Tier Badge`;
+            if (badgeImg) badgeImg.src = getTierBadgePath(tier);
+            if (badgeImg) badgeImg.alt = `${tier} Tier Badge`;
+            const dashImg = document.getElementById('dash-tier-badge');
+            if (dashImg) dashImg.src = getTierBadgePath(tier);
         }
 
         document.addEventListener('DOMContentLoaded', function() {
             const user = getCurrentUser();
             if (!user) return;
-            const r = user.rewards || {points:0,badges:0,tier:'BRONZE',pointsToNext:0,nextTier:''};
-
-            // populate basic info
+            
+            // Populate user info
             document.getElementById('rewards-picture').src = user.picture || './images/naveen.png';
             document.getElementById('rewards-name').textContent = `${user.firstName || ''} ${user.lastName || ''}`.trim();
             document.getElementById('rewards-studentid').textContent = user.studentId || '';
             document.getElementById('rewards-email').textContent = user.email || '';
+            
+            lastKnownPoints = Number(user.rewards?.points || 0);
+            updateProgressBarReactive(user);
+        });
 
-            // rewards stats
-            document.getElementById('rewards-points').textContent = r.points;
-            document.getElementById('rewards-badges').textContent = r.badges;
-            document.getElementById('rewards-tier').textContent = r.tier;
-            document.getElementById('rewards-current-tier').textContent = `${r.tier} Tier`;
-            document.getElementById('rewards-progress-text').textContent = `${r.points} / ${r.points + r.pointsToNext} Points to ${r.nextTier || 'next tier'}`;
+        // Listen for user updates and animate progress
+        window.addEventListener('currentUserUpdated', function(e) {
+            const updated = e.detail;
+            updateProgressBarReactive(updated);
+        });
 
-            // progress bar width
-            const percent = r.pointsToNext > 0 ? (r.points / (r.points + r.pointsToNext)) * 100 : 0;
-            const fill = document.querySelector('.progress-fill');
-            if (fill) fill.style.width = percent + '%';
-
-            updateBadge(r.tier);
+        // Also listen for specific rewards updates for faster reaction
+        window.addEventListener('rewardsUpdated', function(e) {
+            const user = getCurrentUser();
+            if (user) {
+                updateProgressBarReactive(user);
+            }
         });
     </script>
 <script>
