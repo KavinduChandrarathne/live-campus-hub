@@ -2,6 +2,7 @@
 header('Content-Type: application/json');
 $reqFile = '../json/transit-join-requests.json';
 $userFile = '../json/users.json';
+require_once 'reward-utils.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = isset($_POST['id']) ? trim($_POST['id']) : '';
@@ -40,8 +41,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         if (!isset($u['joinedRoutes']) || !is_array($u['joinedRoutes'])) {
                             $u['joinedRoutes'] = [];
                         }
+                        $initialRouteCount = count($u['joinedRoutes']);
                         if (!in_array($r['route'], $u['joinedRoutes'])) {
                             $u['joinedRoutes'][] = $r['route'];
+                        }
+
+                        awardUserPoints($u, 15, 0, false, 'Joining a shuttle route');
+                        if ($initialRouteCount === 0) {
+                            awardUserPoints($u, 10, 0, false, 'First shuttle joined');
                         }
                     }
                 }

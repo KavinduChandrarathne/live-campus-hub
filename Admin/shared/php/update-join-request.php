@@ -2,6 +2,7 @@
 header('Content-Type: application/json');
 $requestsFile = '../json/club-join-requests.json';
 $usersFile = '../json/users.json';
+require_once 'reward-utils.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $index = isset($_POST['index']) ? intval($_POST['index']) : null;
@@ -50,9 +51,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $u['joinedClubs'] = [];
             }
             $clubIndex = array_search($clubName, $u['joinedClubs']);
+
+            // Track first club era
+            $initialClubCount = count($u['joinedClubs']);
+
             if ($status === 'accepted' && $oldStatus !== 'accepted') {
                 if ($clubIndex === false) {
                     $u['joinedClubs'][] = $clubName;
+                }
+
+                // Rewards on club join
+                awardUserPoints($u, 20, 0, false, 'Joining a club');
+                if ($initialClubCount === 0) {
+                    awardUserPoints($u, 10, 0, false, 'First club joined');
                 }
             } elseif ($status !== 'accepted' && $oldStatus === 'accepted') {
                 if ($clubIndex !== false) {

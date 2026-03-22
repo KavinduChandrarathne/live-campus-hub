@@ -16,16 +16,24 @@
             "Wattala"
         ],
         "rewards": {
-            "points": 24,
-            "badges": 5,
-            "tier": "SILVER",
-            "pointsToNext": 26,
-            "nextTier": "GOLD"
+            "points": 40,
+            "badges": 0,
+            "tier": "BRONZE",
+            "pointsToNext": 60,
+            "nextTier": "SILVER",
+            "loginStreak": 0,
+            "lastLoginDate": "",
+            "dailyUsagePoints": 0,
+            "dailyUsageDate": ""
         },
         "joinedClubs": [
             "coding club",
             "rotaract club",
-            "sports society"
+            "sports society",
+            "leo club",
+            "photography club",
+            "new test",
+            "media society"
         ]
     },
     {
@@ -46,17 +54,19 @@
             "Wattala"
         ],
         "rewards": {
-            "points": 75,
-            "badges": 12,
-            "tier": "GOLD",
-            "pointsToNext": 50,
-            "nextTier": "PLATINUM"
+            "points": 60,
+            "badges": 0,
+            "tier": "BRONZE",
+            "pointsToNext": 40,
+            "nextTier": "SILVER"
         },
         "joinedClubs": [
             "coding club",
             "rotaract club",
             "sports society",
-            "leo club"
+            "leo club",
+            "photography club",
+            "media society"
         ]
     },
     {
@@ -74,13 +84,14 @@
         "joinedRoutes": [
             "Moratuwa",
             "Gampaha",
-            "Negombo"
+            "Negombo",
+            "Wattala"
         ],
         "rewards": {
-            "points": 12,
-            "badges": 1,
+            "points": 15,
+            "badges": 0,
             "tier": "BRONZE",
-            "pointsToNext": 38,
+            "pointsToNext": 85,
             "nextTier": "SILVER"
         },
         "joinedClubs": []
@@ -101,14 +112,20 @@
             "Gampaha"
         ],
         "rewards": {
-            "points": 0,
+            "points": 122,
             "badges": 0,
-            "tier": "BRONZE",
-            "pointsToNext": 50,
-            "nextTier": "SILVER"
+            "tier": "SILVER",
+            "pointsToNext": 128,
+            "nextTier": "GOLD"
         },
         "joinedClubs": [
-            "coding club"
+            "coding club",
+            "rotaract club",
+            "sports society",
+            "leo club",
+            "media society",
+            "photography club",
+            "new test"
         ]
     },
     {

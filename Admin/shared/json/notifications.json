@@ -1,5 +1,145 @@
 [
     {
+        "id": "notif_69bec5ec5527a",
+        "type": "direct",
+        "title": "Reward Earned",
+        "message": "You earned 20 points for Joining a club.",
+        "datetime": "2026-03-21 21:53:08"
+    },
+    {
+        "id": "notif_69bec5a2ed528",
+        "type": "direct",
+        "title": "Reward Earned",
+        "message": "You earned 20 points for Joining a club.",
+        "datetime": "2026-03-21 21:51:54"
+    },
+    {
+        "id": "notif_69bec50ca21a8",
+        "type": "direct",
+        "title": "Reward Earned",
+        "message": "You earned 15 points for Joining a shuttle route.",
+        "datetime": "2026-03-21 21:49:24"
+    },
+    {
+        "id": "notif_69bec4471457f",
+        "type": "direct",
+        "title": "Reward Earned",
+        "message": "You earned 20 points for Joining a club.",
+        "datetime": "2026-03-21 21:46:07"
+    },
+    {
+        "id": "notif_69bec43a653cb",
+        "type": "direct",
+        "title": "Reward Earned",
+        "message": "You earned 2 points for Engagement usage.",
+        "datetime": "2026-03-21 21:45:54"
+    },
+    {
+        "id": "notif_69bec43a65236",
+        "type": "direct",
+        "title": "Reward Earned",
+        "message": "You earned 2 points for Engagement usage.",
+        "datetime": "2026-03-21 21:45:54"
+    },
+    {
+        "id": "notif_69bec4373bf4c",
+        "type": "direct",
+        "title": "Reward Earned",
+        "message": "You earned 20 points for Joining a club.",
+        "datetime": "2026-03-21 21:45:51"
+    },
+    {
+        "id": "notif_69bec4373bd2a",
+        "type": "direct",
+        "title": "Tier Upgrade",
+        "message": "Congratulations! You've reached SILVER tier.",
+        "datetime": "2026-03-21 21:45:51"
+    },
+    {
+        "id": "notif_69bec42eac8ea",
+        "type": "direct",
+        "title": "Reward Earned",
+        "message": "You earned 20 points for Joining a club.",
+        "datetime": "2026-03-21 21:45:42"
+    },
+    {
+        "id": "notif_69bec42614087",
+        "type": "direct",
+        "title": "Reward Earned",
+        "message": "You earned 20 points for Joining a club.",
+        "datetime": "2026-03-21 21:45:34"
+    },
+    {
+        "id": "notif_69bec41e0852f",
+        "type": "direct",
+        "title": "Reward Earned",
+        "message": "You earned 20 points for Joining a club.",
+        "datetime": "2026-03-21 21:45:26"
+    },
+    {
+        "id": "notif_69bec40f2d6f2",
+        "type": "direct",
+        "title": "Reward Earned",
+        "message": "You earned 20 points for Joining a club.",
+        "datetime": "2026-03-21 21:45:11"
+    },
+    {
+        "id": "notif_69bec0f3cf2fd",
+        "type": "direct",
+        "title": "Reward Earned",
+        "message": "You earned 20 points for Joining a club.",
+        "datetime": "2026-03-21 21:31:55"
+    },
+    {
+        "id": "notif_69bec0e7f1ff6",
+        "type": "direct",
+        "title": "Reward Earned",
+        "message": "You earned 20 points for Joining a club.",
+        "datetime": "2026-03-21 21:31:43"
+    },
+    {
+        "id": "notif_69bec0db05af1",
+        "type": "direct",
+        "title": "Reward Earned",
+        "message": "You earned 20 points for Joining a club.",
+        "datetime": "2026-03-21 21:31:31"
+    },
+    {
+        "id": "notif_69bebb964499c",
+        "type": "direct",
+        "title": "Reward Earned",
+        "message": "You earned 20 points for Joining a club.",
+        "datetime": "2026-03-21 21:09:02"
+    },
+    {
+        "id": "notif_69bebb964478d",
+        "type": "direct",
+        "title": "Tier Upgrade",
+        "message": "Congratulations! You've reached SILVER tier.",
+        "datetime": "2026-03-21 21:09:02"
+    },
+    {
+        "id": "notif_69bebb871b806",
+        "type": "direct",
+        "title": "Reward Earned",
+        "message": "You earned 20 points for Joining a club.",
+        "datetime": "2026-03-21 21:08:47"
+    },
+    {
+        "id": "notif_69bebb51be056",
+        "type": "direct",
+        "title": "Reward Earned",
+        "message": "You earned 20 points for Joining a club.",
+        "datetime": "2026-03-21 21:07:53"
+    },
+    {
+        "id": "notif_69beb96038bc8",
+        "type": "direct",
+        "title": "Reward Earned",
+        "message": "You earned 5 points for Engagement usage.",
+        "datetime": "2026-03-21 20:59:36"
+    },
+    {
         "type": "direct",
         "title": "test 2",
         "message": "test message 2",

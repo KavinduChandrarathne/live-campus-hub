@@ -55,8 +55,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'points' => 0,
             'badges' => 0,
             'tier' => 'BRONZE',
-            'pointsToNext' => 50,
-            'nextTier' => 'SILVER'
+            'pointsToNext' => 100,
+            'nextTier' => 'SILVER',
+            'loginStreak' => 0,
+            'lastLoginDate' => '',
+            'dailyUsagePoints' => 0,
+            'dailyUsageDate' => ''
         ],
         'joinedClubs' => []
     ];
