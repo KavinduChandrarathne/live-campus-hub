@@ -89,10 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     file_put_contents($requestsFile, json_encode($newRequests, JSON_PRETTY_PRINT));
     echo json_encode(['success' => true]);
     exit;
-    file_put_contents($requestsFile, json_encode($requests, JSON_PRETTY_PRINT));
-
-    echo json_encode(['success' => true]);
-    exit;
 } else {
     echo json_encode(['success' => false, 'error' => 'Invalid request']);
     exit;

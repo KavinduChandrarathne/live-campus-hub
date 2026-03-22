@@ -16,18 +16,17 @@
             "Wattala"
         ],
         "rewards": {
-            "points": 40,
+            "points": 45,
             "badges": 0,
             "tier": "BRONZE",
-            "pointsToNext": 60,
+            "pointsToNext": 55,
             "nextTier": "SILVER",
-            "loginStreak": 0,
-            "lastLoginDate": "",
-            "dailyUsagePoints": 0,
-            "dailyUsageDate": ""
+            "loginStreak": 1,
+            "lastLoginDate": "2026-03-22",
+            "dailyUsagePoints": 5,
+            "dailyUsageDate": "2026-03-22"
         },
         "joinedClubs": [
-            "coding club",
             "rotaract club",
             "sports society",
             "leo club",
@@ -54,19 +53,21 @@
             "Wattala"
         ],
         "rewards": {
-            "points": 60,
+            "points": 100,
             "badges": 0,
-            "tier": "BRONZE",
-            "pointsToNext": 40,
-            "nextTier": "SILVER"
+            "tier": "SILVER",
+            "pointsToNext": 150,
+            "nextTier": "GOLD",
+            "loginStreak": 0,
+            "lastLoginDate": "",
+            "dailyUsagePoints": 0,
+            "dailyUsageDate": ""
         },
         "joinedClubs": [
-            "coding club",
-            "rotaract club",
-            "sports society",
             "leo club",
             "photography club",
-            "media society"
+            "media society",
+            "sports society"
         ]
     },
     {
@@ -74,7 +75,7 @@
         "username": "charlie",
         "password": "charliepwd",
         "email": "charlie@campushub.com",
-        "role": "staff",
+        "role": "student",
         "firstName": "Charlie",
         "lastName": "Clark",
         "studentId": "S1003",
@@ -88,11 +89,15 @@
             "Wattala"
         ],
         "rewards": {
-            "points": 15,
+            "points": 20,
             "badges": 0,
             "tier": "BRONZE",
-            "pointsToNext": 85,
-            "nextTier": "SILVER"
+            "pointsToNext": 80,
+            "nextTier": "SILVER",
+            "loginStreak": 1,
+            "lastLoginDate": "2026-03-22",
+            "dailyUsagePoints": 5,
+            "dailyUsageDate": "2026-03-22"
         },
         "joinedClubs": []
     },
