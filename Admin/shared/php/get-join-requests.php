@@ -87,10 +87,12 @@ foreach ($requests as $r) {
 
 $requests = array_values($deduped);
 
-if ($changed || $originalCount !== count($requests)) {
-    // write back fixes so file stays consistent
-    file_put_contents($requestsFile, json_encode($requests, JSON_PRETTY_PRINT));
-}
+// Don't rewrite the file during read operations - let writes happen only in add-join-request.php
+// This prevents data loss from concurrent access
+// if ($changed || $originalCount !== count($requests)) {
+//     // write back fixes so file stays consistent
+//     file_put_contents($requestsFile, json_encode($requests, JSON_PRETTY_PRINT));
+// }
 
 // Ensure memberships recorded in users.json (joinedClubs) show up as accepted requests
 // so admin can see members even if the request entry is missing.

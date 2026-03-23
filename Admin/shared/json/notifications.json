@@ -1,5 +1,40 @@
 [
     {
+        "id": "notif_69bf8c6a46e3d",
+        "type": "direct",
+        "title": "Reward Earned",
+        "message": "You earned 5 points for Daily login.",
+        "datetime": "2026-03-22 12:00:02"
+    },
+    {
+        "id": "notif_69bf8b779b14c",
+        "type": "direct",
+        "title": "Reward Earned",
+        "message": "You earned 5 points for Daily login.",
+        "datetime": "2026-03-22 11:55:59"
+    },
+    {
+        "id": "notif_69bf8647e5a5f",
+        "type": "direct",
+        "title": "Reward Earned",
+        "message": "You earned 20 points for Joining a club.",
+        "datetime": "2026-03-22 11:33:51"
+    },
+    {
+        "id": "notif_69bf8647e5765",
+        "type": "direct",
+        "title": "Tier Upgrade",
+        "message": "Congratulations! You've reached SILVER tier.",
+        "datetime": "2026-03-22 11:33:51"
+    },
+    {
+        "id": "notif_69bf84294dc9f",
+        "type": "direct",
+        "title": "Reward Earned",
+        "message": "You earned 20 points for Joining a club.",
+        "datetime": "2026-03-22 11:24:49"
+    },
+    {
         "id": "notif_69bec5ec5527a",
         "type": "direct",
         "title": "Reward Earned",

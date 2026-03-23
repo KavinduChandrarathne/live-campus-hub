@@ -11,9 +11,7 @@ function renderClubRequests(clubName) {
         .map((r, i) => ({ r, i }))
       .filter(({ r }) => {
         const existing = (r.clubName || '').trim().toLowerCase();
-        if (existing === normalized) return true;
-        if (existing.split(' ')[0] === normalized) return true;
-        return false;
+        return existing === normalized;
       })
       .reduce((acc, cur) => {
         // Keep only one request per student per club (latest + accepted priority)
@@ -79,30 +77,43 @@ function updateRequestCounts() {
 
 function filterRequests(filter) {
   requestCards.forEach(card => {
-    if (filter === "all" || card.dataset.status === filter) {
+    const cardStatus = card.dataset.status;
+    let shouldShow = false;
+    
+    if (filter === "all") {
+      // In "all" view, show all except rejected and removed
+      shouldShow = cardStatus !== "rejected" && cardStatus !== "removed";
+    } else if (filter === "pending") {
+      shouldShow = cardStatus === "pending";
+    } else if (filter === "accepted") {
+      shouldShow = cardStatus === "accepted";
+    } else if (filter === "rejected") {
+      shouldShow = cardStatus === "rejected";
+    } else if (filter === "removed") {
+      shouldShow = cardStatus === "removed";
+    }
+    
+    if (shouldShow) {
       card.classList.remove("hidden");
     } else {
       card.classList.add("hidden");
-    }
-    // Hide action buttons in 'removed' tab
-    if (filter === "removed") {
-      const actions = card.querySelector('.request-actions');
-      if (actions) actions.innerHTML = '';
-    }
-    // Hide action buttons in 'rejected' tab
-    if (filter === "rejected") {
-      const actions = card.querySelector('.request-actions');
-      if (actions) actions.innerHTML = '';
     }
   });
 }
 
 function changeStatus(card, newStatus) {
-  const idx = card.dataset.index;
+  const studentId = card.dataset.studentId;
+  const clubName = card.dataset.clubName;
+  
+  if (!studentId || !clubName) {
+    console.error('Missing studentId or clubName:', { studentId, clubName });
+    return;
+  }
+  
   fetch('shared/php/update-join-request.php', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: `index=${idx}&status=${newStatus}`
+    body: `studentId=${encodeURIComponent(studentId)}&clubName=${encodeURIComponent(clubName)}&status=${newStatus}`
   }).then(res => res.json()).then(res => {
     if (!res.success) console.error('Failed to persist status', res.error);
   }).catch(err => console.error('Network error', err));
@@ -173,7 +184,8 @@ function renderRequests(wrapped) {
     const card = document.createElement('article');
     card.className = 'request-card';
     card.dataset.status = req.status || 'pending';
-    card.dataset.index = globalIdx;
+    card.dataset.studentId = req.studentId || '';
+    card.dataset.clubName = req.clubName || '';
 
     // determine action buttons based on status
     let actionsHTML = '';
@@ -184,7 +196,7 @@ function renderRequests(wrapped) {
     } else if (status === 'accepted') {
       actionsHTML = `<button class="remove-btn" type="button">Remove member</button>`;
     } else if (status === 'rejected') {
-      actionsHTML = `<button class="accept-btn" type="button">Accept</button>`;
+      actionsHTML = ''; // No buttons for rejected - user must send new request
     }
 
     card.innerHTML = `

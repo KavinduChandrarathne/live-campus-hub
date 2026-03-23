@@ -5,10 +5,11 @@ $usersFile = '../json/users.json';
 require_once 'reward-utils.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $index = isset($_POST['index']) ? intval($_POST['index']) : null;
+    $studentId = isset($_POST['studentId']) ? trim($_POST['studentId']) : null;
+    $clubName = isset($_POST['clubName']) ? trim($_POST['clubName']) : null;
     $status = isset($_POST['status']) ? trim($_POST['status']) : '';
 
-    if ($index === null || $status === '') {
+    if (!$studentId || !$clubName || $status === '') {
         echo json_encode(['success' => false, 'error' => 'Missing parameters']);
         exit;
     }
@@ -24,18 +25,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $requests = [];
     }
 
-    if (!isset($requests[$index])) {
-        echo json_encode(['success' => false, 'error' => 'Invalid index']);
-        exit;
+    // Find the request by studentId and clubName
+    $index = null;
+    $studentIdNorm = strtoupper(trim($studentId));
+    $clubNameNorm = strtolower(trim($clubName));
+    
+    foreach ($requests as $i => $req) {
+        if (isset($req['studentId']) && isset($req['clubName'])) {
+            $reqStudentId = strtoupper(trim($req['studentId']));
+            $reqClubName = strtolower(trim($req['clubName']));
+            if ($reqStudentId === $studentIdNorm && $reqClubName === $clubNameNorm) {
+                $index = $i;
+                break;
+            }
+        }
     }
 
-    $oldStatus = $requests[$index]['status'];
-    $requests[$index]['status'] = $status;
+    // If not found in requests file, it might be a user who's only in joinedClubs
+    $requestFoundInFile = ($index !== null);
+
+    // Determine the old status
+    $oldStatus = 'pending';
+    if ($requestFoundInFile) {
+        $oldStatus = $requests[$index]['status'] ?? 'pending';
+        $requests[$index]['status'] = $status;
+    }
 
     // Update user's joinedClubs
-    $studentId = strtoupper(trim($requests[$index]['studentId']));
-    $clubName = trim($requests[$index]['clubName']);
-
     $users = [];
     if (file_exists($usersFile)) {
         $uj = file_get_contents($usersFile);
@@ -46,18 +62,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     foreach ($users as &$u) {
-        if (isset($u['studentId']) && strtoupper(trim($u['studentId'])) === $studentId) {
+        if (isset($u['studentId']) && strtoupper(trim($u['studentId'])) === $studentIdNorm) {
             if (!isset($u['joinedClubs']) || !is_array($u['joinedClubs'])) {
                 $u['joinedClubs'] = [];
             }
-            $clubIndex = array_search($clubName, $u['joinedClubs']);
-
+            
+            // Search for club in joinedClubs (case-insensitive)
+            $clubIndex = -1;
+            foreach ($u['joinedClubs'] as $idx => $club) {
+                if (strtolower(trim($club)) === $clubNameNorm) {
+                    $clubIndex = $idx;
+                    break;
+                }
+            }
+            
             // Track first club era
             $initialClubCount = count($u['joinedClubs']);
 
             if ($status === 'accepted' && $oldStatus !== 'accepted') {
-                if ($clubIndex === false) {
-                    $u['joinedClubs'][] = $clubName;
+                if ($clubIndex === -1) {
+                    $u['joinedClubs'][] = trim($clubName);
                 }
 
                 // Rewards on club join
@@ -65,9 +89,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($initialClubCount === 0) {
                     awardUserPoints($u, 10, 0, false, 'First club joined');
                 }
-            } elseif ($status !== 'accepted' && $oldStatus === 'accepted') {
-                if ($clubIndex !== false) {
-                    array_splice($u['joinedClubs'], $clubIndex, 1);
+            } elseif ($status === 'removed') {
+                // Remove from joinedClubs - either it was accepted or it's not in the request file
+                if (!$requestFoundInFile || $oldStatus === 'accepted') {
+                    if ($clubIndex !== -1) {
+                        array_splice($u['joinedClubs'], $clubIndex, 1);
+                    }
                 }
             }
             break;
@@ -75,7 +102,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     file_put_contents($usersFile, json_encode($users, JSON_PRETTY_PRINT));
-    file_put_contents($requestsFile, json_encode($requests, JSON_PRETTY_PRINT));
+    
+    // Only write requests file if we found and modified the request in it
+    if ($requestFoundInFile) {
+        file_put_contents($requestsFile, json_encode($requests, JSON_PRETTY_PRINT));
+    }
 
     echo json_encode(['success' => true]);
     exit;
