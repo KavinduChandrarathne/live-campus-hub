@@ -1,8 +1,6 @@
 <?php
 header('Content-Type: application/json');
-$requestsFile = '../json/club-join-requests.json';
-$usersFile = '../json/users.json';
-require_once 'reward-utils.php';
+require_once 'db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $studentId = isset($_POST['studentId']) ? trim($_POST['studentId']) : null;
@@ -14,102 +12,99 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    if (!file_exists($requestsFile)) {
-        echo json_encode(['success' => false, 'error' => 'Requests file not found']);
+    try {
+        // Get user
+        $stmt = $pdo->prepare('SELECT id FROM users WHERE LOWER(studentId) = LOWER(:studentId)');
+        $stmt->execute([':studentId' => $studentId]);
+        $user = $stmt->fetch();
+
+        if (!$user) {
+            echo json_encode(['success' => false, 'error' => 'User not found']);
+            exit;
+        }
+
+        $userId = $user['id'];
+
+        // Get club
+        $stmt = $pdo->prepare('SELECT id FROM clubs WHERE LOWER(name) = LOWER(:clubName)');
+        $stmt->execute([':clubName' => $clubName]);
+        $club = $stmt->fetch();
+
+        if (!$club) {
+            echo json_encode(['success' => false, 'error' => 'Club not found']);
+            exit;
+        }
+
+        $clubId = $club['id'];
+
+        // Get current request
+        $stmt = $pdo->prepare('
+            SELECT status FROM club_join_requests 
+            WHERE user_id = :userId AND club_id = :clubId
+        ');
+        $stmt->execute([':userId' => $userId, ':clubId' => $clubId]);
+        $request = $stmt->fetch();
+
+        $oldStatus = $request ? ($request['status'] ?? 'pending') : 'pending';
+
+        // Check if user already has a membership
+        $stmt = $pdo->prepare('
+            SELECT id FROM club_memberships 
+            WHERE user_id = :userId AND club_id = :clubId
+        ');
+        $stmt->execute([':userId' => $userId, ':clubId' => $clubId]);
+        $membership = $stmt->fetch();
+
+        // Count existing clubs before this change
+        $stmt = $pdo->prepare('SELECT COUNT(*) as cnt FROM club_memberships WHERE user_id = :userId');
+        $stmt->execute([':userId' => $userId]);
+        $countResult = $stmt->fetch();
+        $clubCount = $countResult['cnt'];
+
+        if ($status === 'accepted' && $oldStatus !== 'accepted') {
+            // Add to joined clubs if not already there
+            if (!$membership) {
+                $stmt = $pdo->prepare('
+                    INSERT INTO club_memberships (user_id, club_id, joined_at)
+                    VALUES (:userId, :clubId, NOW())
+                ');
+                $stmt->execute([':userId' => $userId, ':clubId' => $clubId]);
+            }
+
+            // Award points
+            awardUserPoints($pdo, $userId, 20, 0, false, 'Joining a club');
+            if ($clubCount === 0) {
+                awardUserPoints($pdo, $userId, 10, 0, false, 'First club joined');
+            }
+        } elseif ($status === 'removed') {
+            // Remove from joined clubs if it was accepted or if there's no pending request
+            if ($membership && ($oldStatus === 'accepted' || !$request)) {
+                $stmt = $pdo->prepare('DELETE FROM club_memberships WHERE user_id = :userId AND club_id = :clubId');
+                $stmt->execute([':userId' => $userId, ':clubId' => $clubId]);
+            }
+        }
+
+        // Update the join request status
+        if ($request) {
+            $stmt = $pdo->prepare('
+                UPDATE club_join_requests 
+                SET status = :status, updated_at = NOW()
+                WHERE user_id = :userId AND club_id = :clubId
+            ');
+            $stmt->execute([
+                ':status' => $status,
+                ':userId' => $userId,
+                ':clubId' => $clubId
+            ]);
+        }
+
+        echo json_encode(['success' => true]);
+        exit;
+    } catch (PDOException $e) {
+        error_log('Update join request error: ' . $e->getMessage());
+        echo json_encode(['success' => false, 'error' => 'Failed to update request']);
         exit;
     }
-
-    $json = file_get_contents($requestsFile);
-    $requests = json_decode($json, true);
-    if (!is_array($requests)) {
-        $requests = [];
-    }
-
-    // Find the request by studentId and clubName
-    $index = null;
-    $studentIdNorm = strtoupper(trim($studentId));
-    $clubNameNorm = strtolower(trim($clubName));
-    
-    foreach ($requests as $i => $req) {
-        if (isset($req['studentId']) && isset($req['clubName'])) {
-            $reqStudentId = strtoupper(trim($req['studentId']));
-            $reqClubName = strtolower(trim($req['clubName']));
-            if ($reqStudentId === $studentIdNorm && $reqClubName === $clubNameNorm) {
-                $index = $i;
-                break;
-            }
-        }
-    }
-
-    // If not found in requests file, it might be a user who's only in joinedClubs
-    $requestFoundInFile = ($index !== null);
-
-    // Determine the old status
-    $oldStatus = 'pending';
-    if ($requestFoundInFile) {
-        $oldStatus = $requests[$index]['status'] ?? 'pending';
-        $requests[$index]['status'] = $status;
-    }
-
-    // Update user's joinedClubs
-    $users = [];
-    if (file_exists($usersFile)) {
-        $uj = file_get_contents($usersFile);
-        $users = json_decode($uj, true);
-        if (!is_array($users)) {
-            $users = [];
-        }
-    }
-
-    foreach ($users as &$u) {
-        if (isset($u['studentId']) && strtoupper(trim($u['studentId'])) === $studentIdNorm) {
-            if (!isset($u['joinedClubs']) || !is_array($u['joinedClubs'])) {
-                $u['joinedClubs'] = [];
-            }
-            
-            // Search for club in joinedClubs (case-insensitive)
-            $clubIndex = -1;
-            foreach ($u['joinedClubs'] as $idx => $club) {
-                if (strtolower(trim($club)) === $clubNameNorm) {
-                    $clubIndex = $idx;
-                    break;
-                }
-            }
-            
-            // Track first club era
-            $initialClubCount = count($u['joinedClubs']);
-
-            if ($status === 'accepted' && $oldStatus !== 'accepted') {
-                if ($clubIndex === -1) {
-                    $u['joinedClubs'][] = trim($clubName);
-                }
-
-                // Rewards on club join
-                awardUserPoints($u, 20, 0, false, 'Joining a club');
-                if ($initialClubCount === 0) {
-                    awardUserPoints($u, 10, 0, false, 'First club joined');
-                }
-            } elseif ($status === 'removed') {
-                // Remove from joinedClubs - either it was accepted or it's not in the request file
-                if (!$requestFoundInFile || $oldStatus === 'accepted') {
-                    if ($clubIndex !== -1) {
-                        array_splice($u['joinedClubs'], $clubIndex, 1);
-                    }
-                }
-            }
-            break;
-        }
-    }
-
-    file_put_contents($usersFile, json_encode($users, JSON_PRETTY_PRINT));
-    
-    // Only write requests file if we found and modified the request in it
-    if ($requestFoundInFile) {
-        file_put_contents($requestsFile, json_encode($requests, JSON_PRETTY_PRINT));
-    }
-
-    echo json_encode(['success' => true]);
-    exit;
 } else {
     echo json_encode(['success' => false, 'error' => 'Invalid request']);
     exit;

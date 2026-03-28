@@ -1,72 +1,57 @@
 <?php
-// Add a new club-specific update to JSON
-date_default_timezone_set('Asia/Colombo');
-$updatesFile = '../json/club-updates.json';
-$notificationsFile = '../json/notifications.json';
+// Add a new club update to database
+header('Content-Type: application/json');
+require_once 'db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $club = isset($_POST['clubName']) ? trim($_POST['clubName']) : '';
+    $clubName = isset($_POST['clubName']) ? trim($_POST['clubName']) : '';
     $icon = isset($_POST['icon']) ? trim($_POST['icon']) : 'fa-users';
     $message = isset($_POST['message']) ? trim($_POST['message']) : '';
     $description = isset($_POST['description']) ? trim($_POST['description']) : '';
     $sendNotification = isset($_POST['sendNotification']) && $_POST['sendNotification'] === 'on';
 
-    if ($club === '' || $message === '') {
+    if ($clubName === '' || $message === '') {
         echo json_encode(['success' => false, 'error' => 'Club and message are required']);
         exit;
     }
 
-    $update = [
-        'clubName' => $club,
-        'icon' => $icon,
-        'message' => $message,
-        'description' => $description,
-        'datetime' => date('Y-m-d H:i:s')
-    ];
+    try {
+        // Find club by name
+        $stmt = $pdo->prepare('SELECT id FROM clubs WHERE LOWER(name) = LOWER(:clubName)');
+        $stmt->execute([':clubName' => $clubName]);
+        $club = $stmt->fetch();
 
-    $updates = [];
-    if (file_exists($updatesFile)) {
-        $json = file_get_contents($updatesFile);
-        $updates = json_decode($json, true);
-        if (!is_array($updates)) {
-            $updates = [];
-        }
-    }
-
-    array_unshift($updates, $update);
-    file_put_contents($updatesFile, json_encode($updates, JSON_PRETTY_PRINT));
-
-    // If send as notification is checked, create a notification
-    if ($sendNotification) {
-        $notification = [
-            'id' => uniqid('notif_'),
-            'type' => 'club',
-            'title' => 'Club Update - ' . $club,
-            'message' => $message,
-            'description' => $description,
-            'clubName' => $club,
-            'datetime' => date('Y-m-d H:i:s')
-        ];
-
-        // Read existing notifications
-        $notifications = [];
-        if (file_exists($notificationsFile)) {
-            $json = file_get_contents($notificationsFile);
-            $notifications = json_decode($json, true);
-            if (!is_array($notifications)) {
-                $notifications = [];
-            }
+        if (!$club) {
+            echo json_encode(['success' => false, 'error' => 'Club not found']);
+            exit;
         }
 
-        // Add new notification to the beginning
-        array_unshift($notifications, $notification);
+        $clubId = $club['id'];
 
-        // Save back to JSON file
-        file_put_contents($notificationsFile, json_encode($notifications, JSON_PRETTY_PRINT));
+        // Insert club update
+        $stmt = $pdo->prepare('
+            INSERT INTO club_updates (club_id, icon, message, description, created_at)
+            VALUES (:clubId, :icon, :message, :description, NOW())
+        ');
+        $stmt->execute([
+            ':clubId' => $clubId,
+            ':icon' => $icon,
+            ':message' => $message,
+            ':description' => $description ?: null
+        ]);
+
+        // If send as notification is checked, create a notification
+        if ($sendNotification) {
+            addNotification($pdo, 'Club Update - ' . $clubName, $message, 'club', $clubId);
+        }
+
+        echo json_encode(['success' => true]);
+        exit;
+    } catch (PDOException $e) {
+        error_log('Club update creation error: ' . $e->getMessage());
+        echo json_encode(['success' => false, 'error' => 'Failed to create club update']);
+        exit;
     }
-
-    echo json_encode(['success' => true]);
-    exit;
 }
 
 http_response_code(400);

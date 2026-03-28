@@ -452,10 +452,10 @@
 
   function fetchAndRenderClubs() {
     refreshCurrentUser().then(() => {
-      fetch('Admin/shared/json/clubs.json')
+      fetch('Admin/shared/php/api-get-clubs.php')
         .then(res => res.json())
         .then(renderClubs)
-        .catch(err => console.error('Failed to load clubs.json', err));
+        .catch(err => console.error('Failed to load clubs', err));
     });
   }
   fetchAndRenderClubs();

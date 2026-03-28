@@ -1,8 +1,10 @@
-// common.js - Utilities for pages that need user information
+// This is for utilities for pages that need user information
 
 let _userRefreshPromise = null;
 let _lastRefresh = 0;
-const REFRESH_INTERVAL = 10000; // don't refresh more often than every 10s
+const REFRESH_INTERVAL = 10000; 
+
+
 
 function getCurrentUser() {
     const raw = sessionStorage.getItem('currentUser');
@@ -20,7 +22,7 @@ function getCurrentUser() {
 }
 
 /**
- * Force-refreshes the session user from the JSON file.  Returns a promise
+ * Force-refreshes the session user from the database API.  Returns a promise
  * that resolves with the updated user.  Multiple simultaneous calls
  * will share the same in-flight fetch.  Refreshes are throttled.
  */
@@ -31,14 +33,16 @@ function refreshCurrentUser() {
     }
 
     _lastRefresh = now;
-    // add timestamp to prevent aggressive browser caching
-    _userRefreshPromise = fetch('Admin/shared/json/users.json?t=' + Date.now())
+    const existing = getCurrentUser();
+    if (!existing || !existing.email) {
+        return Promise.resolve(existing);
+    }
+
+    // fetch from database API endpoint instead of JSON file
+    _userRefreshPromise = fetch('Admin/shared/php/api-get-user.php?email=' + encodeURIComponent(existing.email))
         .then(r => r.json())
-        .then(users => {
-            const existing = getCurrentUser();
-            if (!existing) return null;
-            const updated = users.find(u => u.username === existing.username || u.email === existing.email);
-            if (updated) {
+        .then(updated => {
+            if (updated && updated.email) {
                 sessionStorage.setItem('currentUser', JSON.stringify(updated));
                 window.dispatchEvent(new CustomEvent('currentUserUpdated', { detail: updated }));
                 return updated;
@@ -47,7 +51,7 @@ function refreshCurrentUser() {
         })
         .catch(err => {
             console.warn('refreshCurrentUser failed', err);
-            return getCurrentUser();
+            return existing;
         })
         .finally(() => {
             // clear promise after a short delay to allow repeat refreshes
@@ -276,7 +280,7 @@ function logout() {
 
 // Initialize dropdown functionality for all pages
 function initDropdown() {
-    // ...dropdown logic removed...
+    
 }
 
 // Initialize everything when DOM is ready

@@ -1,7 +1,6 @@
 <?php
 header('Content-Type: application/json');
-// Edit a transit update by route and index
-$updatesFile = '../json/transit-updates.json';
+require_once 'db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $route = isset($_POST['route']) ? trim($_POST['route']) : '';
@@ -10,60 +9,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $message = isset($_POST['message']) ? trim($_POST['message']) : '';
     $description = isset($_POST['description']) ? trim($_POST['description']) : '';
     $liveLink = isset($_POST['liveLink']) ? trim($_POST['liveLink']) : '';
-    $sendNotification = isset($_POST['sendNotification']) && $_POST['sendNotification'] === 'on';
+
     if ($route === '' || $index < 0 || !$icon || !$message) {
         echo json_encode(['success' => false, 'error' => 'Invalid input']);
         exit;
     }
-    $updates = [];
-    if (file_exists($updatesFile)) {
-        $json = file_get_contents($updatesFile);
-        $updates = json_decode($json, true);
-        if (!is_array($updates)) $updates = [];
-    }
-    $count = -1;
-    foreach ($updates as $k => $u) {
-        if (isset($u['route']) && strcasecmp(trim($u['route']), $route) === 0) {
-            $count++;
-            if ($count === $index) {
-                $updates[$k]['icon'] = $icon;
-                $updates[$k]['message'] = $message;
-                $updates[$k]['description'] = $description;
-                $updates[$k]['liveLink'] = $liveLink;
-                $updates[$k]['datetime'] = date('Y-m-d H:i:s');
-                file_put_contents($updatesFile, json_encode($updates, JSON_PRETTY_PRINT));
 
-                // if requested, add a new notification for this update
-                if ($sendNotification) {
-                    $notificationsFile = '../json/notifications.json';
-                    $notification = [
-                        'id' => uniqid('notif_'),
-                        'type' => 'transit',
-                        'title' => 'Transit Update - ' . $route,
-                        'message' => $message,
-                        'description' => $description,
-                        'route' => $route,
-                        'datetime' => date('Y-m-d H:i:s')
-                    ];
-                    $notifications = [];
-                    if (file_exists($notificationsFile)) {
-                        $jsonNotif = file_get_contents($notificationsFile);
-                        $notifications = json_decode($jsonNotif, true);
-                        if (!is_array($notifications)) {
-                            $notifications = [];
-                        }
-                    }
-                    array_unshift($notifications, $notification);
-                    file_put_contents($notificationsFile, json_encode($notifications, JSON_PRETTY_PRINT));
-                }
+    try {
+        $stmt = $pdo->prepare('SELECT id FROM transit_routes WHERE LOWER(name) = LOWER(:route)');
+        $stmt->execute([':route' => $route]);
+        $routeRow = $stmt->fetch();
 
-                echo json_encode(['success' => true]);
-                exit;
-            }
+        if (!$routeRow) {
+            echo json_encode(['success' => false, 'error' => 'Route not found']);
+            exit;
         }
+
+        $stmt = $pdo->prepare('SELECT id FROM transit_updates WHERE route_id = :routeId ORDER BY created_at DESC');
+        $stmt->execute([':routeId' => $routeRow['id']]);
+        $updates = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+
+        if ($index >= count($updates)) {
+            echo json_encode(['success' => false, 'error' => 'Update not found']);
+            exit;
+        }
+
+        $updateId = $updates[$index];
+
+        $stmt = $pdo->prepare('
+            UPDATE transit_updates 
+            SET icon = :icon, message = :message, description = :description, live_link = :liveLink, created_at = NOW()
+            WHERE id = :id
+        ');
+        $stmt->execute([':icon' => $icon, ':message' => $message, ':description' => $description ?: null, ':liveLink' => $liveLink ?: null, ':id' => $updateId]);
+
+        echo json_encode(['success' => true]);
+        exit;
+    } catch (PDOException $e) {
+        error_log('Edit transit update error: ' . $e->getMessage());
+        echo json_encode(['success' => false, 'error' => 'Failed to edit update']);
+        exit;
     }
-    echo json_encode(['success' => false, 'error' => 'Update not found']);
-    exit;
 }
+
 http_response_code(400);
 echo json_encode(['success' => false, 'error' => 'Invalid request']);

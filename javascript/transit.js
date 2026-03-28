@@ -1,5 +1,26 @@
 // Attach click handlers to transit cards and enforce join permissions
 // this module depends on common.js for getCurrentUser()
+
+function showToast(message, duration = 2600) {
+  const toast = document.getElementById('toast');
+  if (!toast) {
+    console.log('[toast]', message);
+    return;
+  }
+  toast.textContent = message;
+  toast.style.display = 'block';
+  toast.style.opacity = '1';
+  toast.style.bottom = '32px';
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.bottom = '20px';
+    setTimeout(() => {
+      toast.style.display = 'none';
+      toast.style.bottom = '32px';
+    }, 300);
+  }, duration);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   let pendingRoutes = [];
 
@@ -56,16 +77,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     b.disabled = true;
                   });
                   pendingRoutes.push(locationName);
-                  alert('Request sent!');
+                  showToast('Your join request has been submitted!');
                   // update UI in case something changed on server
                   loadPending(initCards);
                 } else {
-                  alert('Error: ' + (resp.error || 'unknown'));
+                  showToast('Error: ' + (resp.error || 'unknown'));
                 }
               })
               .catch(err => {
                 console.error(err);
-                alert('Request failed');
+                showToast('Request failed');
               });
           }
 

@@ -1,6 +1,8 @@
 <?php
+// Get all users who joined a specific route via MySQL
 header('Content-Type: application/json');
-$userFile = '../json/users.json';
+require_once 'db.php';
+
 $route = isset($_GET['route']) ? trim($_GET['route']) : '';
 
 if ($route === '') {
@@ -8,27 +10,28 @@ if ($route === '') {
     exit;
 }
 
-$users = [];
-if (file_exists($userFile)) {
-    $json = file_get_contents($userFile);
-    $users = json_decode($json, true);
-    if (!is_array($users)) {
-        $users = [];
-    }
-}
+try {
+    $stmt = $pdo->prepare('
+        SELECT 
+            u.username,
+            u.firstName,
+            u.lastName,
+            u.email,
+            u.faculty,
+            u.picture
+        FROM users u
+        INNER JOIN transit_route_memberships m ON u.id = m.user_id
+        INNER JOIN transit_routes r ON m.route_id = r.id
+        WHERE LOWER(r.name) = LOWER(:route)
+        ORDER BY u.firstName, u.lastName
+    ');
+    $stmt->execute([':route' => $route]);
+    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$result = [];
-foreach ($users as $u) {
-    if (isset($u['joinedRoutes']) && is_array($u['joinedRoutes']) && in_array($route, $u['joinedRoutes'])) {
-        $result[] = [
-            'username' => $u['username'] ?? $u['email'] ?? '',
-            'firstName' => $u['firstName'] ?? '',
-            'lastName' => $u['lastName'] ?? '',
-            'email' => $u['email'] ?? '',
-            'faculty' => $u['faculty'] ?? '',
-            'picture' => $u['picture'] ?? ''
-        ];
-    }
+    echo json_encode($users);
+    exit;
+} catch (PDOException $e) {
+    error_log('Get route joined users error: ' . $e->getMessage());
+    echo json_encode([]);
+    exit;
 }
-
-echo json_encode($result);

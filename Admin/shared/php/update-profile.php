@@ -1,8 +1,7 @@
 <?php
-// update-profile.php: Update user profile info (name, dob, etc.)
+// update-profile.php: Update user profile info (name, dob, etc.) via MySQL
 header('Content-Type: application/json');
-$usersFile = '../json/users.json';
-$adminsFile = '../json/admins.json';
+require_once 'db.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['success' => false, 'error' => 'Invalid request']);
@@ -18,27 +17,40 @@ if (!$email) {
     exit;
 }
 
-$file = ($role === 'admin') ? $adminsFile : $usersFile;
-$data = [];
-if (file_exists($file)) {
-    $json = file_get_contents($file);
-    $data = json_decode($json, true);
-    if (!is_array($data)) $data = [];
-}
-
-$updated = false;
-foreach ($data as &$u) {
-    if (strcasecmp($u['email'], $email) === 0) {
-        foreach ($fields as $f) {
-            if (isset($_POST[$f])) $u[$f] = $_POST[$f];
-        }
-        $updated = true;
-        break;
+try {
+    if ($role === 'admin') {
+        $table = 'admins';
+    } else {
+        $table = 'users';
     }
-}
-if ($updated) {
-    file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT));
-    echo json_encode(['success' => true]);
-} else {
-    echo json_encode(['success' => false, 'error' => 'User not found']);
+
+    $updates = [];
+    $params = [':email' => $email];
+
+    foreach ($fields as $field) {
+        if (isset($_POST[$field])) {
+            $updates[] = "{$field} = :{$field}";
+            $params[":{$field}"] = $_POST[$field];
+        }
+    }
+
+    if (empty($updates)) {
+        echo json_encode(['success' => false, 'error' => 'No fields to update']);
+        exit;
+    }
+
+    $updateClause = implode(', ', $updates);
+    $sql = "UPDATE {$table} SET {$updateClause} WHERE LOWER(email) = LOWER(:email)";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
+
+    if ($stmt->rowCount() > 0) {
+        echo json_encode(['success' => true]);
+    } else {
+        echo json_encode(['success' => false, 'error' => 'User not found']);
+    }
+} catch (PDOException $e) {
+    error_log('Update profile error: ' . $e->getMessage());
+    echo json_encode(['success' => false, 'error' => 'Failed to update profile']);
 }

@@ -1,8 +1,7 @@
 <?php
-// reset-password.php: Reset user password with current password verification
+// reset-password.php: Reset user password via MySQL
 header('Content-Type: application/json');
-$usersFile = '../json/users.json';
-$adminsFile = '../json/admins.json';
+require_once 'db.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['success' => false, 'error' => 'Invalid request']);
@@ -19,29 +18,35 @@ if (!$email || !$currentPassword || !$newPassword) {
     exit;
 }
 
-$file = ($role === 'admin') ? $adminsFile : $usersFile;
-$data = [];
-if (file_exists($file)) {
-    $json = file_get_contents($file);
-    $data = json_decode($json, true);
-    if (!is_array($data)) $data = [];
-}
+try {
+    if ($role === 'admin') {
+        $stmt = $pdo->prepare('SELECT password FROM admins WHERE LOWER(email) = LOWER(:email)');
+        $stmt->execute([':email' => $email]);
+        $user = $stmt->fetch();
 
-$updated = false;
-foreach ($data as &$u) {
-    if (strcasecmp($u['email'], $email) === 0) {
-        if ($u['password'] !== $currentPassword) {
+        if (!$user || $user['password'] !== $currentPassword) {
             echo json_encode(['success' => false, 'error' => 'Current password is incorrect']);
             exit;
         }
-        $u['password'] = $newPassword;
-        $updated = true;
-        break;
+
+        $stmt = $pdo->prepare('UPDATE admins SET password = :newPassword WHERE LOWER(email) = LOWER(:email)');
+        $stmt->execute([':newPassword' => $newPassword, ':email' => $email]);
+    } else {
+        $stmt = $pdo->prepare('SELECT password FROM users WHERE LOWER(email) = LOWER(:email)');
+        $stmt->execute([':email' => $email]);
+        $user = $stmt->fetch();
+
+        if (!$user || $user['password'] !== $currentPassword) {
+            echo json_encode(['success' => false, 'error' => 'Current password is incorrect']);
+            exit;
+        }
+
+        $stmt = $pdo->prepare('UPDATE users SET password = :newPassword WHERE LOWER(email) = LOWER(:email)');
+        $stmt->execute([':newPassword' => $newPassword, ':email' => $email]);
     }
-}
-if ($updated) {
-    file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT));
+
     echo json_encode(['success' => true]);
-} else {
-    echo json_encode(['success' => false, 'error' => 'User not found']);
+} catch (PDOException $e) {
+    error_log('Reset password error: ' . $e->getMessage());
+    echo json_encode(['success' => false, 'error' => 'Failed to reset password']);
 }

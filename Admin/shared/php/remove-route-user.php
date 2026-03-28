@@ -1,6 +1,7 @@
 <?php
+// Remove user from transit route via MySQL
 header('Content-Type: application/json');
-$userFile = '../json/users.json';
+require_once 'db.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(400);
@@ -16,33 +17,41 @@ if ($route === '' || $user === '') {
     exit;
 }
 
-$changed = false;
-$users = [];
-if (file_exists($userFile)) {
-    $json = file_get_contents($userFile);
-    $users = json_decode($json, true);
-    if (!is_array($users)) {
-        $users = [];
-    }
-}
+try {
+    // Find user by username or email
+    $userLower = strtolower($user);
+    $stmt = $pdo->prepare('SELECT id FROM users WHERE LOWER(username) = ? OR LOWER(email) = ?');
+    $stmt->execute([$userLower, $userLower]);
+    $userRow = $stmt->fetch(PDO::FETCH_ASSOC);
 
-foreach ($users as &$u) {
-    if ((isset($u['username']) && strtolower($u['username']) === strtolower($user)) ||
-        (isset($u['email']) && strtolower($u['email']) === strtolower($user))) {
-        if (isset($u['joinedRoutes']) && is_array($u['joinedRoutes'])) {
-            $idx = array_search($route, $u['joinedRoutes']);
-            if ($idx !== false) {
-                array_splice($u['joinedRoutes'], $idx, 1);
-                $changed = true;
-            }
-        }
-        break;
+    if (!$userRow) {
+        echo json_encode(['success' => false, 'error' => 'User not found']);
+        exit;
     }
-}
 
-if ($changed) {
-    file_put_contents($userFile, json_encode($users, JSON_PRETTY_PRINT));
+    // Find route by name
+    $routeLower = strtolower($route);
+    $stmt = $pdo->prepare('SELECT id FROM transit_routes WHERE LOWER(name) = ?');
+    $stmt->execute([$routeLower]);
+    $routeRow = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$routeRow) {
+        echo json_encode(['success' => false, 'error' => 'Route not found']);
+        exit;
+    }
+
+    // Remove from memberships
+    $stmt = $pdo->prepare('DELETE FROM transit_route_memberships WHERE user_id = ? AND route_id = ?');
+    $stmt->execute([$userRow['id'], $routeRow['id']]);
+
+    // Mark any prior join requests as rejected so user can request again
+    $stmt = $pdo->prepare('UPDATE transit_join_requests SET status = ? WHERE user_id = ? AND route_id = ?');
+    $stmt->execute(['rejected', $userRow['id'], $routeRow['id']]);
+
     echo json_encode(['success' => true]);
-} else {
-    echo json_encode(['success' => false, 'error' => 'User not found or not joined']);
+    exit;
+} catch (PDOException $e) {
+    error_log('Remove route user error: ' . $e->getMessage());
+    echo json_encode(['success' => false, 'error' => 'Failed to remove user']);
+    exit;
 }
