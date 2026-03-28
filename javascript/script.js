@@ -25,51 +25,48 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
     const email = document.querySelector("#loginForm input[type='email']").value.trim();
     const password = document.querySelector("#loginForm input[type='password']").value;
 
-    // fetch the sample users JSON
-    fetch("Admin/shared/json/users.json")
+    // fetch from new database login API endpoint
+    const formData = new FormData();
+    formData.append('email', email);
+    formData.append('password', password);
+
+    fetch("Admin/shared/php/api-login.php", {
+        method: 'POST',
+        body: formData
+    })
         .then(resp => resp.json())
-        .then(users => {
-            const match = users.find(u =>
-                (u.email.toLowerCase() === email.toLowerCase() || u.username.toLowerCase() === email.toLowerCase())
-            );
+        .then(result => {
+            if (result.success && result.user) {
+                // store user for session
+                sessionStorage.setItem('currentUser', JSON.stringify(result.user));
 
-            if (!match) {
-                alert("No account found with that email/username.");
-                return;
+                // daily login reward update and get updated user data
+                fetch('Admin/shared/php/update-user-rewards.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `email=${encodeURIComponent(result.user.email)}&action=dailyLogin`
+                })
+                .then(resp => resp.json())
+                .then(rewardResult => {
+                    if (rewardResult.success && rewardResult.user) {
+                        sessionStorage.setItem('currentUser', JSON.stringify(rewardResult.user));
+                        window.dispatchEvent(new CustomEvent('currentUserUpdated', { detail: rewardResult.user }));
+                        showToast(rewardResult.message || 'Login reward processed', 'success');
+                    } else if (rewardResult.error) {
+                        showToast(rewardResult.error, 'error');
+                    }
+                    window.location.href = 'dashboard.html';
+                })
+                .catch(err => {
+                    console.error('Reward update failed', err);
+                    window.location.href = 'dashboard.html';
+                });
+            } else {
+                alert(result.error || 'Login failed');
             }
-
-            if (match.password !== password) {
-                alert("Incorrect password.");
-                return;
-            }
-
-            // store user for session
-            sessionStorage.setItem('currentUser', JSON.stringify(match));
-
-            // daily login reward update and get updated user data
-            fetch('Admin/shared/php/update-user-rewards.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: `email=${encodeURIComponent(match.email)}&action=dailyLogin`
-            })
-            .then(resp => resp.json())
-            .then(result => {
-                if (result.success && result.user) {
-                    sessionStorage.setItem('currentUser', JSON.stringify(result.user));
-                    window.dispatchEvent(new CustomEvent('currentUserUpdated', { detail: result.user }));
-                    showToast(result.message || 'Login reward processed', 'success');
-                } else if (result.error) {
-                    showToast(result.error, 'error');
-                }
-                window.location.href = 'dashboard.html';
-            })
-            .catch(err => {
-                console.error('Reward update failed', err);
-                window.location.href = 'dashboard.html';
-            });
         })
         .catch(err => {
-            console.error("Failed to load users.json", err);
+            console.error("Login request failed", err);
             alert("An error occurred. Please try again later.");
         });
 });

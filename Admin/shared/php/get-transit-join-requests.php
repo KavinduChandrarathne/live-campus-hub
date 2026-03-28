@@ -1,44 +1,51 @@
 <?php
+// Get all transit join requests with user details via MySQL
 header('Content-Type: application/json');
-$reqFile = '../json/transit-join-requests.json';
-$userFile = '../json/users.json';
+require_once 'db.php';
 
-function findUser($username) {
-    global $userFile;
-    if (!file_exists($userFile)) return null;
-    $json = file_get_contents($userFile);
-    $users = json_decode($json, true);
-    if (!is_array($users)) return null;
-    foreach ($users as $u) {
-        if ((isset($u['username']) && strtolower($u['username']) === strtolower($username)) ||
-            (isset($u['email']) && strtolower($u['email']) === strtolower($username))) {
-            return $u;
-        }
+try {
+    $stmt = $pdo->prepare('
+        SELECT 
+            tjr.id,
+            u.username,
+            u.email,
+            u.firstName,
+            u.lastName,
+            u.faculty,
+            u.picture,
+            r.name as route,
+            tjr.status,
+            tjr.created_at
+        FROM transit_join_requests tjr
+        JOIN users u ON tjr.user_id = u.id
+        JOIN transit_routes r ON tjr.route_id = r.id
+        ORDER BY tjr.created_at DESC
+    ');
+    $stmt->execute();
+    $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Format response for frontend compatibility
+    $response = [];
+    foreach ($requests as $r) {
+        $response[] = [
+            'id' => $r['id'],
+            'username' => $r['username'],
+            'email' => $r['email'] ?? '',
+            'firstName' => $r['firstName'] ?? '',
+            'lastName' => $r['lastName'] ?? '',
+            'faculty' => $r['faculty'] ?? '',
+            'picture' => $r['picture'] ?? '',
+            'route' => $r['route'],
+            'status' => $r['status'],
+            'created_at' => $r['created_at'] ?? ''
+        ];
     }
-    return null;
-}
 
-$requests = [];
-if (file_exists($reqFile)) {
-    $json = file_get_contents($reqFile);
-    $requests = json_decode($json, true);
-    if (!is_array($requests)) {
-        $requests = [];
-    }
+    echo json_encode($response);
+    exit;
+} catch (PDOException $e) {
+    error_log('Get transit join requests error: ' . $e->getMessage());
+    echo json_encode([]);
+    exit;
 }
-
-// enhance each request with user details if available
-foreach ($requests as &$r) {
-    if (isset($r['username'])) {
-        $u = findUser($r['username']);
-        if ($u) {
-            $r['email'] = $u['email'] ?? '';
-            $r['firstName'] = $u['firstName'] ?? '';
-            $r['lastName'] = $u['lastName'] ?? '';
-            $r['faculty'] = $u['faculty'] ?? '';
-            $r['picture'] = $u['picture'] ?? '';
-        }
-    }
-}
-
-echo json_encode($requests);
+?>

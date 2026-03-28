@@ -1,8 +1,7 @@
 <?php
+// Update transit join request (accept/reject) via MySQL
 header('Content-Type: application/json');
-$reqFile = '../json/transit-join-requests.json';
-$userFile = '../json/users.json';
-require_once 'reward-utils.php';
+require_once 'db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = isset($_POST['id']) ? trim($_POST['id']) : '';
@@ -13,58 +12,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $requests = [];
-    if (file_exists($reqFile)) {
-        $json = file_get_contents($reqFile);
-        $requests = json_decode($json, true);
-        if (!is_array($requests)) {
-            $requests = [];
+    try {
+        // Find the request with user and route details
+        $stmt = $pdo->prepare('
+            SELECT tjr.id, tjr.user_id, tjr.route_id, tjr.status
+            FROM transit_join_requests tjr
+            WHERE tjr.id = ? AND (tjr.status = "pending" OR tjr.status = "")
+        ');
+        $stmt->execute([$id]);
+        $request = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$request) {
+            echo json_encode(['success' => false, 'error' => 'Request not found or already handled']);
+            exit;
         }
-    }
 
-    $updated = false;
-    foreach ($requests as &$r) {
-        if (isset($r['id']) && $r['id'] === $id && $r['status'] === 'pending') {
-            $r['status'] = $action === 'accept' ? 'accepted' : 'rejected';
-            $updated = true;
-            if ($action === 'accept') {
-                // add route to user's joinedRoutes
-                $users = [];
-                if (file_exists($userFile)) {
-                    $uj = json_decode(file_get_contents($userFile), true);
-                    if (is_array($uj)) {
-                        $users = $uj;
-                    }
-                }
-                foreach ($users as &$u) {
-                    if (isset($u['username']) && $u['username'] === $r['username']) {
-                        if (!isset($u['joinedRoutes']) || !is_array($u['joinedRoutes'])) {
-                            $u['joinedRoutes'] = [];
-                        }
-                        $initialRouteCount = count($u['joinedRoutes']);
-                        if (!in_array($r['route'], $u['joinedRoutes'])) {
-                            $u['joinedRoutes'][] = $r['route'];
-                        }
+        $userId = $request['user_id'];
+        $routeId = $request['route_id'];
 
-                        awardUserPoints($u, 15, 0, false, 'Joining a shuttle route');
-                        if ($initialRouteCount === 0) {
-                            awardUserPoints($u, 10, 0, false, 'First shuttle joined');
-                        }
-                    }
-                }
-                file_put_contents($userFile, json_encode($users, JSON_PRETTY_PRINT));
+        // Update status
+        $newStatus = ($action === 'accept') ? 'accepted' : 'rejected';
+        $stmt = $pdo->prepare('UPDATE transit_join_requests SET status = ? WHERE id = ?');
+        $stmt->execute([$newStatus, $id]);
+
+        // If accepted, add to memberships and award points
+        if ($action === 'accept') {
+            // Check if already a member
+            $stmt = $pdo->prepare('SELECT id FROM transit_route_memberships WHERE user_id = ? AND route_id = ?');
+            $stmt->execute([$userId, $routeId]);
+            if (!$stmt->fetch(PDO::FETCH_ASSOC)) {
+                $stmt = $pdo->prepare('INSERT INTO transit_route_memberships (user_id, route_id, joined_at) VALUES (?, ?, NOW())');
+                $stmt->execute([$userId, $routeId]);
             }
-            break;
-        }
-    }
 
-    if ($updated) {
-        file_put_contents($reqFile, json_encode($requests, JSON_PRETTY_PRINT));
+            // Count how many routes user already joined
+            $stmt = $pdo->prepare('SELECT COUNT(*) as cnt FROM transit_route_memberships WHERE user_id = ?');
+            $stmt->execute([$userId]);
+            $count = $stmt->fetch(PDO::FETCH_ASSOC);
+            $isFirstRoute = ($count['cnt'] === 1);
+
+            // Award points for joining transit route
+            awardUserPoints($pdo, $userId, 15, 0, false, 'Joining a shuttle route');
+            if ($isFirstRoute) {
+                awardUserPoints($pdo, $userId, 10, 0, false, 'First shuttle joined');
+            }
+        }
+
         echo json_encode(['success' => true]);
-    } else {
-        echo json_encode(['success' => false, 'error' => 'Request not found or already handled']);
+        exit;
+    } catch (PDOException $e) {
+        error_log('Update transit request error: ' . $e->getMessage());
+        echo json_encode(['success' => false, 'error' => 'Failed to update request']);
+        exit;
     }
-    exit;
 }
 
 http_response_code(400);

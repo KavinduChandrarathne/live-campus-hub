@@ -1,7 +1,7 @@
 // Mobile hamburger menu toggle
 document.addEventListener('DOMContentLoaded', function () {
 
-        // ...dropdown logic removed...
+        
 
         // Logout button logic
         const logoutBtn = document.getElementById('logoutBtn');

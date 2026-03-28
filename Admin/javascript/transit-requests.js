@@ -3,6 +3,27 @@ function getQueryParam(name) {
   return params.get(name);
 }
 
+// Toast helper (styled message instead of alert)
+function showToast(message, duration = 2600) {
+  const toast = document.getElementById('toast');
+  if (!toast) {
+    alert(message);
+    return;
+  }
+
+  toast.textContent = message;
+  toast.style.background = '#28a745';
+  toast.style.display = 'block';
+  toast.style.opacity = '1';
+
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    setTimeout(() => {
+      toast.style.display = 'none';
+    }, 300);
+  }, duration);
+}
+
 const joinList = document.getElementById('joinRequestList');
 
 function renderJoinRequests(requests) {
@@ -55,13 +76,14 @@ function handleJoinAction(id, action) {
         if (action === 'accept') {
           loadJoinedUsers();
         }
+        showToast('Request updated successfully');
       } else {
-        alert('Error: ' + (resp.error || 'unknown'));
+        showToast('Error: ' + (resp.error || 'unknown'));
       }
     })
     .catch(err => {
       console.error(err);
-      alert('Request failed');
+      showToast('Request failed');
     });
 }
 
@@ -134,13 +156,14 @@ function removeJoinedUser(username) {
       if (resp.success) {
         loadJoinedUsers();
         loadRequests();
+        showToast('User removed from route successfully');
       } else {
-        alert('Error: ' + (resp.error || 'unknown'));
+        showToast('Error: ' + (resp.error || 'unknown'));
       }
     })
     .catch(err => {
       console.error(err);
-      alert('Request failed');
+      showToast('Request failed');
     });
 }
 
@@ -209,14 +232,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     b.disabled = true;
                   });
                   pendingRoutes.push(locationName);
-                  alert('Request sent!');
+                  showToast('Your join request has been submitted!');
                 } else {
-                  alert('Error: ' + (resp.error || 'unknown'));
+                  showToast('Error: ' + (resp.error || 'unknown'));
                 }
               })
               .catch(err => {
                 console.error(err);
-                alert('Request failed');
+                showToast('Request failed');
               });
           }
 

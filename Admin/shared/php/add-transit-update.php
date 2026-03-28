@@ -1,8 +1,7 @@
 <?php
-// Add a new transit update (regular or live-link) to JSON
-date_default_timezone_set('Asia/Colombo');
-$updatesFile = '../json/transit-updates.json';
-$notificationsFile = '../json/notifications.json';
+// Add a new transit update via MySQL
+header('Content-Type: application/json');
+require_once 'db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $route = isset($_POST['route']) ? trim($_POST['route']) : '';
@@ -22,55 +21,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $update = [
-        'route' => $route,
-        'icon' => $icon,
-        'message' => $message,
-        'description' => $description,
-        'liveLink' => $liveLink,
-        'userName' => $userName,
-        'datetime' => date('Y-m-d H:i:s')
-    ];
+    try {
+        // Find or create route
+        $stmt = $pdo->prepare('SELECT id FROM transit_routes WHERE LOWER(name) = LOWER(:route)');
+        $stmt->execute([':route' => $route]);
+        $routeRow = $stmt->fetch();
 
-    $updates = [];
-    if (file_exists($updatesFile)) {
-        $json = file_get_contents($updatesFile);
-        $updates = json_decode($json, true);
-        if (!is_array($updates)) {
-            $updates = [];
-        }
-    }
-
-    array_unshift($updates, $update);
-    file_put_contents($updatesFile, json_encode($updates, JSON_PRETTY_PRINT));
-
-    // If send as notification is checked, create a notification
-    if ($sendNotification) {
-        $notification = [
-            'id' => uniqid('notif_'),
-            'type' => 'transit',
-            'title' => 'Transit Update - ' . $route,
-            'message' => $message,
-            'description' => $description,
-            'route' => $route,
-            'datetime' => date('Y-m-d H:i:s')
-        ];
-
-        $notifications = [];
-        if (file_exists($notificationsFile)) {
-            $json = file_get_contents($notificationsFile);
-            $notifications = json_decode($json, true);
-            if (!is_array($notifications)) {
-                $notifications = [];
-            }
+        if (!$routeRow) {
+            $stmt = $pdo->prepare('INSERT INTO transit_routes (name) VALUES (:name)');
+            $stmt->execute([':name' => $route]);
+            $routeId = $pdo->lastInsertId();
+        } else {
+            $routeId = $routeRow['id'];
         }
 
-        array_unshift($notifications, $notification);
-        file_put_contents($notificationsFile, json_encode($notifications, JSON_PRETTY_PRINT));
-    }
+        // Insert transit update
+        $stmt = $pdo->prepare('
+            INSERT INTO transit_updates (route_id, icon, message, description, live_link, created_by_username, created_at)
+            VALUES (:routeId, :icon, :message, :description, :liveLink, :userName, NOW())
+        ');
+        $stmt->execute([
+            ':routeId' => $routeId,
+            ':icon' => $icon,
+            ':message' => $message,
+            ':description' => $description ?: null,
+            ':liveLink' => $liveLink ?: null,
+            ':userName' => $userName
+        ]);
 
-    echo json_encode(['success' => true]);
-    exit;
+        echo json_encode(['success' => true]);
+        exit;
+    } catch (PDOException $e) {
+        error_log('Transit update creation error: ' . $e->getMessage());
+        echo json_encode(['success' => false, 'error' => 'Failed to create update']);
+        exit;
+    }
 }
 
 http_response_code(400);
