@@ -1,7 +1,7 @@
 CREATE DATABASE IF NOT EXISTS campus_hub;
 USE campus_hub;
 
-
+-- admin accounts
 CREATE TABLE admins (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) UNIQUE NOT NULL,
@@ -20,6 +20,7 @@ CREATE TABLE admins (
 
 
 
+-- user accounts
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(100) NOT NULL,
@@ -41,15 +42,16 @@ CREATE TABLE users (
 
 
 
+-- User rewards: points, badges, tiers
 CREATE TABLE user_rewards (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL UNIQUE,
-    points INT DEFAULT 0,
-    badges INT DEFAULT 0,
+    points INT DEFAULT 0 CHECK (points >= 0),
+    badges INT DEFAULT 0 CHECK (badges >= 0),
     tier ENUM('BRONZE', 'SILVER', 'GOLD', 'DIAMOND', 'PLATINUM') DEFAULT 'BRONZE',
-    login_streak INT DEFAULT 0,
+    login_streak INT DEFAULT 0 CHECK (login_streak >= 0),
     last_login_date DATE,
-    daily_usage_points INT DEFAULT 0,
+    daily_usage_points INT DEFAULT 0 CHECK (daily_usage_points >= 0),
     daily_usage_date DATE,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
@@ -61,12 +63,14 @@ CREATE TABLE user_rewards (
 
 
 
+-- campus clubs info
 CREATE TABLE clubs (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) UNIQUE NOT NULL,
     icon VARCHAR(100),
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_name (name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -74,6 +78,7 @@ CREATE TABLE clubs (
 
 
 
+-- user-club links
 CREATE TABLE club_memberships (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -90,6 +95,7 @@ CREATE TABLE club_memberships (
 
 
 
+-- Club join requests 
 CREATE TABLE club_join_requests (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -110,6 +116,7 @@ CREATE TABLE club_join_requests (
 
 
 
+-- Club updates
 CREATE TABLE club_updates (
     id INT AUTO_INCREMENT PRIMARY KEY,
     club_id INT NOT NULL,
@@ -126,16 +133,19 @@ CREATE TABLE club_updates (
 
 
 
+-- shuttle routes
 CREATE TABLE transit_routes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) UNIQUE NOT NULL,
     icon VARCHAR(100),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_name (name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
 
+-- Transit memberships
 CREATE TABLE transit_route_memberships (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -153,11 +163,12 @@ CREATE TABLE transit_route_memberships (
 
 
 
+-- Transit join requests
 CREATE TABLE transit_join_requests (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     route_id INT NOT NULL,
-    status ENUM('pending', 'accepted') DEFAULT 'pending',
+    status ENUM('pending', 'accepted', 'rejected') DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
@@ -169,6 +180,8 @@ CREATE TABLE transit_join_requests (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+
+-- Transit updates: route announcements
 CREATE TABLE transit_updates (
     id INT AUTO_INCREMENT PRIMARY KEY,
     route_id INT NOT NULL,
@@ -186,6 +199,7 @@ CREATE TABLE transit_updates (
 
 
 
+-- Facility updates
 CREATE TABLE facility_event_updates (
     id INT AUTO_INCREMENT PRIMARY KEY,
     icon VARCHAR(100),
@@ -199,7 +213,6 @@ CREATE TABLE facility_event_updates (
 
 
 
-CREATE TABLE notifications (
     id VARCHAR(50) PRIMARY KEY DEFAULT (CONCAT('notif_', SUBSTR(MD5(CONCAT(UUID(), RAND())), 1, 12))),
     type ENUM('direct', 'club', 'facility') DEFAULT 'direct',
     title VARCHAR(255),

@@ -8,10 +8,10 @@
 date_default_timezone_set('Asia/Colombo');
 
 // Database configuration
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_NAME', 'campus_hub');
+define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
+define('DB_USER', getenv('DB_USER') ?: 'root');
+define('DB_PASS', getenv('DB_PASS') ?: '');
+define('DB_NAME', getenv('DB_NAME') ?: 'campus_hub');
 
 // Create PDO connection
 try {
@@ -26,6 +26,14 @@ try {
         ]
     );
 } catch (PDOException $e) {
+    // Enhanced error logging to file
+    $logFile = __DIR__ . '/../logs/db_errors.log';
+    $logDir = dirname($logFile);
+    if (!is_dir($logDir)) {
+        mkdir($logDir, 0755, true);
+    }
+    error_log(date('Y-m-d H:i:s') . ' - Database Connection Error: ' . $e->getMessage() . PHP_EOL, 3, $logFile);
+    
     http_response_code(500);
     echo json_encode(['success' => false, 'error' => 'Database connection failed']);
     error_log('Database Error: ' . $e->getMessage());
@@ -33,8 +41,20 @@ try {
 }
 
 /**
+ * Test Database Connection*/
+function testDatabaseConnection() {
+    global $pdo;
+    try {
+        $pdo->query('SELECT 1');
+        return true;
+    } catch (PDOException $e) {
+        return false;
+    }
+}
+
+/**
  * Reward Tier Calculation
- * Returns tier info based on points
+ * Returns tier 
  */
 function getTierInfo($points) {
     $points = max(0, intval($points));
@@ -149,7 +169,7 @@ function getUserByStudentId($pdo, $studentId) {
 
 /**
  * Get User with Joined Clubs and Routes
- * Returns user array with joinedClubs and joinedRoutes arrays
+ * Returns user array 
  */
 function getUserWithMemberships($pdo, $userId) {
     try {
