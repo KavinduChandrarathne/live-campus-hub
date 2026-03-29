@@ -259,7 +259,7 @@
 <script src="./javascript/common.js"></script>
 <script src="./javascript/dashboard.js"></script>
 <script>
-    // no hard‑coded club data any more; we will fetch from clubs.json and updates API
+    // no hard‑coded club data any more; we will fetch from clubs API and updates API
     // Get club from URL parameter
     function getClubFromUrl() {
         const params = new URLSearchParams(window.location.search);
@@ -294,7 +294,7 @@
         const updatesContainer = document.getElementById('clubUpdates');
 
         // fetch list of clubs to get full info
-        fetch('Admin/shared/json/clubs.json')
+        fetch('Admin/shared/php/api-get-clubs.php')
             .then(res => res.json())
             .then(clubs => {
                 // find club by first-word match

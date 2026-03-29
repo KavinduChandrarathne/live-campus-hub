@@ -1,8 +1,7 @@
 <?php
-// Add a new club join request to JSON
+// Add a new club join request to database
 header('Content-Type: application/json');
-date_default_timezone_set('Asia/Colombo');
-$requestsFile = '../json/club-join-requests.json';
+require_once 'db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $studentId = isset($_POST['studentId']) ? trim($_POST['studentId']) : '';
@@ -14,81 +13,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // normalize ID for comparison
-    $normalizedId = strtoupper($studentId);
+    try {
+        // Get user by studentId
+        $stmt = $pdo->prepare('SELECT id FROM users WHERE LOWER(studentId) = LOWER(:studentId)');
+        $stmt->execute([':studentId' => $studentId]);
+        $user = $stmt->fetch();
 
-    // look up user details on server side to avoid mismatched or tampered names
-    $name = '';
-    $picture = '';
-    $usersFile = '../json/users.json';
-    if (file_exists($usersFile)) {
-        $usersJson = file_get_contents($usersFile);
-        $allUsers = json_decode($usersJson, true);
-        if (is_array($allUsers)) {
-            foreach ($allUsers as $u) {
-                if (isset($u['studentId']) && strtoupper(trim($u['studentId'])) === $normalizedId) {
-                    // optionally restrict to students only
-                    if (isset($u['role']) && $u['role'] !== 'student') {
-                        echo json_encode(['success' => false, 'error' => 'Only student accounts may send club requests']);
-                        exit;
-                    }
-                    $name = trim(($u['firstName'] ?? '') . ' ' . ($u['lastName'] ?? ''));
-                    $picture = $u['picture'] ?? '';
-                    break;
-                }
-            }
+        if (!$user) {
+            echo json_encode(['success' => false, 'error' => 'Unknown student ID']);
+            exit;
         }
-    }
 
-    if ($name === '') {
-        // student id not recognized, reject
-        echo json_encode(['success' => false, 'error' => 'Unknown student ID']);
-        exit;
-    }
+        $userId = $user['id'];
 
-    // build new request using server-sourced name/picture
-    $request = [
-        'name' => $name,
-        'studentId' => $normalizedId,
-        'clubName' => $clubName,
-        'picture' => $picture,
-        'message' => $message,
-        'status' => 'pending',
-        'datetime' => date('Y-m-d H:i:s')
-    ];
+        // Get club by name
+        $stmt = $pdo->prepare('SELECT id FROM clubs WHERE LOWER(name) = LOWER(:clubName)');
+        $stmt->execute([':clubName' => $clubName]);
+        $club = $stmt->fetch();
 
-    // load existing requests
-    $requests = [];
-    if (file_exists($requestsFile)) {
-        $json = file_get_contents($requestsFile);
-        $requests = json_decode($json, true);
-        if (!is_array($requests)) {
-            $requests = [];
+        if (!$club) {
+            echo json_encode(['success' => false, 'error' => 'Club not found']);
+            exit;
         }
-    }
 
-    // prevent duplicates for same student and club
-    $newRequests = [];
-    $duplicate = false;
-    foreach ($requests as $existing) {
-        if (isset($existing['studentId'], $existing['clubName']) &&
-            strcasecmp($existing['studentId'], $studentId) === 0 &&
-            strcasecmp(trim($existing['clubName']), trim($clubName)) === 0) {
-            // If status is pending or accepted, block duplicate
+        $clubId = $club['id'];
+
+        // Check for existing request
+        $stmt = $pdo->prepare('
+            SELECT status FROM club_join_requests 
+            WHERE user_id = :userId AND club_id = :clubId
+        ');
+        $stmt->execute([':userId' => $userId, ':clubId' => $clubId]);
+        $existing = $stmt->fetch();
+
+        if ($existing) {
             if ($existing['status'] === 'pending' || $existing['status'] === 'accepted') {
                 echo json_encode(['success' => false, 'error' => 'Duplicate request']);
                 exit;
             }
-            // If status is removed or rejected, allow re-request and remove old entry
-            $duplicate = true;
-            continue; // skip adding old entry
         }
-        $newRequests[] = $existing;
+
+        // Insert new request
+        $stmt = $pdo->prepare('
+            INSERT INTO club_join_requests (user_id, club_id, message, status, created_at)
+            VALUES (:userId, :clubId, :message, "pending", NOW())
+        ');
+        $stmt->execute([
+            ':userId' => $userId,
+            ':clubId' => $clubId,
+            ':message' => $message ?: null
+        ]);
+
+        echo json_encode(['success' => true]);
+        exit;
+    } catch (PDOException $e) {
+        error_log('Join request creation error: ' . $e->getMessage());
+        echo json_encode(['success' => false, 'error' => 'Failed to create request']);
+        exit;
     }
-    array_unshift($newRequests, $request);
-    file_put_contents($requestsFile, json_encode($newRequests, JSON_PRETTY_PRINT));
-    echo json_encode(['success' => true]);
-    exit;
 } else {
     echo json_encode(['success' => false, 'error' => 'Invalid request']);
     exit;

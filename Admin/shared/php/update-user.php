@@ -1,7 +1,8 @@
 <?php
-// update-user.php - Handle user update requests
+// update-user.php - Handle user update requests via MySQL
 
 header('Content-Type: application/json');
+require_once 'db.php';
 
 // Get POST data
 $action = $_POST['action'] ?? null;
@@ -20,79 +21,44 @@ if ($action === 'update-user') {
         exit;
     }
 
-    // Load users JSON file
-    $usersFile = __DIR__ . '/../json/users.json';
-    
-    if (!file_exists($usersFile)) {
+    // Validate field
+    $allowed_fields = ['firstName', 'lastName', 'faculty', 'dob'];
+    if (!in_array($field, $allowed_fields)) {
         echo json_encode([
             'success' => false,
-            'message' => 'Users file not found'
+            'message' => 'Invalid field'
         ]);
         exit;
     }
 
-    // Read the file
-    $usersJson = file_get_contents($usersFile);
-    $users = json_decode($usersJson, true);
-
-    if ($users === null) {
-        echo json_encode([
-            'success' => false,
-            'message' => 'Error decoding users JSON'
+    try {
+        // Update user field
+        $stmt = $pdo->prepare("
+            UPDATE users 
+            SET {$field} = :value
+            WHERE LOWER(studentId) = LOWER(:studentId)
+        ");
+        $stmt->execute([
+            ':value' => $value,
+            ':studentId' => $studentId
         ]);
-        exit;
-    }
 
-    // Find and update the user
-    $userFound = false;
-    foreach ($users as &$user) {
-        if ($user['studentId'] === $studentId) {
-            // Map field names to user object properties
-            switch($field) {
-                case 'firstName':
-                    $user['firstName'] = $value;
-                    break;
-                case 'lastName':
-                    $user['lastName'] = $value;
-                    break;
-                case 'faculty':
-                    $user['faculty'] = $value;
-                    break;
-                case 'dob':
-                    $user['dob'] = $value;
-                    break;
-                default:
-                    echo json_encode([
-                        'success' => false,
-                        'message' => 'Invalid field'
-                    ]);
-                    exit;
-            }
-            $userFound = true;
-            break;
+        if ($stmt->rowCount() > 0) {
+            echo json_encode([
+                'success' => true,
+                'message' => 'User updated successfully'
+            ]);
+        } else {
+            echo json_encode([
+                'success' => false,
+                'message' => 'User not found'
+            ]);
         }
-    }
-
-    if (!$userFound) {
+    } catch (PDOException $e) {
+        error_log('Update user error: ' . $e->getMessage());
         echo json_encode([
             'success' => false,
-            'message' => 'User not found'
-        ]);
-        exit;
-    }
-
-    // Write the updated data back to the file
-    $updatedJson = json_encode($users, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-    
-    if (file_put_contents($usersFile, $updatedJson) !== false) {
-        echo json_encode([
-            'success' => true,
-            'message' => 'User updated successfully'
-        ]);
-    } else {
-        echo json_encode([
-            'success' => false,
-            'message' => 'Error writing to file'
+            'message' => 'Error updating user'
         ]);
     }
 } else {

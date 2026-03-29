@@ -3,7 +3,7 @@ let cards = []; // will be populated after loading
 const addClubBtn = document.getElementById("addClubBtn");
 const clubGrid = document.getElementById("clubGrid");
 
-// load clubs from JSON file and render them
+// load clubs from database API and render them
 function renderClubs(clubs) {
   clubGrid.innerHTML = clubs.map(club => {
     const clubKey = club.name.toLowerCase();
@@ -20,10 +20,15 @@ function renderClubs(clubs) {
   cards = clubGrid.querySelectorAll('.club-card');
 }
 
-fetch('shared/json/clubs.json')
-  .then(res => res.json())
-  .then(renderClubs)
-  .catch(err => console.error('Failed to load clubs.json', err));
+// Fetch clubs from the database API
+function loadClubs() {
+  fetch('shared/php/api-get-clubs.php')
+    .then(res => res.json())
+    .then(renderClubs)
+    .catch(err => console.error('Failed to load clubs', err));
+}
+
+loadClubs();
 
 
 searchInput.addEventListener("input", () => {

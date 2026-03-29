@@ -1,8 +1,6 @@
 <?php
 header('Content-Type: application/json');
-date_default_timezone_set('Asia/Colombo');
-
-$notificationsFile = '../json/notifications.json';
+require_once 'db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $notifId = isset($_POST['id']) ? trim($_POST['id']) : '';
@@ -13,40 +11,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Read existing notifications
-    $notifications = [];
-    if (file_exists($notificationsFile)) {
-        $json = file_get_contents($notificationsFile);
-        $notifications = json_decode($json, true);
-        if (!is_array($notifications)) {
-            $notifications = [];
-        }
-    }
+    try {
+        $stmt = $pdo->prepare('DELETE FROM notifications WHERE id = :id');
+        $stmt->execute([':id' => $notifId]);
 
-    // Find and remove notification by ID
-    $found = false;
-    foreach ($notifications as $index => $notif) {
-        if (isset($notif['id']) && $notif['id'] === $notifId) {
-            array_splice($notifications, $index, 1);
-            $found = true;
-            break;
+        if ($stmt->rowCount() > 0) {
+            echo json_encode(['success' => true]);
+        } else {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'error' => 'Notification not found']);
         }
-    }
-
-    if (!$found) {
-        http_response_code(400);
-        echo json_encode(['success' => false, 'error' => 'Notification not found']);
+        exit;
+    } catch (PDOException $e) {
+        error_log('Delete notification error: ' . $e->getMessage());
+        http_response_code(500);
+        echo json_encode(['success' => false, 'error' => 'Failed to delete notification']);
         exit;
     }
-
-    // Save back to JSON file
-    file_put_contents($notificationsFile, json_encode($notifications, JSON_PRETTY_PRINT));
-
-    echo json_encode(['success' => true]);
-    exit;
 } else {
     http_response_code(400);
     echo json_encode(['success' => false, 'error' => 'Invalid request']);
     exit;
 }
-?>

@@ -1,30 +1,42 @@
 <?php
 header('Content-Type: application/json');
-$updatesFile = '../json/club-updates.json';
-$club = isset($_GET['club']) ? trim($_GET['club']) : '';
+require_once 'db.php';
 
-if ($club === '') {
+$clubName = isset($_GET['club']) ? trim($_GET['club']) : '';
+
+if ($clubName === '') {
     echo json_encode([]);
     exit;
 }
 
-$clubKey = strtolower($club);
+try {
+    // Find club
+    $stmt = $pdo->prepare('SELECT id FROM clubs WHERE LOWER(name) = LOWER(:clubName)');
+    $stmt->execute([':clubName' => $clubName]);
+    $club = $stmt->fetch();
 
-$updates = [];
-if (file_exists($updatesFile)) {
-    $json = file_get_contents($updatesFile);
-    $updates = json_decode($json, true);
-    if (!is_array($updates)) {
-        $updates = [];
+    if (!$club) {
+        echo json_encode([]);
+        exit;
     }
-}
 
-// filter updates for this club
-$result = [];
-foreach ($updates as $u) {
-    if (isset($u['clubName']) && strtolower(trim($u['clubName'])) === $clubKey) {
-        $result[] = $u;
+    // Get all updates for this club
+    $stmt = $pdo->prepare('
+        SELECT icon, message, description, created_at as datetime
+        FROM club_updates 
+        WHERE club_id = :clubId
+        ORDER BY created_at DESC
+    ');
+    $stmt->execute([':clubId' => $club['id']]);
+    $updates = $stmt->fetchAll();
+
+    // Add clubName to each update for frontend compatibility
+    foreach ($updates as &$u) {
+        $u['clubName'] = $clubName;
     }
-}
 
-echo json_encode($result);
+    echo json_encode($updates);
+} catch (PDOException $e) {
+    error_log('Get club updates error: ' . $e->getMessage());
+    echo json_encode([]);
+}
