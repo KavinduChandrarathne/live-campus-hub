@@ -141,7 +141,7 @@ nav a {
     padding: 12px 16px;
     border-radius: 6px;
     margin-bottom: 0;
-    transition: color 0.22s ease, padding-left 0.18s ease;
+    transition: color 0.22s ease, padding-left 0.18s ease, background-color 0.22s ease, border-left-color 0.22s ease;
     font-size: 14px;
     font-weight: 500;
     border-left: 3px solid transparent;
@@ -176,7 +176,14 @@ nav a i {
 
 nav a > * { z-index: 2; }
 
-nav a.active,
+nav a.active {
+    color: #fff;
+    background-color: rgba(125, 211, 252, 0.15);
+    border-left-color: #7dd3fc;
+    padding-left: 14px;
+    font-weight: 600;
+}
+
 nav a:hover {
     color: white;
     border-left-color: #7dd3fc;
@@ -291,6 +298,11 @@ nav a:hover::after { transform: scaleX(1); }
     border-radius: 999px;
     font-weight: 700;
     line-height: 1;
+    display: inline-block;
+}
+
+.notify-btn .badge.hidden {
+    display: none;
 }
 
 .notify-btn:hover { background: rgba(255,255,255,0.12); }
