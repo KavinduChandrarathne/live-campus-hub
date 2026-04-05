@@ -136,7 +136,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (!notifications || notifications.length === 0) {
             notificationList.innerHTML = '<div class="notification-empty">No notifications</div>';
-            if (notifyCount) notifyCount.textContent = '0';
+            if (notifyCount) {
+                notifyCount.textContent = '';
+                notifyCount.classList.add('hidden');
+            }
             return;
         }
 
@@ -208,6 +211,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (notifyCount) {
             notifyCount.textContent = Math.min(notifications.length, 9) === 9 && notifications.length > 9 ? '9+' : notifications.length;
+            notifyCount.classList.remove('hidden');
         }
     }
 

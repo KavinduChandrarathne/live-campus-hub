@@ -98,6 +98,28 @@
             font-weight: 600;
         }
 
+        .leave-club-btn {
+            margin-top: 12px;
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            display: inline-block;
+        }
+
+        .leave-club-btn:hover {
+            background: #ff3838;
+        }
+
+        .leave-club-btn:active {
+            transform: scale(0.98);
+        }
+
         .club-updates::-webkit-scrollbar {
             width: 8px;
         }
@@ -287,6 +309,39 @@
         return `${d.toLocaleDateString()} ${h}.${m} ${ampm}`;
     }
 
+    // Handle leaving a club
+    function handleLeaveClub(clubName, user) {
+        if (!confirm(`Are you sure you want to leave "${clubName}"?`)) {
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('studentId', user.studentId || '');
+        formData.append('clubName', clubName);
+        formData.append('status', 'removed');
+
+        fetch('Admin/shared/php/update-join-request.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(r => r.json())
+        .then(result => {
+            if (result.success) {
+                // Refresh user data and navigate back
+                refreshCurrentUser().then(() => {
+                    alert('You have left the club successfully.');
+                    window.location.href = 'clubs.html';
+                });
+            } else {
+                alert('Error: ' + (result.error || 'Failed to leave club'));
+            }
+        })
+        .catch(err => {
+            console.error('Leave club error:', err);
+            alert('Failed to leave club');
+        });
+    }
+
     // Load club data and decide what to display
     function loadClubData() {
         const clubKey = getClubFromUrl();
@@ -321,7 +376,15 @@
                     const notice = document.createElement('div');
                     notice.className = 'member-notice';
                     notice.textContent = '🎉 You are a member of this club';
+                    
+                    // Create leave button
+                    const leaveBtn = document.createElement('button');
+                    leaveBtn.className = 'leave-club-btn';
+                    leaveBtn.textContent = 'Leave Club';
+                    leaveBtn.onclick = () => handleLeaveClub(clubObj.name, user);
+                    
                     headerInfo.appendChild(notice);
+                    headerInfo.appendChild(leaveBtn);
 
                     // fetch updates
                     const url = `Admin/shared/php/get-club-updates.php?club=${encodeURIComponent(clubObj.name)}`;
