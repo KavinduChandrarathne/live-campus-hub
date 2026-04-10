@@ -160,8 +160,114 @@ button:hover {
 }
 
 /* ============================= */
-/* 🔵 SINGLE MEDIA QUERY */
+/* RESPONSIVE DESIGN - ALL SCREEN SIZES */
 /* ============================= */
+
+/* Tablet/Medium Screens (768px - 1024px) */
+@media (max-width: 1024px) {
+    body {
+        min-height: 100vh;
+    }
+
+    .login-container {
+        width: 85%;
+        max-width: 420px;
+        padding: 30px;
+    }
+
+    h3 {
+        font-size: 20px;
+    }
+
+    .logo h2 {
+        font-size: 18px;
+    }
+
+    .input-group input {
+        padding: 11px 11px 11px 36px;
+        font-size: 16px;
+    }
+
+    button {
+        padding: 11px;
+        font-size: 15px;
+    }
+}
+
+/* Mobile/Small Screens (480px - 767px) */
+@media (max-width: 767px) {
+    body {
+        padding: 10px;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .login-container {
+        width: 95%;
+        max-width: 100%;
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    .logo {
+        margin-bottom: 12px;
+    }
+
+    .logo i {
+        font-size: 26px;
+    }
+
+    .logo h2 {
+        font-size: 14px;
+    }
+
+    h3 {
+        font-size: 16px;
+        margin-top: 8px;
+    }
+
+    p {
+        font-size: 12px;
+        margin-bottom: 15px;
+    }
+
+    .input-group {
+        margin-bottom: 14px;
+    }
+
+    .input-group i {
+        left: 10px;
+    }
+
+    .input-group input {
+        padding: 10px 10px 10px 36px;
+        font-size: 16px;
+        border-radius: 5px;
+    }
+
+    .forgot {
+        margin-bottom: 15px;
+    }
+
+    .forgot a {
+        font-size: 12px;
+    }
+
+    button {
+        padding: 10px;
+        font-size: 13px;
+        border-radius: 5px;
+    }
+
+    .signup-link {
+        margin-top: 12px;
+        font-size: 12px;
+    }
+}
+
+/* Extra Small Screens (Under 480px) */
 @media (max-width: 480px) {
 
     .login-container {

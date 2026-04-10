@@ -301,3 +301,164 @@ body {
         width: 100%;
     }
 }
+
+/* Mobile - Small Tablets (600px - 899px) */
+@media (max-width: 900px) and (min-width: 601px) {
+    .page-title {
+        font-size: 28px;
+        padding: 16px 24px;
+        margin: 14px auto 20px;
+    }
+
+    .profile-card {
+        padding: 24px;
+        gap: 24px;
+    }
+
+    .profile-left img {
+        width: 140px;
+        height: 140px;
+    }
+
+    .form-group {
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+
+    .form-group label {
+        width: 120px;
+        font-size: 13px;
+    }
+
+    .input-edit {
+        width: calc(100% - 120px);
+    }
+
+    .input-edit input,
+    .input-edit select {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .password-btn,
+    .button-row {
+        margin-left: 120px;
+        width: calc(100% - 120px);
+    }
+}
+
+/* Mobile - Phones (max-width: 600px) */
+@media (max-width: 600px) {
+    .page-title {
+        font-size: 22px;
+        padding: 14px 16px;
+        margin: 12px auto 16px;
+        border-radius: 6px;
+    }
+
+    .profile-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 20px 16px;
+        gap: 20px;
+        border-radius: 8px;
+    }
+
+    .profile-left img {
+        width: 120px;
+        height: 120px;
+        border-width: 4px;
+    }
+
+    .profile-right {
+        width: 100%;
+        align-items: center;
+    }
+
+    .form-group {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+        margin-bottom: 12px;
+    }
+
+    .form-group label {
+        width: 100%;
+        text-align: left;
+        font-size: 12px;
+    }
+
+    .input-edit {
+        width: 100%;
+    }
+
+    .input-edit input,
+    .input-edit select {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .input-edit i {
+        right: 10px;
+    }
+
+    .password-btn {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .button-row {
+        width: 100%;
+        margin-left: 0;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .save-btn,
+    .cancel-btn {
+        width: 100%;
+        padding: 10px;
+        font-size: 13px;
+    }
+}
+
+/* Extra Small Screens (under 480px) */
+@media (max-width: 480px) {
+    .page-title {
+        font-size: 18px;
+        padding: 12px 12px;
+        margin: 10px auto 14px;
+    }
+
+    .profile-card {
+        padding: 16px 12px;
+        gap: 16px;
+    }
+
+    .profile-left img {
+        width: 100px;
+        height: 100px;
+        border-width: 3px;
+    }
+
+    .form-group {
+        margin-bottom: 10px;
+    }
+
+    .form-group label {
+        font-size: 11px;
+    }
+
+    .input-edit input,
+    .input-edit select {
+        padding: 8px;
+        font-size: 13px;
+    }
+
+    .save-btn,
+    .cancel-btn {
+        padding: 8px;
+        font-size: 12px;
+    }
+}
