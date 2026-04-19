@@ -1,0 +1,84 @@
+/* Emergency Alert Button Styles */
+
+/* Alert Button Container */
+.alert-button-container {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+}
+
+/* Blinking Alert Button */
+#emergency-alert-btn {
+    background: none;
+    border: none;
+    color: #d32f2f;
+    font-size: 24px;
+    cursor: pointer;
+    position: relative;
+    padding: 8px 12px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+#emergency-alert-btn.show {
+    display: flex;
+    animation: blinkAlert 1s ease-in-out infinite;
+}
+
+#emergency-alert-btn:hover {
+    background-color: rgba(211, 47, 47, 0.1);
+    transform: scale(1.1);
+}
+
+#emergency-alert-btn:active {
+    transform: scale(0.95);
+}
+
+@keyframes blinkAlert {
+    0%, 100% {
+        color: #d32f2f;
+        text-shadow: 0 0 0 rgba(211, 47, 47, 0.3);
+    }
+    50% {
+        color: #b71c1c;
+        text-shadow: 0 0 12px rgba(211, 47, 47, 0.6);
+    }
+}
+
+/* Alert Dot (pulsing indicator) */
+.alert-dot {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background-color: #d32f2f;
+    border-radius: 50%;
+    top: 0;
+    right: 0;
+    animation: pulseDot 1.5s ease-in-out infinite;
+}
+
+@keyframes pulseDot {
+    0%, 100% {
+        transform: scale(1);
+        background-color: #d32f2f;
+    }
+    50% {
+        transform: scale(1.3);
+        background-color: #ff5252;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .alert-button-container {
+        margin-right: 10px;
+    }
+
+    #emergency-alert-btn {
+        font-size: 20px;
+        padding: 6px 10px;
+    }
+}

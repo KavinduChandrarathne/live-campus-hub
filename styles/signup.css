@@ -126,9 +126,125 @@ button:hover {
 }
 
 /* ============================= */
-/* 🔵 SINGLE MEDIA QUERY */
+/* RESPONSIVE DESIGN - ALL SCREEN SIZES */
 /* ============================= */
-@media (max-width: 600px) {
+
+/* Large Screens (1200px+) */
+@media (max-width: 1400px) {
+    .signup-container {
+        width: 480px;
+    }
+}
+
+/* Tablet/Medium Screens (768px - 1199px) */
+@media (max-width: 1024px) {
+    .signup-container {
+        width: 75%;
+        max-width: 450px;
+        padding: 30px;
+    }
+
+    h3 {
+        font-size: 20px;
+    }
+
+    .logo h2 {
+        font-size: 16px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .input-group input,
+    .input-group select {
+        font-size: 16px;
+    }
+
+    button {
+        font-size: 15px;
+        padding: 11px;
+    }
+}
+
+/* Mobile/Small Screens (480px - 767px) */
+@media (max-width: 767px) {
+    body {
+        padding: 10px;
+    }
+
+    .signup-container {
+        width: 95%;
+        max-width: 100%;
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    .logo {
+        margin-bottom: 10px;
+    }
+
+    .logo i {
+        font-size: 24px;
+    }
+
+    .logo h2 {
+        font-size: 13px;
+    }
+
+    h3 {
+        font-size: 16px;
+        margin-top: 8px;
+    }
+
+    p {
+        font-size: 12px;
+        margin-bottom: 12px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .input-group {
+        margin-bottom: 12px;
+    }
+
+    .input-group i {
+        left: 10px;
+    }
+
+    .input-group input,
+    .input-group select {
+        padding: 10px 10px 10px 36px;
+        font-size: 16px;
+        border-radius: 5px;
+    }
+
+    .forgot {
+        margin-bottom: 12px;
+    }
+
+    .forgot a {
+        font-size: 12px;
+    }
+
+    button {
+        padding: 10px;
+        font-size: 13px;
+        border-radius: 5px;
+    }
+
+    .login-link {
+        margin-top: 12px;
+        font-size: 12px;
+    }
+}
+
+/* Extra Small Screens (Under 480px) */
+@media (max-width: 480px) {
 
     .signup-container {
         width: 90%;

@@ -2,56 +2,52 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Campus Hub | Calendar</title>
+    <title>Campus Hub | Admin Calendar</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <base href="./">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="./styles/dashboard.css">
-    <link rel="stylesheet" href="./styles/calendar.css">
-    <link rel="stylesheet" href="./styles/emergency-alert-banner.css">
+    <link rel="stylesheet" href="styles/dashboard.css">
+    <link rel="stylesheet" href="styles/calendar.css">
 </head>
 <body>
 
-<div class="dashboard">
+<div class="bg-overlay"></div>
 
-    <!-- SIDEBAR -->
+<div class="layout">
+
+    <!-- Sidebar -->
     <aside class="sidebar">
         <div class="brand">
             <i class="fa-solid fa-graduation-cap"></i>
-            <span>CAMPUS HUB</span>
+            <h2>CAMPUS HUB</h2>
         </div>
 
-        <nav>
+        <nav class="menu">
             <a href="dashboard.html"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
-            <a href="facility.html"><i class="fa-solid fa-bullhorn"></i> Facility & Event</a>
+            <a href="facility-event-admin.html"><i class="fa-solid fa-bullhorn"></i> Facility &amp; Event</a>
             <a href="transit.html"><i class="fa-solid fa-bus"></i> Transit</a>
-            <a href="clubs.html"><i class="fa-solid fa-users"></i> Campus Clubs</a>
-            <a href="updates.html"><i class="fa-solid fa-message"></i> Updates Feed</a>
-            <a href="rewards.html"><i class="fa-solid fa-star"></i> Rewards</a>
+            <a href="campus-clubs.html"><i class="fa-solid fa-users"></i> Campus Clubs</a>
+            <a href="updates-feed.html"><i class="fa-solid fa-message"></i> Updates Feed</a>
+            <a href="add-notification.html"><i class="fa-solid fa-bell"></i> Notification</a>
         </nav>
 
-        <div class="sidebar-user-bottom">
-            <a class="user-profile-btn" href="profile.html" title="View Profile">
-                <img id="sidebar-picture" src="" alt="User">
-                <div class="user-info-text">
-                    <strong id="sidebar-name"></strong>
-                    <small id="sidebar-email"></small>
-                </div>
-            </a>
+        <div class="user" onclick="window.location='admin-profile.html'">
+            <img id="sidebar-picture" src="images/admin.png" alt="user">
+            <div>
+                <p id="sidebar-name">Admin Name</p>
+                <small id="sidebar-email">admin@example.com</small>
+            </div>
         </div>
     </aside>
 
-    <!-- MAIN -->
-    <main class="content">
-        <!-- Mobile hamburger menu -->
-        <button id="hamburger" class="hamburger" aria-label="Menu">
-            <i class="fa-solid fa-bars"></i>
-        </button>
+    <!-- Main -->
+    <main class="main">
+        <!-- Top bar (matches campus clubs layout) -->
+        <header class="topbar">
+            <button class="hamburger" id="hamburger"><i class="fa-solid fa-bars"></i></button>
+            <h1>Calendar</h1>
 
-        <section class="welcome">
-            <h2>Calendar</h2>
-            <p>Manage your academic, personal, and club events</p>
-        </section>
+            <div class="top-actions"></div>
+        </header>
 
         <!-- Calendar Controls -->
         <section class="calendar-controls">
@@ -88,23 +84,20 @@
         <!-- Category Filter -->
         <section class="calendar-filters">
             <div class="filter-group">
-                <label>Filter by Category:</label>
+                <label>Filter by Event Type:</label>
                 <div class="filter-buttons">
                     <button class="filter-btn active" data-category="all">All</button>
-                    <button class="filter-btn" data-category="personal">
-                        <i class="fa-solid fa-user"></i> Personal
+                    <button class="filter-btn" data-category="lecture">
+                        <i class="fa-solid fa-chalkboard-user"></i> Lectures
                     </button>
-                    <button class="filter-btn" data-category="meeting">
-                        <i class="fa-solid fa-users"></i> Meeting
+                    <button class="filter-btn" data-category="exam">
+                        <i class="fa-solid fa-pencil"></i> Exams
                     </button>
-                    <button class="filter-btn" data-category="event">
-                        <i class="fa-solid fa-star"></i> Event
+                    <button class="filter-btn" data-category="workshop">
+                        <i class="fa-solid fa-person-chalkboard"></i> Workshops
                     </button>
-                    <button class="filter-btn" data-category="admin">
-                        <i class="fa-solid fa-clipboard"></i> Admin
-                    </button>
-                    <button class="filter-btn" data-category="club">
-                        <i class="fa-solid fa-users-line"></i> Club
+                    <button class="filter-btn" data-category="notice">
+                        <i class="fa-solid fa-bell"></i> Notices
                     </button>
                 </div>
             </div>
@@ -158,7 +151,7 @@
                             </div>
                         </div>
                         <button class="day-add-btn" onclick="openEventModal(new Date())">
-                            <i class="fa-solid fa-plus"></i> Add Personal Event
+                            <i class="fa-solid fa-plus"></i> Create Event
                         </button>
                     </div>
                 </div>
@@ -173,6 +166,14 @@
                     <!-- Events will be populated by JavaScript -->
                 </div>
             </aside>
+        </section>
+
+        <!-- Events Management Panel -->
+        <section class="events-management">
+            <h3>Recent Events</h3>
+            <div id="eventsManagementList" class="events-table-wrapper">
+                <!-- Events will be populated by JavaScript -->
+            </div>
         </section>
     </main>
 
@@ -196,18 +197,19 @@
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="eventDate">Date *</label>
-                    <input type="date" id="eventDate" name="date" required>
-                </div>
-                <div class="form-group">
-                    <label for="eventCategory">Category *</label>
-                    <select id="eventCategory" name="category" required>
-                        <option value="">Select Category</option>
-                        <option value="personal">Personal</option>
-                        <option value="meeting">Meeting</option>
-                        <option value="event">Event</option>
+                    <label for="eventType">Event Type *</label>
+                    <select id="eventType" name="eventType" required>
+                        <option value="">Select Event Type</option>
+                        <option value="lecture">Lectures</option>
+                        <option value="exam">Exams</option>
+                        <option value="workshop">Workshops</option>
+                        <option value="notice">Holiday/Closure Notices</option>
                         <option value="other">Other</option>
                     </select>
+                </div>
+                <div class="form-group">
+                    <label for="eventDate">Date *</label>
+                    <input type="date" id="eventDate" name="date" required>
                 </div>
             </div>
 
@@ -232,15 +234,35 @@
                 <textarea id="eventDescription" name="description" placeholder="Enter event description" rows="4"></textarea>
             </div>
 
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="eventTargetGroup">Target Group *</label>
+                    <select id="eventTargetGroup" name="targetGroup" required>
+                        <option value="">Select Target Group</option>
+                        <option value="all_students">All Students</option>
+                        <option value="specific_department">Specific Department</option>
+                        <option value="specific_year">Specific Year</option>
+                        <option value="club">Club Members</option>
+                        <option value="custom">Custom Group</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="eventReminder">Reminder Before *</label>
+                    <select id="eventReminder" name="reminder" required>
+                        <option value="">Select reminder time</option>
+                        <option value="10">10 minutes</option>
+                        <option value="30">30 minutes</option>
+                        <option value="60">1 hour</option>
+                        <option value="1440">1 day</option>
+                    </select>
+                </div>
+            </div>
+
             <div class="form-group">
-                <label for="eventReminder">Reminder Before *</label>
-                <select id="eventReminder" name="reminder" required>
-                    <option value="">Select reminder time</option>
-                    <option value="10">10 minutes</option>
-                    <option value="30">30 minutes</option>
-                    <option value="60">1 hour</option>
-                    <option value="1440">1 day</option>
-                </select>
+                <label for="sendNotification">
+                    <input type="checkbox" id="sendNotification" name="sendNotification">
+                    Send as notification to students
+                </label>
             </div>
 
             <div class="form-actions">
@@ -277,13 +299,13 @@
     </div>
 </div>
 
+<script src="javascript/auth.js"></script>
+<script src="javascript/calendar.js"></script>
+
 <button id="scrollTop" class="scroll-top" aria-label="Scroll to top">
     <i class="fa-solid fa-arrow-up"></i>
 </button>
 
-<script src="javascript/common.js"></script>
-<script src="javascript/calendar.js"></script>
-<script src="javascript/emergency-alert-banner.js"></script>
-
+<div class="mobile-backdrop" id="mobileBackdrop"></div>
 </body>
 </html>

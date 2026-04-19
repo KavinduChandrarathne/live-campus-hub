@@ -1,0 +1,497 @@
+/* Emergency Alerts Page Styles */
+
+.welcome {
+    padding: 30px 40px;
+    background: linear-gradient(135deg, rgba(196, 28, 59, 0.08) 0%, rgba(211, 47, 47, 0.05) 100%);
+    border-bottom: 2px solid #d32f2f;
+    margin-bottom: 30px;
+}
+
+.welcome h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1f3556;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 0 8px 0;
+}
+
+.welcome h2 i {
+    color: #d32f2f;
+    font-size: 32px;
+}
+
+.welcome p {
+    color: #666;
+    margin: 0;
+    font-size: 14px;
+}
+
+.alerts-section {
+    padding: 0 40px 40px;
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1f3556;
+    margin-bottom: 20px;
+    padding: 0;
+}
+
+/* Emergency Alert Cards */
+.emergency-alert-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.emergency-alert-cards .card {
+    display: grid;
+    grid-template-columns: 60px 1fr auto;
+    gap: 16px;
+    align-items: flex-start;
+    min-height: auto;
+    padding: 20px;
+    text-align: left;
+    border-left: 6px solid #d32f2f;
+    border-radius: 8px;
+    position: relative;
+}
+
+.emergency-alert-cards .card.severity-high {
+    border-left-color: #d32f2f;
+}
+
+.emergency-alert-cards .card.severity-medium {
+    border-left-color: #f57c00;
+}
+
+.emergency-alert-cards .card.severity-low {
+    border-left-color: #f9a825;
+}
+
+.emergency-alert-cards .card.severity-critical {
+    border-left-color: #c41c3b;
+    box-shadow: 0 4px 12px rgba(196, 28, 59, 0.15);
+}
+
+.emergency-alert-cards .card i {
+    font-size: 32px;
+    margin-bottom: 0;
+    grid-column: 1;
+    grid-row: 1 / span 4;
+    color: #d32f2f;
+}
+
+.emergency-alert-cards .card.severity-medium i {
+    color: #f57c00;
+}
+
+.emergency-alert-cards .card.severity-low i {
+    color: #f9a825;
+}
+
+.emergency-alert-cards .card.severity-critical i {
+    color: #c41c3b;
+}
+
+.emergency-alert-cards .card h3 {
+    grid-column: 2;
+    grid-row: 1;
+    margin: 0 0 6px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f3556;
+}
+
+.emergency-alert-cards .card .alert-type {
+    display: inline-block;
+    padding: 3px 8px;
+    background-color: #d32f2f;
+    color: white;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-right: 8px;
+}
+
+.emergency-alert-cards .card .alert-severity {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.emergency-alert-cards .card.severity-high .alert-severity {
+    background-color: #ffcdd2;
+    color: #d32f2f;
+}
+
+.emergency-alert-cards .card.severity-medium .alert-severity {
+    background-color: #ffe0b2;
+    color: #f57c00;
+}
+
+.emergency-alert-cards .card.severity-low .alert-severity {
+    background-color: #fff9c4;
+    color: #f9a825;
+}
+
+.emergency-alert-cards .card.severity-critical .alert-severity {
+    background-color: #f8bbd0;
+    color: #c41c3b;
+}
+
+.emergency-alert-cards .card .location {
+    grid-column: 2;
+    grid-row: 2;
+    margin: 0;
+    color: #666;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.emergency-alert-cards .card .description {
+    grid-column: 2;
+    grid-row: 3;
+    margin: 0;
+    color: #555;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.emergency-alert-cards .card .instructions {
+    grid-column: 2;
+    grid-row: 4;
+    margin: 8px 0 0 0;
+    padding: 10px;
+    background: #f9f9f9;
+    border-left: 3px solid #d32f2f;
+    border-radius: 4px;
+    color: #555;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.emergency-alert-cards .card .instructions strong {
+    color: #d32f2f;
+    font-weight: 600;
+}
+
+.emergency-alert-cards .card .time-remaining {
+    grid-column: 3;
+    grid-row: 1 / span 4;
+    align-self: center;
+    text-align: right;
+    font-size: 12px;
+    color: #d32f2f;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.emergency-alert-cards .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* No Alerts Message */
+.no-alerts-message {
+    text-align: center;
+    padding: 60px 40px;
+    color: #999;
+}
+
+.no-alerts-message i {
+    font-size: 56px;
+    color: #d32f2f;
+    margin-bottom: 16px;
+    opacity: 0.6;
+}
+
+.no-alerts-message h4 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.no-alerts-message p {
+    font-size: 14px;
+    color: #999;
+    margin: 0;
+}
+
+.history-section {
+    padding-bottom: 0;
+}
+
+/* Resolved Alert Card */
+.emergency-alert-cards .card.resolved {
+    opacity: 0.75;
+    border-left-color: #ccc;
+}
+
+.emergency-alert-cards .card.resolved i {
+    color: #999;
+}
+
+.emergency-alert-cards .card.resolved .alert-severity {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.emergency-alert-cards .card.resolved .time-remaining {
+    color: #999;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .welcome {
+        padding: 24px 30px;
+    }
+
+    .welcome h2 {
+        font-size: 24px;
+    }
+
+    .alerts-section {
+        padding: 0 30px 30px;
+    }
+
+    .emergency-alert-cards .card {
+        grid-template-columns: 50px 1fr 100px;
+    }
+}
+
+@media (max-width: 768px) {
+    .welcome {
+        padding: 20px 20px;
+        margin-bottom: 20px;
+    }
+
+    .welcome h2 {
+        font-size: 20px;
+        gap: 8px;
+    }
+
+    .welcome h2 i {
+        font-size: 24px;
+    }
+
+    .alerts-section {
+        padding: 0 20px 20px;
+    }
+
+    .section-title {
+        font-size: 18px;
+    }
+
+    .emergency-alert-cards .card {
+        grid-template-columns: 45px 1fr;
+        column-gap: 12px;
+    }
+
+    .emergency-alert-cards .card h3 {
+        grid-column: 2;
+        grid-row: 1;
+    }
+
+    .emergency-alert-cards .card .alert-type,
+    .emergency-alert-cards .card .alert-severity {
+        font-size: 9px;
+        padding: 2px 6px;
+    }
+
+    .emergency-alert-cards .card .location {
+        grid-column: 2;
+        grid-row: 2;
+    }
+
+    .emergency-alert-cards .card .description {
+        grid-column: 2;
+        grid-row: 3;
+    }
+
+    .emergency-alert-cards .card .instructions {
+        grid-column: 2;
+        grid-row: 4;
+        padding: 8px;
+    }
+
+    .emergency-alert-cards .card .time-remaining {
+        grid-column: 1 / span 2;
+        grid-row: 5;
+        text-align: left;
+        margin-top: 8px;
+        align-self: auto;
+        white-space: normal;
+    }
+}
+
+/* Tablet Screens (768px - 1023px) */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .welcome {
+        padding: 18px;
+    }
+
+    .welcome h2 {
+        font-size: 24px;
+    }
+
+    .alerts-section,
+    .no-alerts-message {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+    .emergency-alert-cards .card {
+        grid-template-columns: 45px 1fr;
+        gap: 14px;
+        padding: 14px;
+    }
+
+    .emergency-alert-cards .card i {
+        font-size: 32px;
+    }
+
+    .emergency-alert-cards .card h3 {
+        font-size: 15px;
+    }
+}
+
+/* Mobile Screens (600px - 768px) */
+@media (max-width: 768px) and (min-width: 601px) {
+    .welcome {
+        padding: 16px;
+    }
+
+    .welcome h2 {
+        font-size: 20px;
+    }
+
+    .alerts-section,
+    .no-alerts-message {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    .emergency-alert-cards .card {
+        grid-template-columns: 40px 1fr;
+        gap: 12px;
+        padding: 12px;
+    }
+
+    .emergency-alert-cards .card i {
+        font-size: 28px;
+    }
+
+    .emergency-alert-cards .card h3 {
+        font-size: 14px;
+    }
+
+    .emergency-alert-cards .card .location,
+    .emergency-alert-cards .card .description {
+        font-size: 12px;
+    }
+}
+
+/* Small Phones (max-width: 600px) */
+@media (max-width: 600px) {
+    .welcome {
+        padding: 14px;
+    }
+
+    .welcome h2 {
+        font-size: 18px;
+        margin-bottom: 4px;
+    }
+
+    .welcome p {
+        font-size: 12px;
+    }
+
+    .alerts-section,
+    .no-alerts-message {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .alerts-section {
+        padding-bottom: 12px;
+    }
+
+    .emergency-alert-cards .card {
+        grid-template-columns: 40px 1fr;
+        gap: 12px;
+        padding: 12px;
+        border-radius: 8px;
+    }
+
+    .emergency-alert-cards .card i {
+        font-size: 28px;
+    }
+
+    .emergency-alert-cards .card h3 {
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+
+    .emergency-alert-cards .card .location,
+    .emergency-alert-cards .card .description {
+        font-size: 12px;
+        line-height: 1.3;
+    }
+
+    .emergency-alert-cards .card .instructions {
+        font-size: 11px;
+    }
+}
+
+/* Extra Small Screens (under 480px) */
+@media (max-width: 480px) {
+    .welcome {
+        padding: 12px;
+    }
+
+    .welcome h2 {
+        font-size: 16px;
+    }
+
+    .welcome p {
+        font-size: 11px;
+    }
+
+    .alerts-section,
+    .no-alerts-message {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .emergency-alert-cards .card {
+        grid-template-columns: 36px 1fr;
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .emergency-alert-cards .card i {
+        font-size: 24px;
+    }
+
+    .emergency-alert-cards .card h3 {
+        font-size: 13px;
+    }
+
+    .emergency-alert-cards .card .location,
+    .emergency-alert-cards .card .description,
+    .emergency-alert-cards .card .instructions {
+        font-size: 11px;
+    }
+}

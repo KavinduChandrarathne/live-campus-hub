@@ -11,6 +11,7 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <link rel="stylesheet" href="./styles/dashboard.css">
+    <link rel="stylesheet" href="./styles/emergency-alert-banner.css">
 </head>
 <body>
 
@@ -125,7 +126,25 @@
 
         </section>
 
-        
+        <!-- Weather Section -->
+        <section class="weather-section">
+            <div class="weather-container">
+                <div class="current-weather">
+                    <div class="weather-icon-wrapper">
+                        <i id="weatherIcon" class="fas fa-cloud"></i>
+                    </div>
+                    <div class="weather-info">
+                        <div class="weather-label">Currently</div>
+                        <div class="temperature"><span id="temperature">--</span>°C</div>
+                        <div class="weather-description" id="weatherDesc">Partly Cloudy</div>
+                    </div>
+                </div>
+
+                <div class="weather-forecast" id="forecastContainer">
+                    <!-- Forecast items will be loaded here -->
+                </div>
+            </div>
+        </section>
 
     </main>
 
@@ -137,6 +156,8 @@
     </button>
 
     <script src="javascript/dashboard.js"></script>
+    <script src="javascript/weather.js"></script>
+    <script src="javascript/emergency-alert-banner.js"></script>
 
 </body>
 </html>

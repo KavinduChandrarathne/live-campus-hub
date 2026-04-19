@@ -211,6 +211,7 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="./styles/emergency-alert-banner.css">
 </head>
 <body>
 
@@ -283,6 +284,7 @@
 
 <script src="javascript/common.js"></script>
 <script src="javascript/dashboard.js"></script>
+<script src="javascript/emergency-alert-banner.js"></script>
 <script>
   const searchInput = document.querySelector('.search-bar input');
 
@@ -296,12 +298,13 @@
     if (!isStudent) {
       grid.innerHTML = clubs.map(club => {
         const clubKey = club.name.toLowerCase();
+        const iconClass = club.icon && !club.icon.startsWith('fa-solid') ? `fa-solid ${club.icon}` : club.icon;
         return `
       <article class="club-card" data-name="${clubKey}">
         <button class="join-btn" disabled>N/A</button>
         <a href="club-detail.html?club=${encodeURIComponent(club.name.toLowerCase())}" class="card-link">
           <div class="club-icon">
-            <i class="fa-solid ${club.icon}"></i>
+            <i class="${iconClass}"></i>
           </div>
           <h3>${club.name}</h3>
           <p>${club.desc}</p>

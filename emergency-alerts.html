@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Campus Hub | Facility & Event</title>
+    <title>Campus Hub | Emergency Alerts</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="./">
 
@@ -11,6 +11,7 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <link rel="stylesheet" href="./styles/dashboard.css">
+    <link rel="stylesheet" href="./styles/emergency-alerts.css">
     <link rel="stylesheet" href="./styles/emergency-alert-banner.css">
 </head>
 <body>
@@ -26,11 +27,12 @@
 
         <nav>
             <a href="dashboard.html"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
-            <a class="active" href="facility.html"><i class="fa-solid fa-bullhorn"></i> Facility & Event</a>
+            <a href="facility.html"><i class="fa-solid fa-bullhorn"></i> Facility & Event</a>
             <a href="transit.html"><i class="fa-solid fa-bus"></i> Transit</a>
             <a href="clubs.html"><i class="fa-solid fa-users"></i> Campus Clubs</a>
             <a href="updates.html"><i class="fa-solid fa-message"></i> Updates Feed</a>
             <a href="rewards.html"><i class="fa-solid fa-star"></i> Rewards</a>
+            <a class="active" href="emergency-alerts.html"><i class="fa-solid fa-triangle-exclamation"></i> Emergency Alerts</a>
         </nav>
 
         <div class="sidebar-user-bottom">
@@ -52,13 +54,29 @@
         </button>
 
         <section class="welcome">
-            <h2>Facility & Event Updates</h2>
-            <p>Latest facility notices and event announcements</p>
+            <h2><i class="fa-solid fa-triangle-exclamation"></i> Emergency Alerts</h2>
+            <p>Stay informed about active emergency alerts on campus</p>
         </section>
 
+        <!-- Active Alerts Section -->
+        <section class="alerts-section">
+            <h3 class="section-title">Active Alerts</h3>
+            <div id="activeAlertsContainer" class="cards emergency-alert-cards">
+                <!-- Active alerts will load here -->
+            </div>
+            <div id="noActiveAlerts" class="no-alerts-message" style="display: none;">
+                <i class="fa-solid fa-check-circle"></i>
+                <h4>No Active Alerts</h4>
+                <p>There are currently no emergency alerts on campus. Everything is safe!</p>
+            </div>
+        </section>
 
-        <section class="cards facility-cards">
-            <!-- Notifications will be loaded here by JavaScript -->
+        <!-- Alert History Section -->
+        <section class="alerts-section history-section" id="historySection" style="display: none;">
+            <h3 class="section-title">Recently Resolved</h3>
+            <div id="alertHistoryContainer" class="cards emergency-alert-cards">
+                <!-- Resolved alerts will load here -->
+            </div>
         </section>
 
     </main>
@@ -70,14 +88,10 @@
         <i class="fa-solid fa-arrow-up"></i>
     </button>
 
-
     <script src="javascript/common.js"></script>
     <script src="javascript/dashboard.js"></script>
-    <script src="javascript/facility-event-updates.js"></script>
+    <script src="javascript/emergency-alerts-user.js"></script>
     <script src="javascript/emergency-alert-banner.js"></script>
 
 </body>
-<script>
-// ...dropdown logic removed...
-</script>
 </html>

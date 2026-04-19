@@ -5,7 +5,8 @@ const pageMap = {
   clubs: 'campus-clubs.html',
   updates: 'updates-feed.html',
   notifications: 'add-notification.html',
-  calendar: '#'
+  calendar: 'calendar.html',
+  emergency: 'emergency-alerts.html'
 };
 
 document.querySelectorAll(".card").forEach(card => {
