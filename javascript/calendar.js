@@ -38,6 +38,30 @@ document.addEventListener('DOMContentLoaded', async () => {
  * Initialize all event handlers
  */
 function initializeEventHandlers() {
+    // Hamburger menu handler
+    const hamburger = document.getElementById('hamburger');
+    const sidebar = document.querySelector('.sidebar');
+    if (hamburger && sidebar) {
+        hamburger.addEventListener('click', function () {
+            sidebar.classList.toggle('active');
+        });
+
+        // Close sidebar when clicking on a link
+        const navLinks = sidebar.querySelectorAll('nav a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function () {
+                sidebar.classList.remove('active');
+            });
+        });
+
+        // Close sidebar when clicking outside
+        document.addEventListener('click', function (e) {
+            if (!sidebar.contains(e.target) && !hamburger.contains(e.target)) {
+                sidebar.classList.remove('active');
+            }
+        });
+    }
+
     // View selector
     document.querySelectorAll('.view-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {

@@ -129,9 +129,9 @@ function setupFormSubmit() {
         const instructions = document.getElementById('alertInstructions').value.trim();
         const activeUntil = document.getElementById('alertDuration').value;
 
-        // Validation
-        if (!title || !location || !description || !instructions || !activeUntil) {
-            showErrorMessage('Please fill in all required fields');
+        // Validation - Only Title, Location, Type, and Date are required
+        if (!title || !location || !activeUntil) {
+            showErrorMessage('Please fill in all required fields (Title, Location, and Date)');
             return;
         }
 

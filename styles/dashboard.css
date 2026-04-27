@@ -289,16 +289,18 @@ nav a:hover::after { transform: scaleX(1); }
 
 .notify-btn .badge {
     position: absolute;
-    top: -6px;
-    right: -6px;
+    top: 0;
+    right: 0;
     background: #ff4757;
     color: #fff;
-    font-size: 11px;
-    padding: 2px 6px;
+    font-size: 10px;
+    padding: 3px 6px;
     border-radius: 999px;
     font-weight: 700;
     line-height: 1;
     display: inline-block;
+    min-width: 18px;
+    text-align: center;
 }
 
 .notify-btn .badge.hidden {
@@ -497,6 +499,8 @@ nav a:hover::after { transform: scaleX(1); }
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 22px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 /* CARD */
@@ -758,11 +762,14 @@ nav a:hover::after { transform: scaleX(1); }
     .cards {
         grid-template-columns: 1fr;
         gap: 16px;
+        max-width: 100%;
+        margin: 0 auto;
     }
 
     .card {
         min-height: 180px;
         padding: 20px 16px;
+        max-width: 100%;
     }
 
     .card i {
@@ -795,6 +802,7 @@ nav a:hover::after { transform: scaleX(1); }
         padding: 16px;
         margin-bottom: 20px;
         min-height: auto;
+        overflow: visible;
     }
 
     .welcome h2 {
@@ -804,15 +812,19 @@ nav a:hover::after { transform: scaleX(1); }
 
     .welcome p {
         font-size: 13px;
+        padding-right: 100px;
     }
 
     .welcome-right {
-        position: static;
-        transform: none;
+        position: absolute;
+        top: 50%;
+        right: 12px;
+        transform: translateY(-50%);
         display: flex;
         gap: 8px;
-        margin-top: 12px;
+        margin-top: 0;
         justify-content: flex-end;
+        z-index: 100;
     }
 
     .notify-btn {
@@ -879,6 +891,7 @@ nav a:hover::after { transform: scaleX(1); }
 
     .cards {
         gap: 12px;
+        max-width: 100%;
     }
 
     .card {
@@ -899,9 +912,24 @@ nav a:hover::after { transform: scaleX(1); }
         font-size: 12px;
     }
 
+    /* Weather section extra small screens */
+    .weather-container {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .current-weather {
+        gap: 10px;
+    }
+
+    .weather-info {
+        font-size: 12px;
+    }
+
     .welcome {
         padding: 14px;
         margin-bottom: 16px;
+        overflow: visible;
     }
 
     .welcome h2 {
@@ -910,6 +938,7 @@ nav a:hover::after { transform: scaleX(1); }
 
     .welcome p {
         font-size: 12px;
+        padding-right: 90px;
     }
 
     .welcome-right {
@@ -1021,6 +1050,34 @@ input, textarea, select {
     gap: 20px;
     width: 100%;
     overflow-x: auto;
+}
+
+@media (max-width: 900px) {
+    .weather-section {
+        padding: 8px 0;
+        margin-top: 12px;
+    }
+
+    .weather-container {
+        padding: 12px 16px;
+        gap: 16px;
+        overflow-x: visible;
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 600px) {
+    .weather-section {
+        margin-top: 10px;
+    }
+
+    .weather-container {
+        padding: 12px;
+        gap: 12px;
+        overflow-x: visible;
+        flex-direction: column;
+        align-items: flex-start;
+    }
 }
 
 .current-weather {
@@ -1219,59 +1276,65 @@ input, textarea, select {
 
     .weather-container {
         flex-direction: row;
-        padding: 8px 10px;
-        gap: 10px;
+        padding: 10px;
+        gap: 12px;
+        overflow-x: visible;
     }
 
     .current-weather {
-        width: auto;
-        gap: 6px;
+        width: 100%;
+        gap: 8px;
+        order: 1;
+        flex: 0 0 auto;
     }
 
     .weather-icon-wrapper {
-        width: 40px;
-        height: 40px;
-        font-size: 24px;
+        width: 45px;
+        height: 45px;
+        font-size: 26px;
     }
 
     .weather-info {
-        gap: 0px;
+        gap: 2px;
     }
 
     .temperature {
-        font-size: 18px;
+        font-size: 20px;
     }
 
     .weather-description {
-        font-size: 8px;
+        font-size: 10px;
     }
 
     .weather-label {
-        font-size: 8px;
+        font-size: 9px;
     }
 
     .weather-forecast {
-        flex: 1;
-        justify-content: space-between;
-        gap: 4px;
+        order: 2;
+        flex: 1 0 100%;
+        justify-content: flex-start;
+        gap: 8px;
+        overflow-x: visible;
     }
 
     .forecast-item {
-        padding: 4px 6px;
-        min-width: 58px;
+        padding: 6px 8px;
+        min-width: 70px;
+        flex: 1;
     }
 
     .forecast-day {
-        font-size: 8px;
-        margin-bottom: 2px;
+        font-size: 9px;
+        margin-bottom: 3px;
     }
 
     .forecast-icon {
-        font-size: 14px;
-        margin: 1px 0;
+        font-size: 16px;
+        margin: 2px 0;
     }
 
     .forecast-temp {
-        font-size: 9px;
+        font-size: 10px;
     }
 }
