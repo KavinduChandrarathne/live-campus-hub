@@ -300,6 +300,18 @@ body {
     .cancel-btn {
         width: 100%;
     }
+
+    .logout-row {
+        display: flex;
+        justify-content: center;
+        margin-top: 12px;
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+
+    .logout-btn-centered {
+        margin-left: 0 !important;
+    }
 }
 
 /* Mobile - Small Tablets (600px - 899px) */
@@ -344,6 +356,16 @@ body {
     .button-row {
         margin-left: 120px;
         width: calc(100% - 120px);
+    }
+
+    .logout-row {
+        margin-left: 120px !important;
+        width: calc(100% - 120px) !important;
+        justify-content: flex-start;
+    }
+
+    .logout-btn-centered {
+        margin-left: 0 !important;
     }
 }
 
@@ -460,5 +482,16 @@ body {
     .cancel-btn {
         padding: 8px;
         font-size: 12px;
+    }
+
+    .logout-row {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+
+    .logout-btn-centered {
+        margin-left: 0 !important;
+        width: 100%;
+        justify-content: center;
     }
 }

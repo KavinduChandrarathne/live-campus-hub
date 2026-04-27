@@ -188,11 +188,25 @@
   display: inline-block;
 }
 
+/* Specific styling for "Request to Join" button */
+.transit-card.locked .btn-route {
+  background: #23395d;
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 4px 16px rgba(35, 57, 93, 0.25);
+}
+
 .btn-route:hover {
   background: #23395d;
   color: #fff;
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(35,57,93,0.18);
+}
+
+.transit-card.locked .btn-route:hover {
+  background: #1a2846;
+  box-shadow: 0 6px 20px rgba(35, 57, 93, 0.35);
+  transform: translateY(-2px);
 }
 
 .btn-route:active {
@@ -294,6 +308,19 @@
     border-radius: 8px;
   }
 
+  .btn-route {
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 8px;
+  }
+
+  .transit-card.locked .btn-route {
+    background: #ff6b6b;
+    color: #fff;
+    opacity: 1 !important;
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.35);
+  }
+
   .transit-card h3 {
     font-size: 14px;
     margin-bottom: 6px;
@@ -319,6 +346,17 @@
 
   .transit-card {
     padding: 10px;
+  }
+
+  .btn-route {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+
+  .transit-card.locked .btn-route {
+    background: #ff6b6b;
+    color: #fff;
+    opacity: 1 !important;
   }
 
   .transit-card h3 {

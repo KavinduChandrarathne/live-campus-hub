@@ -1,5 +1,18 @@
 [
     {
+        "id": "alert_69eed1b50d1b27.67366494",
+        "title": "h",
+        "type": "fire",
+        "location": "3",
+        "description": "",
+        "severity": "critical",
+        "instructions": "",
+        "activeUntil": "2026-04-27T06:02:00.000Z",
+        "createdAt": "2026-04-27T03:02:13.049Z",
+        "status": "resolved",
+        "resolvedAt": "2026-04-27T05:09:54+02:00"
+    },
+    {
         "id": "alert_69d87e8ae07be3.90112618",
         "title": "d",
         "type": "fire",

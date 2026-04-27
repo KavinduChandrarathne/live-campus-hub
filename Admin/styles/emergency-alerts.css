@@ -461,12 +461,12 @@ body, html{
 }
 
 .btn{
-  padding:12px 24px;
+  padding:16px 32px;
   border:none;
   border-radius:6px;
   font-weight:600;
   cursor:pointer;
-  font-size:14px;
+  font-size:15px;
   transition:all 0.3s ease;
 }
 
@@ -483,6 +483,9 @@ body, html{
   background-color:#d32f2f;
   color:#fff;
   flex:1;
+  font-size:16px;
+  font-weight:700;
+  padding:18px 36px;
 }
 
 .btn-danger:hover{

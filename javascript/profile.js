@@ -36,6 +36,30 @@ document.addEventListener('DOMContentLoaded', function () {
                     toast.className = 'toast';
                 }, 2600);
             }
+
+            // Hamburger menu handler for mobile
+            const hamburger = document.getElementById('hamburger');
+            const sidebar = document.querySelector('.sidebar');
+            if (hamburger && sidebar) {
+                hamburger.addEventListener('click', function () {
+                    sidebar.classList.toggle('active');
+                });
+
+                // Close sidebar when clicking on a link
+                const navLinks = sidebar.querySelectorAll('nav a');
+                navLinks.forEach(link => {
+                    link.addEventListener('click', function () {
+                        sidebar.classList.remove('active');
+                    });
+                });
+
+                // Close sidebar when clicking outside
+                document.addEventListener('click', function (event) {
+                    if (!sidebar.contains(event.target) && !hamburger.contains(event.target)) {
+                        sidebar.classList.remove('active');
+                    }
+                });
+            }
         // Profile photo upload preview and update
         const photoInput = document.getElementById('profile-photo-input');
         const fileLabel = document.querySelector('.custom-file-label');
