@@ -54,9 +54,18 @@ function submitLogin(email, password) {
   setTimeout(() => {
     const user = adminList.find(u => u.email === email && u.password === password);
     if (user) {
-      // Success
+      // Success - ensure user has an id field
+      const userData = {
+        id: user.id || user.studentId?.replace('A', '') || 1,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        studentId: user.studentId,
+        dob: user.dob,
+        picture: user.picture
+      };
       localStorage.setItem('adminLoggedIn', 'true');
-      localStorage.setItem('adminUser', JSON.stringify(user));
+      localStorage.setItem('adminUser', JSON.stringify(userData));
       window.location.href = 'admin-profile.html';
     } else {
       // Failed

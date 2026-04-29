@@ -362,7 +362,10 @@
 .week-container { background: #fff; }
 
 .wv-wrap {
-    overflow-y: auto;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    height: 100%;
+    overflow: hidden;
     max-height: 620px;
     position: relative;
     border: 1px solid #e0e4eb;
@@ -384,13 +387,13 @@
 }
 
 .wv-col-head {
-    background: #fff;
-    border-bottom: 2px solid #e0e4eb;
-    border-left: 1px solid #e0e4eb;
-    padding: 10px 4px;
+    background: #fff5f5;
     text-align: center;
+    font-weight: bold;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    border-left: 1px solid #e0e4eb;
 }
-.wv-col-head.today { background: #fff5f5; }
 
 .wv-day-name {
     display: block;
@@ -429,10 +432,11 @@
 }
 
 .wv-day-cell {
-    border-left: 1px solid #e8ecf1;
+    border: 1px solid #e8ecf1;
     border-top: 1px solid #f0f0f0;
     vertical-align: top;
     position: relative;
+    overflow: hidden;
     cursor: pointer;
 }
 .wv-day-cell:hover { background: #fff8f8; }
@@ -440,44 +444,15 @@
 
 .wv-event {
     position: absolute;
-    border-radius: 6px;
-    padding: 3px 6px;
-    font-size: 11px;
+    background: #ef9a9a;
+    border-left: 4px solid #d32f2f;
+    padding: 5px;
+    border-radius: 4px;
+    font-size: 12px;
     color: #fff;
-    cursor: pointer;
     overflow: hidden;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-    z-index: 5;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-}
-.wv-event:hover { filter: brightness(1.08); z-index: 20; }
-.wv-event strong { font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.wv-event small  { font-size: 10px; opacity: 0.9; }
-
-.wv-event.lecture  { background: #0c5460; }
-.wv-event.exam     { background: #721c24; }
-.wv-event.workshop { background: #155724; }
-.wv-event.notice   { background: #084298; }
-
-.wv-now-line {
-    position: absolute;
-    height: 2px;
-    background: #dc3545;
-    z-index: 15;
-    pointer-events: none;
-}
-.wv-now-line::before {
-    content: '';
-    position: absolute;
-    left: -4px;
-    top: -4px;
-    width: 10px;
-    height: 10px;
-    background: #dc3545;
-    border-radius: 50%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 /* ── Day View (table-based, iPhone style) ──────────── */
@@ -505,12 +480,15 @@
     margin-top: 4px !important;
 }
 
-.day-content { display: none; }
-.time-column { display: none; }
+
+
 .day-events-grid { position: relative; }
 
 .dv-wrap {
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
     max-height: 580px;
     position: relative;
 }
@@ -522,87 +500,66 @@
 }
 
 .dv-time-cell {
-    width: 64px;
-    padding: 0 8px 0 0;
+    width: 60px;
     text-align: right;
-    font-size: 11px;
-    color: #aaa;
-    vertical-align: top;
-    padding-top: 4px;
-    border-top: 1px solid #f0f0f0;
-    white-space: nowrap;
+    padding-right: 10px;
+    font-weight: bold;
+    color: #555;
+    border-right: 1px solid #ddd;
 }
 
 .dv-slot-cell {
-    border-top: 1px solid #f0f0f0;
-    vertical-align: top;
+    border: 1px solid #e0e4eb;
+    height: 80px;
     position: relative;
+    overflow: hidden;
+}
+
+.dv-slot-cell:hover {
+    background-color: #fce4ec;
 }
 
 .dv-event {
     position: absolute;
-    border-radius: 8px;
-    padding: 6px 10px;
+    background: #f48fb1;
+    border-left: 4px solid #c2185b;
+    padding: 5px;
+    border-radius: 4px;
     font-size: 12px;
     color: #fff;
-    cursor: pointer;
     overflow: hidden;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    z-index: 5;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-}
-.dv-event:hover { filter: brightness(1.08); z-index: 20; }
-
-.dv-event.lecture  { background: #0c5460; }
-.dv-event.exam     { background: #721c24; }
-.dv-event.workshop { background: #155724; }
-.dv-event.notice   { background: #084298; }
-
-.day-event-title    { font-weight: 700; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.day-event-time     { font-size: 10px; opacity: 0.9; }
-.day-event-location { font-size: 10px; opacity: 0.8; }
-
-.dv-now-line {
-    position: absolute;
-    height: 2px;
-    background: #dc3545;
-    z-index: 15;
-    pointer-events: none;
-}
-.dv-now-line::before {
-    content: '';
-    position: absolute;
-    left: -4px;
-    top: -4px;
-    width: 10px;
-    height: 10px;
-    background: #dc3545;
-    border-radius: 50%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
+/* Day View Add Button */
 .day-add-btn {
     position: absolute;
     bottom: 20px;
     right: 20px;
-    padding: 12px 20px;
-    background: #dc3545;
+    padding: 14px 28px;
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
     color: #fff;
     border: none;
     border-radius: 50px;
     cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
-    box-shadow: 0 4px 16px rgba(220,53,69,0.4);
-    transition: all 0.2s ease;
+    font-size: 16px;
+    font-weight: 700;
+    box-shadow: 0 4px 20px rgba(0, 123, 255, 0.4);
+    transition: all 0.3s ease;
     display: flex;
     align-items: center;
     gap: 8px;
-    z-index: 20;
 }
-.day-add-btn:hover { background: #c82333; transform: translateY(-2px); }
+
+.day-add-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(0, 123, 255, 0.5);
+}
+
+.day-add-btn i {
+    font-size: 14px;
+}
 
 /* Agenda View */
 .agenda-grid {

@@ -140,13 +140,32 @@ function initializeEventHandlers() {
 }
 
 /**
- * Load events from local storage or API
+ * Load events from database via PHP API
  */
-function loadEvents() {
+async function loadEvents() {
     try {
-        const eventsData = localStorage.getItem('calendarEvents_' + currentUser.id);
-        if (eventsData) {
-            allEvents = JSON.parse(eventsData);
+        const month = currentDate.getMonth() + 1;
+        const year = currentDate.getFullYear();
+        
+        const response = await fetch(`Admin/shared/php/get-calendar-events.php?user_id=${currentUser.id}&month=${month}&year=${year}&category=${currentFilter}`);
+        const result = await response.json();
+        
+        if (result.success) {
+            allEvents = result.events.map(event => ({
+                id: event.id,
+                title: event.title,
+                date: event.event_date,
+                startTime: event.start_time,
+                endTime: event.end_time || '23:59',
+                category: event.category,
+                clubId: event.club_id,
+                clubName: event.club_name || '',
+                description: event.description || '',
+                location: event.location || '',
+                isAdminEvent: event.created_by_type === 'admin',
+                // Defensive defaults for UI
+                reminder: event.reminder || null
+            }));
         } else {
             allEvents = [];
         }
@@ -174,13 +193,27 @@ function saveEvents() {
  * Render calendar based on current view
  */
 function renderCalendar() {
+    const monthView = document.getElementById('monthView');
+    const weekView = document.getElementById('weekView');
+    const dayView = document.getElementById('dayView');
+
+    // Hide all views
+    monthView.style.display = 'none';
+    weekView.style.display = 'none';
+    dayView.style.display = 'none';
+
+    // Show the selected view
     if (currentView === 'month') {
+        monthView.style.display = 'block';
         renderMonthView();
     } else if (currentView === 'week') {
+        weekView.style.display = 'block';
         renderWeekView();
     } else {
+        dayView.style.display = 'block';
         renderDayView();
     }
+
     updateDateDisplay();
     populateSidebarEvents();
 }
@@ -246,7 +279,7 @@ function renderMonthView() {
             if (!e.target.closest('button')) {
                 const dateStr = dayElement.dataset.date;
                 const [y, mo, d] = dateStr.split('-').map(Number);
-                currentDate = new Date(y, mo, d);
+                currentDate = new Date(y, mo - 1, d); // Fix: month is zero-based
                 currentView = 'day';
                 document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
                 document.querySelector('.view-btn[data-view="day"]').classList.add('active');
@@ -272,7 +305,10 @@ function createDayElement(day, month, year, isOtherMonth) {
 
     let eventsHtml = '';
     for (let i = 0; i < Math.min(dayEvents.length, 2); i++) {
-        eventsHtml += `<div class="day-event-item ${dayEvents[i].category}">${dayEvents[i].title}</div>`;
+        const ev = dayEvents[i];
+        const adminIcon = ev.isAdminEvent ? '<i class="fa-solid fa-crown admin-event-icon" title="Admin Event"></i> ' : '';
+        const adminClass = ev.isAdminEvent ? 'admin-event' : '';
+        eventsHtml += `<div class="day-event-item ${ev.category} ${adminClass}">${adminIcon}${ev.title}</div>`;
     }
     if (dayEvents.length > 2) {
         eventsHtml += `<div class="more-events">+${dayEvents.length - 2} more</div>`;
@@ -356,9 +392,11 @@ function renderWeekView() {
             const height = Math.max(22, (duration / 60) * HOUR_HEIGHT - 2);
 
             const pill = document.createElement('div');
-            pill.className = `wv-event ${ev.category}`;
+            const adminIcon = ev.isAdminEvent ? '<i class="fa-solid fa-crown admin-event-icon" title="Admin Event"></i> ' : '';
+            const adminClass = ev.isAdminEvent ? 'admin-event' : '';
+            pill.className = `wv-event ${ev.category} ${adminClass}`;
             pill.style.cssText = `top:${top}px;left:${left}px;width:${width}px;height:${height}px`;
-            pill.innerHTML = `<strong>${ev.title}</strong><small>${ev.startTime}</small>`;
+            pill.innerHTML = `${adminIcon}<strong>${ev.title}</strong><small>${ev.startTime}</small>`;
             pill.onclick = () => viewEventDetails(ev.id);
             document.querySelector('#weekGrid .wv-wrap').appendChild(pill);
         });
@@ -440,9 +478,11 @@ function renderDayView() {
         const height = Math.max(44, (duration / 60) * HOUR_HEIGHT - 2);
 
         const pill = document.createElement('div');
-        pill.className = `dv-event ${ev.category}`;
+        const adminIcon = ev.isAdminEvent ? '<i class="fa-solid fa-crown admin-event-icon" title="Admin Event"></i> ' : '';
+        const adminClass = ev.isAdminEvent ? 'admin-event' : '';
+        pill.className = `dv-event ${ev.category} ${adminClass}`;
         pill.style.cssText = `top:${top}px;left:${left}px;width:${width}px;height:${height}px`;
-        pill.innerHTML = `<div class="day-event-title">${ev.title}</div><small class="day-event-time">${ev.startTime} – ${ev.endTime}</small><small class="day-event-location">${ev.location || ''}</small>`;
+        pill.innerHTML = `${adminIcon}<div class="day-event-title">${ev.title}</div><small class="day-event-time">${ev.startTime} – ${ev.endTime}</small><small class="day-event-location">${ev.location || ''}</small>`;
         pill.onclick = () => viewEventDetails(ev.id);
         wrap.appendChild(pill);
     });
@@ -540,9 +580,11 @@ function populateSidebarEvents() {
     } else {
         eventsToShow.forEach(event => {
             const eventDate = new Date(event.date);
+            const adminIcon = event.isAdminEvent ? '<i class="fa-solid fa-crown admin-event-icon" title="Admin Event"></i> ' : '';
+            const adminClass = event.isAdminEvent ? 'admin-event' : '';
             html += `
-                <div class="event-item ${event.category}" onclick="viewEventDetails(${event.id})">
-                    <div class="event-item-title">${event.title}</div>
+                <div class="event-item ${event.category} ${adminClass}" onclick="viewEventDetails(${event.id})">
+                    <div class="event-item-title">${adminIcon}${event.title}</div>
                     <div class="event-item-time">${event.startTime} - ${event.endTime}</div>
                     <div class="event-item-date">${eventDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>
                 </div>
@@ -559,11 +601,16 @@ function populateSidebarEvents() {
 function applyFilter() {
     if (currentFilter === 'all') {
         filteredEvents = [...allEvents];
+    } else if (currentFilter === 'admin') {
+        // Filter for admin-created events (visible to all)
+        filteredEvents = allEvents.filter(event => event.isAdminEvent);
+    } else if (currentFilter === 'club') {
+        // Filter for club events (user is a member)
+        filteredEvents = allEvents.filter(event => event.clubId !== null);
     } else {
         filteredEvents = allEvents.filter(event => event.category === currentFilter);
     }
     renderCalendar();
-    populateUpcomingEvents();
 }
 
 /**
@@ -650,39 +697,36 @@ async function handleEventSubmit(e) {
     
     const formData = {
         title: document.getElementById('eventTitle').value,
-        date: document.getElementById('eventDate').value,
+        event_date: document.getElementById('eventDate').value,
         category: document.getElementById('eventCategory').value,
-        startTime: document.getElementById('eventStartTime').value,
-        endTime: document.getElementById('eventEndTime').value,
-        location: document.getElementById('eventLocation').value,
+        start_time: document.getElementById('eventStartTime').value,
+        end_time: document.getElementById('eventEndTime').value || document.getElementById('eventStartTime').value,
         description: document.getElementById('eventDescription').value,
-        reminder: document.getElementById('eventReminder').value,
-        createdBy: currentUser.id,
-        targetGroup: 'personal'
+        user_id: currentUser.id,
+        is_admin_event: '0'
     };
     
-    if (editingEventId) {
-        // Update existing event
-        const eventIndex = allEvents.findIndex(e => e.id === editingEventId);
-        if (eventIndex !== -1) {
-            allEvents[eventIndex] = { ...allEvents[eventIndex], ...formData };
+    try {
+        const response = await fetch('Admin/shared/php/add-calendar-event.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams(formData).toString()
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            await loadEvents();
+            renderCalendar();
+            closeEventModal();
+            showNotification('Event created successfully!');
+        } else {
+            showNotification(result.error || 'Failed to create event', 'error');
         }
-    } else {
-        // Create new event
-        const newEvent = {
-            id: Date.now(),
-            ...formData,
-            createdAt: new Date().toISOString()
-        };
-        allEvents.push(newEvent);
+    } catch (error) {
+        console.error('Error creating event:', error);
+        showNotification('Failed to create event', 'error');
     }
-    
-    saveEvents();
-    loadEvents();
-    renderCalendar();
-    populateUpcomingEvents();
-    closeEventModal();
-    showNotification('Event saved successfully!');
 }
 
 /**
@@ -772,17 +816,29 @@ function editCurrentEvent() {
 /**
  * Delete current event
  */
-function deleteCurrentEvent() {
+async function deleteCurrentEvent() {
     if (!editingEventId) return;
     
     if (confirm('Are you sure you want to delete this event?')) {
-        allEvents = allEvents.filter(e => e.id !== editingEventId);
-        saveEvents();
-        loadEvents();
-        renderCalendar();
-        populateUpcomingEvents();
-        closeDetailsModal();
-        showNotification('Event deleted successfully!');
+        try {
+            const response = await fetch(`Admin/shared/php/delete-calendar-event.php?id=${editingEventId}&user_id=${currentUser.id}`, {
+                method: 'DELETE'
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                await loadEvents();
+                renderCalendar();
+                closeDetailsModal();
+                showNotification('Event deleted successfully!');
+            } else {
+                showNotification(result.error || 'Failed to delete event', 'error');
+            }
+        } catch (error) {
+            console.error('Error deleting event:', error);
+            showNotification('Failed to delete event', 'error');
+        }
     }
 }
 
