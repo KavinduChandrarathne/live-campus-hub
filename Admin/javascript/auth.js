@@ -80,8 +80,29 @@ function attachLogoutButton() {
   }
 }
 
+function loginAdmin(adminData) {
+  // Simulate login success
+  localStorage.setItem('adminLoggedIn', 'true');
+  localStorage.setItem('adminUser', JSON.stringify(adminData));
+  window.location.href = 'admin-profile.html';
+}
+
+function logoutAdmin() {
+  // Clear admin session
+  localStorage.removeItem('adminLoggedIn');
+  localStorage.removeItem('adminUser');
+  window.location.href = 'index.html';
+}
+
+function debugAuth() {
+  console.log('Debugging Auth:');
+  console.log('adminLoggedIn:', localStorage.getItem('adminLoggedIn'));
+  console.log('adminUser:', localStorage.getItem('adminUser'));
+}
+
 // run on every page load
 document.addEventListener('DOMContentLoaded', () => {
   initAuth();
   attachLogoutButton();
+  debugAuth();
 });

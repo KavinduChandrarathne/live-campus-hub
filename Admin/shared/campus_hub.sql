@@ -1,4 +1,4 @@
-CREATE DATABASE IF NOT EXISTS campus_hub;
+﻿CREATE DATABASE IF NOT EXISTS campus_hub;
 USE campus_hub;
 
 -- admin accounts
@@ -15,10 +15,6 @@ CREATE TABLE admins (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_email (email)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-
-
-
 
 -- user accounts
 CREATE TABLE users (
@@ -40,8 +36,6 @@ CREATE TABLE users (
     INDEX idx_studentId (studentId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-
-
 -- User rewards: points, badges, tiers
 CREATE TABLE user_rewards (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -59,10 +53,6 @@ CREATE TABLE user_rewards (
     INDEX idx_points (points)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-
-
-
-
 -- campus clubs info
 CREATE TABLE clubs (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -73,10 +63,6 @@ CREATE TABLE clubs (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_name (name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-
-
-
 
 -- user-club links
 CREATE TABLE club_memberships (
@@ -90,10 +76,6 @@ CREATE TABLE club_memberships (
     INDEX idx_user (user_id),
     INDEX idx_club (club_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-
-
-
 
 -- Club join requests 
 CREATE TABLE club_join_requests (
@@ -112,10 +94,6 @@ CREATE TABLE club_join_requests (
     INDEX idx_created (created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-
-
-
-
 -- Club updates
 CREATE TABLE club_updates (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -129,10 +107,6 @@ CREATE TABLE club_updates (
     INDEX idx_created (created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-
-
-
-
 -- shuttle routes
 CREATE TABLE transit_routes (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -142,8 +116,6 @@ CREATE TABLE transit_routes (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_name (name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-
 
 -- Transit memberships
 CREATE TABLE transit_route_memberships (
@@ -157,11 +129,6 @@ CREATE TABLE transit_route_memberships (
     INDEX idx_user (user_id),
     INDEX idx_route (route_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-
-
-
-
 
 -- Transit join requests
 CREATE TABLE transit_join_requests (
@@ -179,8 +146,6 @@ CREATE TABLE transit_join_requests (
     INDEX idx_created (created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-
-
 -- Transit updates: route announcements
 CREATE TABLE transit_updates (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -196,9 +161,6 @@ CREATE TABLE transit_updates (
     INDEX idx_created (created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-
-
-
 -- Facility updates
 CREATE TABLE facility_event_updates (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -209,10 +171,8 @@ CREATE TABLE facility_event_updates (
     INDEX idx_created (created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-
-
-
-
+-- Notifications
+CREATE TABLE notifications (
     id VARCHAR(50) PRIMARY KEY DEFAULT (CONCAT('notif_', SUBSTR(MD5(CONCAT(UUID(), RAND())), 1, 12))),
     type ENUM('direct', 'club', 'facility') DEFAULT 'direct',
     title VARCHAR(255),
@@ -225,7 +185,7 @@ CREATE TABLE facility_event_updates (
     INDEX idx_club (club_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-
+-- User daily activity
 CREATE TABLE user_daily_activity (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -239,14 +199,29 @@ CREATE TABLE user_daily_activity (
     INDEX idx_date (activity_date)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-
-
-
-
-
-
-
-
+-- Calendar events (user and admin created)
+CREATE TABLE calendar_events (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    event_date DATE NOT NULL,
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
+    location VARCHAR(255),
+    category ENUM('personal', 'meeting', 'event', 'other', 'lecture', 'exam', 'workshop', 'notice') NOT NULL,
+    icon VARCHAR(100),
+    created_by_type ENUM('user', 'admin') NOT NULL,
+    created_by_id INT NOT NULL,
+    club_id INT NULL,
+    reminder_minutes INT DEFAULT 30,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (club_id) REFERENCES clubs(id) ON DELETE SET NULL,
+    INDEX idx_date (event_date),
+    INDEX idx_category (category),
+    INDEX idx_created_by (created_by_type, created_by_id),
+    INDEX idx_club (club_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Insert data
 INSERT INTO admins (email, password, firstName, lastName, studentId, dob, picture) VALUES
@@ -254,20 +229,14 @@ INSERT INTO admins (email, password, firstName, lastName, studentId, dob, pictur
 ('admin2@example.com', 'admin456', 'Bob', 'Smith', 'A1002', '1991-02-02', 'images/admin.png'),
 ('admin3@example.com', 'admin789', 'Carol', 'Williams', 'A1003', '1992-03-03', 'images/admin.png');
 
-
-
-
 INSERT INTO users (username, email, password, role, firstName, lastName, studentId, faculty, dob, picture) VALUES
-('aliceanderson', 'alice@campushub.com', '$2y$10$Xi741ZmO91At2CdQY4CnW.6KwQrPquFx0PiKgUqnt/QIrSVSpsBcS', 'student', 'Alice', 'Anderson', 'S1001', 'Business', '2000-03-15', './images/person1.png'),
-('bobbrown', 'bob@campushub.com', '$2y$10$fRtkek6cXM2YtIzC4bzeXOsLSqHGOQz2rIh/ez0G0FCN8Psnyx3EW', 'student', 'Bob', 'Brown', 'A1001', 'Business', '1998-10-30', './images/person2.png'),
-('charlieClark', 'charlie@campushub.com', '$2y$10$71FpJVq3S8ymjAw/hWXVveRw3Lcf4taOEAkx8YLA8.kxucF0pJhsK', 'student', 'Charlie', 'Clark', 'S1003', 'Arts', '1999-07-22', './images/person3.png'),
-('testuser', 'testuser@campushub.com', '$2y$10$1LclAASCN8wdKyeA.xiID.ylzi7dN6dv6R/pzqmuy4hiE0IjaT/gK', 'student', 'Test', 'User', 'S1006', 'Business', '2026-03-25', './images/profile_e5cf8952c0d1af43cd0d216b10e39962.png'),
-('testuser2', 'user2@campushub.com', '$2y$10$R4W6kOb3cLtd5V5uRnW2b.AXXPzLDnf6nB/cAXapDfoVaBVeJXVji', 'student', 'test', 'User 2', 'S1007', 'Science', '2026-03-02', './images/default.png'),
-('testuser3', 'test3@campushub.com', '$2y$10$1LclAASCN8wdKyeA.xiID.ylzi7dN6dv6R/pzqmuy4hiE0IjaT/gK', 'student', 'Test', 'User 3', 'S1008', 'Arts', '2026-03-05', './images/default.png'),
-('testuser4', 'test4@campushub.com', '$2y$10$1LclAASCN8wdKyeA.xiID.ylzi7dN6dv6R/pzqmuy4hiE0IjaT/gK', 'student', 'test', 'User 3', 'S1009', 'Science', '2026-03-03', './images/default.png');
-
-
-
+('aliceanderson', 'alice@campushub.com', '.6KwQrPquFx0PiKgUqnt/QIrSVSpsBcS', 'student', 'Alice', 'Anderson', 'S1001', 'Business', '2000-03-15', './images/person1.png'),
+('bobbrown', 'bob@campushub.com', '/ez0G0FCN8Psnyx3EW', 'student', 'Bob', 'Brown', 'A1001', 'Business', '1998-10-30', './images/person2.png'),
+('charlieClark', 'charlie@campushub.com', '/hWXVveRw3Lcf4taOEAkx8YLA8.kxucF0pJhsK', 'student', 'Charlie', 'Clark', 'S1003', 'Arts', '1999-07-22', './images/person3.png'),
+('testuser', 'testuser@campushub.com', '.xiID.ylzi7dN6dv6R/pzqmuy4hiE0IjaT/gK', 'student', 'Test', 'User', 'S1006', 'Business', '2026-03-25', './images/profile_e5cf8952c0d1af43cd0d216b10e39962.png'),
+('testuser2', 'user2@campushub.com', '.AXXPzLDnf6nB/cAXapDfoVaBVeJXVji', 'student', 'test', 'User 2', 'S1007', 'Science', '2026-03-02', './images/default.png'),
+('testuser3', 'test3@campushub.com', '.xiID.ylzi7dN6dv6R/pzqmuy4hiE0IjaT/gK', 'student', 'Test', 'User 3', 'S1008', 'Arts', '2026-03-05', './images/default.png'),
+('testuser4', 'test4@campushub.com', '.xiID.ylzi7dN6dv6R/pzqmuy4hiE0IjaT/gK', 'student', 'test', 'User 3', 'S1009', 'Science', '2026-03-03', './images/default.png');
 
 INSERT INTO user_rewards (user_id, points, badges, tier, login_streak, last_login_date, daily_usage_points, daily_usage_date) VALUES
 (1, 45, 0, 'BRONZE', 1, '2026-03-22', 5, '2026-03-22'),
@@ -278,8 +247,6 @@ INSERT INTO user_rewards (user_id, points, badges, tier, login_streak, last_logi
 (6, 0, 0, 'BRONZE', 0, NULL, 0, NULL),
 (7, 0, 0, 'BRONZE', 0, NULL, 0, NULL);
 
-
-
 INSERT INTO clubs (name, icon, description) VALUES
 ('Coding Club', 'fa-user-group', 'Explore clubs and view the latest updates from each community.'),
 ('Rotaract Club', 'fa-bus', 'Explore clubs and view the latest updates from each community.'),
@@ -289,13 +256,11 @@ INSERT INTO clubs (name, icon, description) VALUES
 ('Photography Club', 'fa-camera', 'Explore clubs and view the latest updates from each community.'),
 ('new test', 'fa-user-group', '');
 
-
 INSERT INTO club_memberships (user_id, club_id) VALUES
-(1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (1, 7),  -- Alice in multiple clubs
-(2, 4), (2, 6), (2, 5), (2, 3),  -- Bob in 4 clubs
-(4, 1), (4, 2), (4, 3), (4, 4), (4, 5), (4, 6), (4, 7),  -- test user in all clubs
-(6, 1);  -- Test User 3 in Coding Club
-
+(1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (1, 7),
+(2, 4), (2, 6), (2, 5), (2, 3),
+(4, 1), (4, 2), (4, 3), (4, 4), (4, 5), (4, 6), (4, 7),
+(6, 1);
 
 INSERT INTO transit_routes (name, icon) VALUES
 ('Gampaha', 'fa-bus'),
@@ -303,13 +268,11 @@ INSERT INTO transit_routes (name, icon) VALUES
 ('Wattala', 'fa-bus'),
 ('Moratuwa', 'fa-bus');
 
-
 INSERT INTO transit_route_memberships (user_id, route_id) VALUES
-(1, 1), (1, 3),  -- Alice: Gampaha, Wattala
-(2, 2), (2, 1), (2, 3),  -- Bob: Negombo, Gampaha, Wattala
-(3, 4), (3, 1), (3, 2), (3, 3),  -- Charlie: Moratuwa, Gampaha, Negombo, Wattala
-(4, 1);  -- test user: Gampaha
-
+(1, 1), (1, 3),
+(2, 2), (2, 1), (2, 3),
+(3, 4), (3, 1), (3, 2), (3, 3),
+(4, 1);
 
 INSERT INTO club_updates (club_id, icon, message, description) VALUES
 (1, 'fa-users', 'Welcome to the Coding Club!', 'Check out our new repository of beginner projects.'),
@@ -318,7 +281,6 @@ INSERT INTO club_updates (club_id, icon, message, description) VALUES
 (1, 'fa-users', 'test new 2', ''),
 (1, 'fa-users', 'test new', ''),
 (1, 'fa-users', 'task 1', 'egfws');
-
 
 INSERT INTO transit_updates (route_id, icon, message, description, live_link, created_by_username) VALUES
 (1, 'fa-bus', 'test user', '', '', 'Alice Anderson'),
@@ -331,7 +293,6 @@ INSERT INTO transit_updates (route_id, icon, message, description, live_link, cr
 (1, 'fa-bus', 'task 1', 'fth', '', NULL),
 (1, 'fa-bus', 'test new', 'test', '', NULL);
 
-
 INSERT INTO facility_event_updates (icon, message, description) VALUES
 ('fa-envelope', 'test message', 'test message'),
 ('fa-book', 'The gym will be closed at 10.00 PM', 'Due to the Scheduled maintenance, the campus gym will be close early today'),
@@ -341,7 +302,6 @@ INSERT INTO facility_event_updates (icon, message, description) VALUES
 ('fa-envelope', 'The gym will be closed at 10.00 PM', 'Due to the Scheduled maintenance, the campus gym will be close early today'),
 ('fa-dumbbell', 'The gym will be closed at 10.00 PM', 'Due to the Scheduled maintenance, the campus gym will be close early today');
 
-
 INSERT INTO club_join_requests (user_id, club_id, status, message) VALUES
 (3, 3, 'pending', ''),
 (3, 2, 'pending', ''),
@@ -350,17 +310,15 @@ INSERT INTO club_join_requests (user_id, club_id, status, message) VALUES
 (2, 2, 'rejected', ''),
 (2, 1, 'pending', '');
 
-
 INSERT INTO transit_join_requests (user_id, route_id, status) VALUES
 (3, 3, 'accepted'),
 (4, 1, 'accepted'),
 (2, 3, 'accepted');
 
-
 INSERT INTO notifications (type, title, message, club_id) VALUES
 ('direct', 'Reward Earned', 'You earned 5 points for Daily login.', NULL),
 ('direct', 'Reward Earned', 'You earned 20 points for Joining a club.', NULL),
-('direct', 'Tier Upgrade', 'Congratulations! You\'ve reached SILVER tier.', NULL),
+('direct', 'Tier Upgrade', 'Congratulations! You''ve reached SILVER tier.', NULL),
 ('direct', 'Reward Earned', 'You earned 15 points for Joining a shuttle route.', NULL),
 ('facility', 'Gym Closed', 'The gym will be closed early today.', NULL),
 ('club', 'New Club Update', 'New activity in your club!', 1);

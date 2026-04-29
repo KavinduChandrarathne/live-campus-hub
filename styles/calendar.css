@@ -1,3 +1,17 @@
+/* Admin Event Highlight */
+.admin-event {
+    background: #fff8e1 !important;
+    border-left-color: #f39c12 !important;
+    color: #b26a00 !important;
+    position: relative;
+}
+
+.admin-event-icon {
+    color: #f39c12;
+    margin-right: 3px;
+    font-size: 13px;
+    vertical-align: middle;
+}
 /* ============================
    CALENDAR PAGE STYLES
    ============================ */
@@ -330,7 +344,10 @@
 .week-container { background: #fff; }
 
 .wv-wrap {
-    overflow-y: auto;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    height: 100%;
+    overflow: hidden;
     max-height: 620px;
     position: relative;
     border: 1px solid #e0e4eb;
@@ -400,7 +417,7 @@
 }
 
 .wv-day-cell {
-    border-left: 1px solid #e8ecf1;
+    border: 1px solid #e8ecf1;
     border-top: 1px solid #f0f0f0;
     vertical-align: top;
     position: relative;
@@ -479,12 +496,15 @@
     margin-top: 4px !important;
 }
 
-.day-content { display: none; } /* replaced by dv-wrap */
-.time-column { display: none; }
+
+
 
 .day-events-grid { position: relative; }
 
 .dv-wrap {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     overflow-y: auto;
     max-height: 580px;
     position: relative;
@@ -509,9 +529,10 @@
 }
 
 .dv-slot-cell {
-    border-top: 1px solid #f0f0f0;
-    vertical-align: top;
+    border: 1px solid #e0e4eb;
+    height: 80px;
     position: relative;
+    vertical-align: top;
 }
 
 /* Event pills */
@@ -565,21 +586,30 @@
     position: absolute;
     bottom: 20px;
     right: 20px;
-    padding: 12px 20px;
-    background: #007bff;
+    padding: 14px 28px;
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
     color: #fff;
     border: none;
     border-radius: 50px;
     cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
-    box-shadow: 0 4px 16px rgba(0,123,255,0.4);
-    transition: all 0.2s ease;
+    font-size: 16px;
+    font-weight: 700;
+    box-shadow: 0 4px 20px rgba(0, 123, 255, 0.4);
+    transition: all 0.3s ease;
     display: flex;
     align-items: center;
     gap: 8px;
-    z-index: 20;
 }
+
+.day-add-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(0, 123, 255, 0.5);
+}
+
+.day-add-btn i {
+    font-size: 14px;
+}
+
 .day-add-btn:hover { background: #0056b3; transform: translateY(-2px); }
 
 /* Agenda View */
@@ -787,6 +817,27 @@
 .event-item-date {
     color: #999;
     font-size: 11px;
+}
+
+.event-item-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.event-item-header i {
+    color: #1f3556;
+    font-size: 12px;
+}
+
+.event-item-club {
+    color: #16a085;
+    font-size: 11px;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
 }
 
 .no-events {

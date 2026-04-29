@@ -30,7 +30,7 @@
             <a href="add-notification.html"><i class="fa-solid fa-bell"></i> Notification</a>
         </nav>
 
-        <div class="user" onclick="window.location='admin-profile.html'">
+        <div class="user" onclick="event.stopPropagation(); window.location='admin-profile.html'">
             <img id="sidebar-picture" src="images/admin.png" alt="user">
             <div>
                 <p id="sidebar-name">Admin Name</p>
@@ -150,7 +150,7 @@
                                 <!-- Day events will be populated by JavaScript -->
                             </div>
                         </div>
-                        <button class="day-add-btn" onclick="openEventModal(new Date())">
+                        <button class="day-add-btn" onclick="openEventModal(currentDate)">
                             <i class="fa-solid fa-plus"></i> Create Event
                         </button>
                     </div>
@@ -237,13 +237,16 @@
             <div class="form-row">
                 <div class="form-group">
                     <label for="eventTargetGroup">Target Group *</label>
-                    <select id="eventTargetGroup" name="targetGroup" required>
+                    <select id="eventTargetGroup" name="targetGroup" required onchange="toggleClubSelect()">
                         <option value="">Select Target Group</option>
                         <option value="all_students">All Students</option>
-                        <option value="specific_department">Specific Department</option>
-                        <option value="specific_year">Specific Year</option>
-                        <option value="club">Club Members</option>
-                        <option value="custom">Custom Group</option>
+                        <option value="club">Specific Club</option>
+                    </select>
+                </div>
+                <div class="form-group" id="clubSelectGroup" style="display: none;">
+                    <label for="eventClub">Select Club</label>
+                    <select id="eventClub" name="club_id">
+                        <option value="">Select a Club</option>
                     </select>
                 </div>
                 <div class="form-group">
