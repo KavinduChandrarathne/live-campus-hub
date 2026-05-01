@@ -1,7 +1,12 @@
-﻿CREATE DATABASE IF NOT EXISTS campus_hub;
+﻿DROP DATABASE IF EXISTS campus_hub;
+CREATE DATABASE campus_hub;
 USE campus_hub;
 
--- admin accounts
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ======================
+-- ADMINS
+-- ======================
 CREATE TABLE admins (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) UNIQUE NOT NULL,
@@ -13,16 +18,18 @@ CREATE TABLE admins (
     picture VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_email (email)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    INDEX (email)
+) ENGINE=InnoDB;
 
--- user accounts
+-- ======================
+-- USERS
+-- ======================
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(100) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
-    role ENUM('student', 'admin') DEFAULT 'student',
+    role ENUM('student','admin') DEFAULT 'student',
     firstName VARCHAR(100) NOT NULL,
     lastName VARCHAR(100) NOT NULL,
     studentId VARCHAR(50) UNIQUE NOT NULL,
@@ -31,197 +38,201 @@ CREATE TABLE users (
     picture VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_email (email),
-    INDEX idx_username (username),
-    INDEX idx_studentId (studentId)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    INDEX (email),
+    INDEX (username),
+    INDEX (studentId)
+) ENGINE=InnoDB;
 
--- User rewards: points, badges, tiers
+-- ======================
+-- USER REWARDS
+-- ======================
 CREATE TABLE user_rewards (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL UNIQUE,
-    points INT DEFAULT 0 CHECK (points >= 0),
-    badges INT DEFAULT 0 CHECK (badges >= 0),
-    tier ENUM('BRONZE', 'SILVER', 'GOLD', 'DIAMOND', 'PLATINUM') DEFAULT 'BRONZE',
-    login_streak INT DEFAULT 0 CHECK (login_streak >= 0),
+    points INT DEFAULT 0,
+    badges INT DEFAULT 0,
+    tier ENUM('BRONZE','SILVER','GOLD','DIAMOND','PLATINUM') DEFAULT 'BRONZE',
+    login_streak INT DEFAULT 0,
     last_login_date DATE,
-    daily_usage_points INT DEFAULT 0 CHECK (daily_usage_points >= 0),
+    daily_usage_points INT DEFAULT 0,
     daily_usage_date DATE,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    INDEX idx_tier (tier),
-    INDEX idx_points (points)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
 
--- campus clubs info
+-- ======================
+-- CLUBS
+-- ======================
 CREATE TABLE clubs (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) UNIQUE NOT NULL,
     icon VARCHAR(100),
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_name (name)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
 
--- user-club links
+-- ======================
+-- CLUB MEMBERSHIPS
+-- ======================
 CREATE TABLE club_memberships (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    club_id INT NOT NULL,
+    user_id INT,
+    club_id INT,
     joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY (user_id, club_id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (club_id) REFERENCES clubs(id) ON DELETE CASCADE,
-    UNIQUE KEY unique_user_club (user_id, club_id),
-    INDEX idx_user (user_id),
-    INDEX idx_club (club_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    FOREIGN KEY (club_id) REFERENCES clubs(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
 
--- Club join requests 
+-- ======================
+-- CLUB JOIN REQUESTS
+-- ======================
 CREATE TABLE club_join_requests (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    club_id INT NOT NULL,
-    status ENUM('pending', 'accepted', 'rejected') DEFAULT 'pending',
+    user_id INT,
+    club_id INT,
+    status ENUM('pending','accepted','rejected') DEFAULT 'pending',
     message TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (club_id) REFERENCES clubs(id) ON DELETE CASCADE,
-    INDEX idx_user (user_id),
-    INDEX idx_club (club_id),
-    INDEX idx_status (status),
-    INDEX idx_created (created_at)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    FOREIGN KEY (club_id) REFERENCES clubs(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
 
--- Club updates
+-- ======================
+-- CLUB UPDATES
+-- ======================
 CREATE TABLE club_updates (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    club_id INT NOT NULL,
+    club_id INT,
     icon VARCHAR(100),
     message VARCHAR(500),
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (club_id) REFERENCES clubs(id) ON DELETE CASCADE,
-    INDEX idx_club (club_id),
-    INDEX idx_created (created_at)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    FOREIGN KEY (club_id) REFERENCES clubs(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
 
--- shuttle routes
+-- ======================
+-- TRANSIT ROUTES
+-- ======================
 CREATE TABLE transit_routes (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) UNIQUE NOT NULL,
+    name VARCHAR(255) UNIQUE,
     icon VARCHAR(100),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_name (name)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
 
--- Transit memberships
+-- ======================
+-- TRANSIT MEMBERSHIPS
+-- ======================
 CREATE TABLE transit_route_memberships (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    route_id INT NOT NULL,
+    user_id INT,
+    route_id INT,
     joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY (user_id, route_id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (route_id) REFERENCES transit_routes(id) ON DELETE CASCADE,
-    UNIQUE KEY unique_user_route (user_id, route_id),
-    INDEX idx_user (user_id),
-    INDEX idx_route (route_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    FOREIGN KEY (route_id) REFERENCES transit_routes(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
 
--- Transit join requests
+-- ======================
+-- TRANSIT JOIN REQUESTS
+-- ======================
 CREATE TABLE transit_join_requests (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    route_id INT NOT NULL,
-    status ENUM('pending', 'accepted', 'rejected') DEFAULT 'pending',
+    user_id INT,
+    route_id INT,
+    status ENUM('pending','accepted','rejected') DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (route_id) REFERENCES transit_routes(id) ON DELETE CASCADE,
-    INDEX idx_user (user_id),
-    INDEX idx_route (route_id),
-    INDEX idx_status (status),
-    INDEX idx_created (created_at)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    FOREIGN KEY (route_id) REFERENCES transit_routes(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
 
--- Transit updates: route announcements
+-- ======================
+-- TRANSIT UPDATES
+-- ======================
 CREATE TABLE transit_updates (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    route_id INT NOT NULL,
+    route_id INT,
     icon VARCHAR(100),
     message VARCHAR(500),
     description TEXT,
     live_link VARCHAR(255),
     created_by_username VARCHAR(100),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (route_id) REFERENCES transit_routes(id) ON DELETE CASCADE,
-    INDEX idx_route (route_id),
-    INDEX idx_created (created_at)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    FOREIGN KEY (route_id) REFERENCES transit_routes(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
 
--- Facility updates
+-- ======================
+-- FACILITY UPDATES
+-- ======================
 CREATE TABLE facility_event_updates (
     id INT AUTO_INCREMENT PRIMARY KEY,
     icon VARCHAR(100),
     message VARCHAR(500),
     description TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    INDEX idx_created (created_at)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
 
--- Notifications
+-- ======================
+-- NOTIFICATIONS (FIXED)
+-- ======================
 CREATE TABLE notifications (
-    id VARCHAR(50) PRIMARY KEY DEFAULT (CONCAT('notif_', SUBSTR(MD5(CONCAT(UUID(), RAND())), 1, 12))),
-    type ENUM('direct', 'club', 'facility') DEFAULT 'direct',
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    type ENUM('direct','club','facility') DEFAULT 'direct',
     title VARCHAR(255),
     message TEXT,
     club_id INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (club_id) REFERENCES clubs(id) ON DELETE SET NULL,
-    INDEX idx_type (type),
-    INDEX idx_created (created_at),
-    INDEX idx_club (club_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    FOREIGN KEY (club_id) REFERENCES clubs(id) ON DELETE SET NULL
+) ENGINE=InnoDB;
 
--- User daily activity
+-- ======================
+-- USER DAILY ACTIVITY
+-- ======================
 CREATE TABLE user_daily_activity (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    activity_date DATE NOT NULL,
+    user_id INT,
+    activity_date DATE,
     points_earned INT DEFAULT 0,
     activity_type VARCHAR(100),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    UNIQUE KEY unique_user_date (user_id, activity_date),
-    INDEX idx_user (user_id),
-    INDEX idx_date (activity_date)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    UNIQUE KEY (user_id, activity_date),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
 
--- Calendar events (user and admin created)
+-- ======================
+-- CALENDAR EVENTS
+-- ======================
 CREATE TABLE calendar_events (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
+    title VARCHAR(255),
     description TEXT,
-    event_date DATE NOT NULL,
-    start_time TIME NOT NULL,
-    end_time TIME NOT NULL,
+    event_date DATE,
+    start_time TIME,
+    end_time TIME,
     location VARCHAR(255),
-    category ENUM('personal', 'meeting', 'event', 'other', 'lecture', 'exam', 'workshop', 'notice') NOT NULL,
+    category ENUM('personal','meeting','event','other','lecture','exam','workshop','notice'),
     icon VARCHAR(100),
-    created_by_type ENUM('user', 'admin') NOT NULL,
-    created_by_id INT NOT NULL,
-    club_id INT NULL,
+    created_by_type ENUM('user','admin'),
+    created_by_id INT,
+    club_id INT,
     reminder_minutes INT DEFAULT 30,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (club_id) REFERENCES clubs(id) ON DELETE SET NULL,
-    INDEX idx_date (event_date),
-    INDEX idx_category (category),
-    INDEX idx_created_by (created_by_type, created_by_id),
-    INDEX idx_club (club_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    FOREIGN KEY (club_id) REFERENCES clubs(id) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+
+
+
+
+
 
 -- Insert data
 INSERT INTO admins (email, password, firstName, lastName, studentId, dob, picture) VALUES
@@ -229,14 +240,22 @@ INSERT INTO admins (email, password, firstName, lastName, studentId, dob, pictur
 ('admin2@example.com', 'admin456', 'Bob', 'Smith', 'A1002', '1991-02-02', 'images/admin.png'),
 ('admin3@example.com', 'admin789', 'Carol', 'Williams', 'A1003', '1992-03-03', 'images/admin.png');
 
+
+
 INSERT INTO users (username, email, password, role, firstName, lastName, studentId, faculty, dob, picture) VALUES
-('aliceanderson', 'alice@campushub.com', '.6KwQrPquFx0PiKgUqnt/QIrSVSpsBcS', 'student', 'Alice', 'Anderson', 'S1001', 'Business', '2000-03-15', './images/person1.png'),
-('bobbrown', 'bob@campushub.com', '/ez0G0FCN8Psnyx3EW', 'student', 'Bob', 'Brown', 'A1001', 'Business', '1998-10-30', './images/person2.png'),
-('charlieClark', 'charlie@campushub.com', '/hWXVveRw3Lcf4taOEAkx8YLA8.kxucF0pJhsK', 'student', 'Charlie', 'Clark', 'S1003', 'Arts', '1999-07-22', './images/person3.png'),
-('testuser', 'testuser@campushub.com', '.xiID.ylzi7dN6dv6R/pzqmuy4hiE0IjaT/gK', 'student', 'Test', 'User', 'S1006', 'Business', '2026-03-25', './images/profile_e5cf8952c0d1af43cd0d216b10e39962.png'),
-('testuser2', 'user2@campushub.com', '.AXXPzLDnf6nB/cAXapDfoVaBVeJXVji', 'student', 'test', 'User 2', 'S1007', 'Science', '2026-03-02', './images/default.png'),
-('testuser3', 'test3@campushub.com', '.xiID.ylzi7dN6dv6R/pzqmuy4hiE0IjaT/gK', 'student', 'Test', 'User 3', 'S1008', 'Arts', '2026-03-05', './images/default.png'),
-('testuser4', 'test4@campushub.com', '.xiID.ylzi7dN6dv6R/pzqmuy4hiE0IjaT/gK', 'student', 'test', 'User 3', 'S1009', 'Science', '2026-03-03', './images/default.png');
+('aliceanderson', 'alice@campushub.com', '$2y$10$Xi741ZmO91At2CdQY4CnW.6KwQrPquFx0PiKgUqnt/QIrSVSpsBcS', 'student', 'Alice', 'Anderson', 'S1001', 'Business', '2000-03-15', './images/person1.png'),
+
+('bobbrown', 'bob@campushub.com', '$2y$10$fRtkek6cXM2YtIzC4bzeXOsLSqHGOQz2rIh/ez0G0FCN8Psnyx3EW', 'student', 'Bob', 'Brown', 'A1001', 'Business', '1998-10-30', './images/person2.png'),
+
+('charlieClark', 'charlie@campushub.com', '$2y$10$71FpJVq3S8ymjAw/hWXVveRw3Lcf4taOEAkx8YLA8.kxucF0pJhsK', 'student', 'Charlie', 'Clark', 'S1003', 'Arts', '1999-07-22', './images/person3.png'),
+
+('testuser', 'testuser@campushub.com', '$2y$10$1LclAASCN8wdKyeA.xiID.ylzi7dN6dv6R/pzqmuy4hiE0IjaT/gK', 'student', 'Test', 'User', 'S1006', 'Business', '2026-03-25', './images/profile_e5cf8952c0d1af43cd0d216b10e39962.png'),
+
+('testuser2', 'user2@campushub.com', '$2y$10$R4W6kOb3cLtd5V5uRnW2b.AXXPzLDnf6nB/cAXapDfoVaBVeJXVji', 'student', 'test', 'User 2', 'S1007', 'Science', '2026-03-02', './images/default.png'),
+
+('testuser3', 'test3@campushub.com', '$2y$10$1LclAASCN8wdKyeA.xiID.ylzi7dN6dv6R/pzqmuy4hiE0IjaT/gK', 'student', 'Test', 'User 3', 'S1008', 'Arts', '2026-03-05', './images/default.png'),
+
+('testuser4', 'test4@campushub.com', '$2y$10$1LclAASCN8wdKyeA.xiID.ylzi7dN6dv6R/pzqmuy4hiE0IjaT/gK', 'student', 'test', 'User 3', 'S1009', 'Science', '2026-03-03', './images/default.png');
 
 INSERT INTO user_rewards (user_id, points, badges, tier, login_streak, last_login_date, daily_usage_points, daily_usage_date) VALUES
 (1, 45, 0, 'BRONZE', 1, '2026-03-22', 5, '2026-03-22'),

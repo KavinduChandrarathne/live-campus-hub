@@ -17,21 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $createdByType = $isAdminEvent ? 'admin' : 'user';
     $createdById = $userId;
 
-    // For admin events, we need a valid user_id for the foreign key
-    // Admins don't have entries in the users table, so use a default valid user (user 1)
-    // This user_id is only for database integrity; visibility is controlled by created_by_type
-    $effectiveUserId = $userId;
-    if ($isAdminEvent) {
-        // Check if the user_id exists in users table; if not, use user 1 as default
-        $stmt = $pdo->prepare('SELECT id FROM users WHERE id = ?');
-        $stmt->execute([$userId]);
-        if (!$stmt->fetch()) {
-            $effectiveUserId = 1; // Default to user 1 for admin events
-        }
-    }
-
-    if ($title === '' || $eventDate === '' || $startTime === '' || $effectiveUserId === 0) {
-        echo json_encode(['success' => false, 'error' => 'Title, date, time, and user ID are required.']);
+    if ($title === '' || $eventDate === '' || $startTime === '' || $createdById === 0) {
+        echo json_encode(['success' => false, 'error' => 'Title, date, time, and creator ID are required.']);
         exit;
     }
 
@@ -61,11 +48,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         $stmt = $pdo->prepare('
-            INSERT INTO calendar_events (user_id, club_id, title, description, event_date, start_time, end_time, category, created_by_type, created_by_id, created_at)
-            VALUES (:user_id, :club_id, :title, :description, :event_date, :start_time, :end_time, :category, :created_by_type, :created_by_id, NOW())
+            INSERT INTO calendar_events (club_id, title, description, event_date, start_time, end_time, category, created_by_type, created_by_id, created_at)
+            VALUES (:club_id, :title, :description, :event_date, :start_time, :end_time, :category, :created_by_type, :created_by_id, NOW())
         ');
         $stmt->execute([
-            ':user_id' => $effectiveUserId,
             ':club_id' => $clubId,
             ':title' => $title,
             ':description' => $description,
