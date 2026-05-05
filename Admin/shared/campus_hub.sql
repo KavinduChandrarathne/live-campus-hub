@@ -7,7 +7,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ======================
 -- ADMINS
 -- ======================
-CREATE TABLE admins (
+CREATE TABLE IF NOT EXISTS admins (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE admins (
 -- ======================
 -- USERS
 -- ======================
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(100) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
@@ -46,7 +46,7 @@ CREATE TABLE users (
 -- ======================
 -- USER REWARDS
 -- ======================
-CREATE TABLE user_rewards (
+CREATE TABLE IF NOT EXISTS user_rewards (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL UNIQUE,
     points INT DEFAULT 0,
@@ -63,7 +63,7 @@ CREATE TABLE user_rewards (
 -- ======================
 -- CLUBS
 -- ======================
-CREATE TABLE clubs (
+CREATE TABLE IF NOT EXISTS clubs (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) UNIQUE NOT NULL,
     icon VARCHAR(100),
@@ -75,7 +75,7 @@ CREATE TABLE clubs (
 -- ======================
 -- CLUB MEMBERSHIPS
 -- ======================
-CREATE TABLE club_memberships (
+CREATE TABLE IF NOT EXISTS club_memberships (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     club_id INT,
@@ -88,7 +88,7 @@ CREATE TABLE club_memberships (
 -- ======================
 -- CLUB JOIN REQUESTS
 -- ======================
-CREATE TABLE club_join_requests (
+CREATE TABLE IF NOT EXISTS club_join_requests (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     club_id INT,
@@ -103,7 +103,7 @@ CREATE TABLE club_join_requests (
 -- ======================
 -- CLUB UPDATES
 -- ======================
-CREATE TABLE club_updates (
+CREATE TABLE IF NOT EXISTS club_updates (
     id INT AUTO_INCREMENT PRIMARY KEY,
     club_id INT,
     icon VARCHAR(100),
@@ -116,7 +116,7 @@ CREATE TABLE club_updates (
 -- ======================
 -- TRANSIT ROUTES
 -- ======================
-CREATE TABLE transit_routes (
+CREATE TABLE IF NOT EXISTS transit_routes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) UNIQUE,
     icon VARCHAR(100),
@@ -127,7 +127,7 @@ CREATE TABLE transit_routes (
 -- ======================
 -- TRANSIT MEMBERSHIPS
 -- ======================
-CREATE TABLE transit_route_memberships (
+CREATE TABLE IF NOT EXISTS transit_route_memberships (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     route_id INT,
@@ -140,7 +140,7 @@ CREATE TABLE transit_route_memberships (
 -- ======================
 -- TRANSIT JOIN REQUESTS
 -- ======================
-CREATE TABLE transit_join_requests (
+CREATE TABLE IF NOT EXISTS transit_join_requests (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     route_id INT,
@@ -154,7 +154,7 @@ CREATE TABLE transit_join_requests (
 -- ======================
 -- TRANSIT UPDATES
 -- ======================
-CREATE TABLE transit_updates (
+CREATE TABLE IF NOT EXISTS transit_updates (
     id INT AUTO_INCREMENT PRIMARY KEY,
     route_id INT,
     icon VARCHAR(100),
@@ -169,7 +169,7 @@ CREATE TABLE transit_updates (
 -- ======================
 -- FACILITY UPDATES
 -- ======================
-CREATE TABLE facility_event_updates (
+CREATE TABLE IF NOT EXISTS facility_event_updates (
     id INT AUTO_INCREMENT PRIMARY KEY,
     icon VARCHAR(100),
     message VARCHAR(500),
@@ -180,7 +180,7 @@ CREATE TABLE facility_event_updates (
 -- ======================
 -- NOTIFICATIONS (FIXED)
 -- ======================
-CREATE TABLE notifications (
+CREATE TABLE IF NOT EXISTS notifications (
     id INT AUTO_INCREMENT PRIMARY KEY,
     type ENUM('direct','club','facility') DEFAULT 'direct',
     title VARCHAR(255),
@@ -193,7 +193,7 @@ CREATE TABLE notifications (
 -- ======================
 -- USER DAILY ACTIVITY
 -- ======================
-CREATE TABLE user_daily_activity (
+CREATE TABLE IF NOT EXISTS user_daily_activity (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     activity_date DATE,
@@ -207,7 +207,7 @@ CREATE TABLE user_daily_activity (
 -- ======================
 -- CALENDAR EVENTS
 -- ======================
-CREATE TABLE calendar_events (
+CREATE TABLE IF NOT EXISTS calendar_events (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255),
     description TEXT,
@@ -224,6 +224,27 @@ CREATE TABLE calendar_events (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (club_id) REFERENCES clubs(id) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+-- ======================
+-- EMERGENCY ALERTS
+-- ======================
+CREATE TABLE IF NOT EXISTS emergency_alerts (
+    id VARCHAR(100) PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    type ENUM('fire','evacuation','hazard','security','flood','other') NOT NULL,
+    location VARCHAR(255) NOT NULL,
+    description TEXT,
+    severity ENUM('critical','high','medium','low') NOT NULL,
+    instructions TEXT,
+    active_until DATETIME NOT NULL,
+    status ENUM('active','resolved') DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    resolved_at DATETIME,
+    INDEX (status),
+    INDEX (created_at),
+    INDEX (active_until)
 ) ENGINE=InnoDB;
 
 SET FOREIGN_KEY_CHECKS = 1;
