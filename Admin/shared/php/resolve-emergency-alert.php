@@ -1,6 +1,9 @@
 <?php
 header('Content-Type: application/json');
 
+// Include database connection
+require_once __DIR__ . '/../php/db.php';
+
 // Get the JSON data
 $input = json_decode(file_get_contents('php://input'), true);
 
@@ -13,39 +16,27 @@ if (!$input || !isset($input['id'])) {
 
 $alertId = htmlspecialchars($input['id']);
 
-// Path to JSON file
-$alertsFile = __DIR__ . '/../json/emergency-alerts.json';
+try {
+    // Update the alert status to resolved
+    $stmt = $pdo->prepare("
+        UPDATE emergency_alerts
+        SET status = 'resolved', resolved_at = NOW()
+        WHERE id = ?
+    ");
 
-// Read existing alerts
-$alerts = [];
-if (file_exists($alertsFile)) {
-    $content = file_get_contents($alertsFile);
-    if ($content) {
-        $alerts = json_decode($content, true) ?? [];
-    }
-}
+    $result = $stmt->execute([$alertId]);
 
-// Find and update the alert status
-$alertFound = false;
-foreach ($alerts as &$alert) {
-    if ($alert['id'] === $alertId) {
-        $alert['status'] = 'resolved';
-        $alert['resolvedAt'] = date('c');
-        $alertFound = true;
-        break;
-    }
-}
-
-if ($alertFound) {
-    // Write back to file
-    if (file_put_contents($alertsFile, json_encode($alerts, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES))) {
+    if ($result && $stmt->rowCount() > 0) {
         echo json_encode(['success' => true, 'message' => 'Alert marked as resolved']);
     } else {
-        http_response_code(500);
-        echo json_encode(['success' => false, 'message' => 'Failed to resolve alert']);
+        http_response_code(404);
+        echo json_encode(['success' => false, 'message' => 'Alert not found or already resolved']);
     }
-} else {
-    http_response_code(404);
-    echo json_encode(['success' => false, 'message' => 'Alert not found']);
+
+} catch (Exception $e) {
+    error_log('Emergency alert resolution error: ' . $e->getMessage());
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Failed to resolve alert']);
 }
+?>
 ?>
