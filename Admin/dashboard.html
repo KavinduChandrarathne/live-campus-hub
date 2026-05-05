@@ -105,16 +105,17 @@
         <div class="weather-container">
           <div class="current-weather">
             <div class="weather-icon-wrapper">
-              <i class="fa-solid fa-cloud"></i>
+              <i id="weatherIcon" class="fa-solid fa-cloud"></i>
             </div>
             <div class="weather-info">
               <div class="weather-label">CURRENTLY</div>
+              <div class="weather-location" id="weatherLocation">Loading location...</div>
               <div class="temperature" id="currentTemp">28°C</div>
               <div class="weather-description" id="weatherDesc">Partly Cloudy</div>
             </div>
           </div>
 
-          <div class="weather-forecast">
+          <div class="weather-forecast" id="forecastContainer">
             <div class="forecast-item">
               <div class="forecast-day">MON</div>
               <div class="forecast-icon"><i class="fa-solid fa-sun"></i></div>
@@ -149,6 +150,7 @@
 
   <script src="javascript/auth.js"></script>
   <script src="javascript/dashboard.js"></script>
+  <script src="../javascript/weather.js"></script>
   <div class="mobile-backdrop" id="mobileBackdrop"></div>
 </body>
 </html>

@@ -7,6 +7,9 @@
 
 date_default_timezone_set('Asia/Colombo');
 
+require_once __DIR__ . '/env.php';
+loadEnv();
+
 // Database configuration
 define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
 define('DB_USER', getenv('DB_USER') ?: 'root');

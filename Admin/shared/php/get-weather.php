@@ -1,6 +1,9 @@
 <?php
 header('Content-Type: application/json');
 
+require_once __DIR__ . '/env.php';
+loadEnv();
+
 // OpenWeather API Configuration
 $apiKey = getenv('OPENWEATHER_API_KEY');
 if (!$apiKey) {
