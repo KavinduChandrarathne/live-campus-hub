@@ -1,6 +1,9 @@
 <?php
 header('Content-Type: application/json');
 
+// Include database connection
+require_once __DIR__ . '/../php/db.php';
+
 // Get the JSON data
 $input = json_decode(file_get_contents('php://input'), true);
 
@@ -11,42 +14,44 @@ if (!$input || !isset($input['title']) || !isset($input['type']) || !isset($inpu
     exit;
 }
 
-// Generate unique ID
-$alertId = uniqid('alert_', true);
+try {
+    // Prepare the INSERT statement
+    $stmt = $pdo->prepare("
+        INSERT INTO emergency_alerts
+        (title, type, location, description, severity, instructions, active_until, created_at, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), 'active')
+    ");
 
-// Create alert object
-$alert = [
-    'id' => $alertId,
-    'title' => htmlspecialchars($input['title']),
-    'type' => htmlspecialchars($input['type']),
-    'location' => htmlspecialchars($input['location']),
-    'description' => htmlspecialchars($input['description']),
-    'severity' => htmlspecialchars($input['severity']),
-    'instructions' => htmlspecialchars($input['instructions']),
-    'activeUntil' => $input['activeUntil'],
-    'createdAt' => $input['createdAt'],
-    'status' => 'active'
-];
+    // Execute the statement
+    $result = $stmt->execute([
+        htmlspecialchars($input['title']),
+        htmlspecialchars($input['type']),
+        htmlspecialchars($input['location']),
+        htmlspecialchars($input['description'] ?? ''),
+        htmlspecialchars($input['severity']),
+        htmlspecialchars($input['instructions'] ?? ''),
+        $input['activeUntil']
+    ]);
 
-// Path to JSON file
-$alertsFile = __DIR__ . '/../json/emergency-alerts.json';
+    if ($result) {
+        // Get the inserted alert ID
+        $alertId = $pdo->lastInsertId();
 
-// Create directory if it doesn't exist
-if (!is_dir(dirname($alertsFile))) {
-    mkdir(dirname($alertsFile), 0755, true);
-}
-
-// Read existing alerts
-$alerts = [];
-if (file_exists($alertsFile)) {
-    $content = file_get_contents($alertsFile);
-    if ($content) {
-        $alerts = json_decode($content, true) ?? [];
+        echo json_encode([
+            'success' => true,
+            'message' => 'Emergency alert created successfully',
+            'alertId' => $alertId
+        ]);
+    } else {
+        throw new Exception('Failed to insert alert');
     }
-}
 
-// Add new alert
-array_unshift($alerts, $alert);
+} catch (Exception $e) {
+    error_log('Emergency alert creation error: ' . $e->getMessage());
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Failed to create emergency alert']);
+}
+?>
 
 // Keep only last 100 alerts
 $alerts = array_slice($alerts, 0, 100);
