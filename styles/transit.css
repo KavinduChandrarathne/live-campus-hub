@@ -130,7 +130,7 @@
 
 /* locked state for cards the user hasn't joined */
 .transit-card.locked {
-  opacity: 0.6;
+  opacity: 1;
 }
 .transit-card .lock-overlay {
   display: none;
@@ -139,15 +139,22 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255,255,255,0.8);
+  background: rgba(255,255,255,0.6);
   justify-content: center;
   align-items: center;
   font-size: 48px;
   color: #555;
   pointer-events: none;
+  z-index: 1;
 }
 .transit-card.locked .lock-overlay {
   display: flex;
+}
+
+.transit-card.locked .btn-route,
+.transit-card.locked .btn-update {
+  position: relative;
+  z-index: 2;
 }
 
 .card-top {
@@ -188,8 +195,9 @@
   display: inline-block;
 }
 
-/* Specific styling for "Request to Join" button */
-.transit-card.locked .btn-route {
+/* Specific styling for "Request to Join"/"Requested" buttons */
+.transit-card.locked .btn-route,
+.transit-card.locked .btn-update {
   background: #23395d;
   color: #fff;
   font-weight: 700;
@@ -203,7 +211,8 @@
   box-shadow: 0 8px 24px rgba(35,57,93,0.18);
 }
 
-.transit-card.locked .btn-route:hover {
+.transit-card.locked .btn-route:hover,
+.transit-card.locked .btn-update:hover {
   background: #1a2846;
   box-shadow: 0 6px 20px rgba(35, 57, 93, 0.35);
   transform: translateY(-2px);
@@ -314,11 +323,12 @@
     border-radius: 8px;
   }
 
-  .transit-card.locked .btn-route {
-    background: #ff6b6b;
+  .transit-card.locked .btn-route,
+  .transit-card.locked .btn-update {
+    background: #23395d;
     color: #fff;
     opacity: 1 !important;
-    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.35);
+    box-shadow: 0 4px 12px rgba(35, 57, 93, 0.35);
   }
 
   .transit-card h3 {
@@ -353,8 +363,9 @@
     font-size: 12px;
   }
 
-  .transit-card.locked .btn-route {
-    background: #ff6b6b;
+  .transit-card.locked .btn-route,
+  .transit-card.locked .btn-update {
+    background: #23395d;
     color: #fff;
     opacity: 1 !important;
   }
