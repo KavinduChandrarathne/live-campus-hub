@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function loadFacilityUpdates() {
     const token = localStorage.getItem('adminAuthToken');
     const headers = token ? { 'Authorization': 'Bearer ' + token } : {};
-    fetch('/api/facility-updates', { headers })
+    fetch('../api/facility-updates', { headers })
         .then(response => response.json())
         .then(result => {
             const data = result.success ? result.data : [];
@@ -41,7 +41,7 @@ function loadClubUpdates() {
         document.getElementById('club-feed').innerHTML = '<p>Admin authentication required.</p>';
         return;
     }
-    fetch('/api/club-updates', {
+    fetch('../api/club-updates', {
         headers: {
             'Authorization': 'Bearer ' + token
         }

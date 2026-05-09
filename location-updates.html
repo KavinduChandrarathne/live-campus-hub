@@ -98,7 +98,7 @@
   }
 
   function refreshLive() {
-    fetch(`/api/transit-updates?route=${encodeURIComponent(loc)}`)
+    fetch(`api/transit-updates?route=${encodeURIComponent(loc)}`)
       .then(r => r.json())
       .then(result => {
           const all = result.success ? result.data : [];

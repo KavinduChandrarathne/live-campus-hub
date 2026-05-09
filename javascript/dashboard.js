@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const token = sessionStorage.getItem('authToken');
         const headers = token ? { 'Authorization': 'Bearer ' + token } : {};
 
-        fetch('/api/notifications', { headers })
+        fetch('api/notifications', { headers })
             .then(response => response.json())
             .then(result => {
                 const notifications = result.success ? result.data : [];

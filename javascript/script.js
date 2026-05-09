@@ -28,7 +28,7 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
     // fetch from new database login API endpoint
     const payload = { email, password };
 
-    fetch('/api/login', {
+    fetch('api/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -42,7 +42,7 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
                 sessionStorage.setItem('currentUser', JSON.stringify(result.user));
                 sessionStorage.setItem('authToken', result.token);
 
-                fetch('/api/users/current', {
+                fetch('api/users/current', {
                     headers: {
                         'Authorization': 'Bearer ' + result.token
                     }
