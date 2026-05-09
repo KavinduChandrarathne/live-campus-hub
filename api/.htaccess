@@ -1,4 +1,4 @@
 RewriteEngine On
-RewriteBase /api/
+RewriteBase /live-campus-hub/api/
 RewriteRule ^index\.php$ - [L]
 RewriteRule ^(.*)$ index.php [L,QSA]

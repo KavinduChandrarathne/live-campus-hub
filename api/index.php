@@ -121,16 +121,16 @@ function handleLogin(): void {
 
 function findUserByIdentifier(PDO $pdo, string $identifier): ?array {
     $identifierLower = strtolower($identifier);
-    $stmt = $pdo->prepare('SELECT id, email, username, password, firstName, lastName, faculty, studentId, dob, picture, role FROM admins WHERE LOWER(email) = :identifier OR LOWER(studentId) = :identifier LIMIT 1');
-    $stmt->execute([':identifier' => $identifierLower]);
+    $stmt = $pdo->prepare('SELECT id, email, password, firstName, lastName, studentId, dob, picture, NULL AS username, "admin" AS role, "" AS faculty FROM admins WHERE LOWER(email) = :identifierEmail OR LOWER(studentId) = :identifierStudentId LIMIT 1');
+    $stmt->execute([':identifierEmail' => $identifierLower, ':identifierStudentId' => $identifierLower]);
     $admin = $stmt->fetch();
     if ($admin) {
         $admin['role'] = 'admin';
         return $admin;
     }
 
-    $stmt = $pdo->prepare('SELECT id, username, email, password, firstName, lastName, faculty, studentId, dob, picture, role FROM users WHERE LOWER(email) = :identifier OR LOWER(username) = :identifier OR LOWER(studentId) = :identifier LIMIT 1');
-    $stmt->execute([':identifier' => $identifierLower]);
+    $stmt = $pdo->prepare('SELECT id, username, email, password, firstName, lastName, faculty, studentId, dob, picture, role FROM users WHERE LOWER(email) = :identifierEmail OR LOWER(username) = :identifierUsername OR LOWER(studentId) = :identifierStudentId LIMIT 1');
+    $stmt->execute([':identifierEmail' => $identifierLower, ':identifierUsername' => $identifierLower, ':identifierStudentId' => $identifierLower]);
     $user = $stmt->fetch();
     return $user ?: null;
 }
@@ -172,8 +172,8 @@ function handleUsers(array $segments): void {
         if ($auth['role'] !== 'admin') {
             sendJson(['success' => false, 'error' => 'Admin access required'], 403);
         }
-        $stmt = $pdo->prepare('SELECT id, username, email, firstName, lastName, faculty, studentId, picture, role FROM users WHERE LOWER(studentId) LIKE LOWER(:search) OR LOWER(firstName) LIKE LOWER(:search) OR LOWER(lastName) LIKE LOWER(:search) OR LOWER(email) LIKE LOWER(:search) ORDER BY firstName ASC LIMIT 100');
-        $stmt->execute([':search' => "%$search%"]);
+        $stmt = $pdo->prepare('SELECT id, username, email, firstName, lastName, faculty, studentId, picture, role FROM users WHERE LOWER(studentId) LIKE LOWER(:search1) OR LOWER(firstName) LIKE LOWER(:search2) OR LOWER(lastName) LIKE LOWER(:search3) OR LOWER(email) LIKE LOWER(:search4) ORDER BY firstName ASC LIMIT 100');
+        $stmt->execute([':search1' => "%$search%", ':search2' => "%$search%", ':search3' => "%$search%", ':search4' => "%$search%"]);
         $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
         sendJson(['success' => true, 'data' => $users]);
     }
@@ -189,7 +189,7 @@ function handleUsers(array $segments): void {
 
 function getUserFromToken(PDO $pdo, array $auth): ?array {
     if (($auth['role'] ?? '') === 'admin') {
-        $stmt = $pdo->prepare('SELECT id, email, username, firstName, lastName, studentId, dob, picture, role FROM admins WHERE id = :id LIMIT 1');
+        $stmt = $pdo->prepare('SELECT id, email, firstName, lastName, studentId, dob, picture, NULL AS username, "admin" AS role, "" AS faculty FROM admins WHERE id = :id LIMIT 1');
         $stmt->execute([':id' => $auth['sub']]);
         return $stmt->fetch();
     }
@@ -346,8 +346,8 @@ function handleTransitJoinRequests(): void {
         $username = $auth['email'];
     }
 
-    $stmt = $pdo->prepare('SELECT id FROM users WHERE LOWER(username) = LOWER(:value) OR LOWER(email) = LOWER(:value) LIMIT 1');
-    $stmt->execute([':value' => strtolower($username)]);
+    $stmt = $pdo->prepare('SELECT id FROM users WHERE LOWER(username) = LOWER(:valueUser) OR LOWER(email) = LOWER(:valueEmail) LIMIT 1');
+    $stmt->execute([':valueUser' => strtolower($username), ':valueEmail' => strtolower($username)]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
     if (!$user) {
         sendJson(['success' => false, 'error' => 'User not found'], 404);

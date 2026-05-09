@@ -25,7 +25,9 @@ function updateSidebarUser() {
 
 function initAuth() {
   const page = window.location.pathname.split('/').pop();
-  const loggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+  const storedUser = localStorage.getItem('adminUser');
+  const storedToken = localStorage.getItem('adminAuthToken');
+  const loggedIn = localStorage.getItem('adminLoggedIn') === 'true' || (storedUser && storedToken);
 
   if (page === 'index.html') {
     // if already logged in, skip the login page
@@ -37,6 +39,7 @@ function initAuth() {
     // protect every other page
     if (!loggedIn) {
       window.location.href = 'index.html';
+      return;
     }
   }
 

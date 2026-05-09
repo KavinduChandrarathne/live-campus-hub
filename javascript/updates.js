@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Function to load facility and event updates
 function loadFacilityUpdates() {
-    fetch('/api/facility-updates')
+    fetch('api/facility-updates')
         .then(response => response.json())
         .then(result => {
             const data = result.success ? result.data : [];
@@ -55,7 +55,7 @@ function loadClubUpdates() {
             return;
         }
 
-        fetch(`/api/club-updates?studentId=${encodeURIComponent(freshUser.studentId)}`, {
+        fetch(`api/club-updates?studentId=${encodeURIComponent(freshUser.studentId)}`, {
             headers: {
                 'Authorization': 'Bearer ' + token
             }

@@ -35,7 +35,7 @@ function submitLogin(email, password) {
     loginBtn.textContent = 'Logging in...';
   }
 
-  fetch('/api/login', {
+  fetch('../api/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -47,6 +47,8 @@ function submitLogin(email, password) {
       if (result.success && result.user && result.token) {
         localStorage.setItem('adminAuthToken', result.token);
         localStorage.setItem('adminUser', JSON.stringify(result.user));
+        localStorage.setItem('adminLoggedIn', 'true');
+        localStorage.setItem('adminEmail', result.user.email || '');
         window.location.href = 'admin-profile.html';
         return;
       }

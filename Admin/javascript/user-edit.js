@@ -25,7 +25,7 @@ function loadUserFromURL() {
     return;
   }
 
-  fetch(`/api/users?studentId=${encodeURIComponent(studentId)}`, {
+  fetch(`../api/users?studentId=${encodeURIComponent(studentId)}`, {
     headers: {
       'Authorization': 'Bearer ' + token
     }

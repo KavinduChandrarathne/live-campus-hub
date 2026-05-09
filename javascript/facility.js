@@ -1,6 +1,6 @@
 // Fetch and display notifications from the API
 const token = sessionStorage.getItem('authToken');
-fetch('/api/notifications', {
+fetch('api/notifications', {
   headers: token ? { 'Authorization': 'Bearer ' + token } : {}
 })
   .then(response => response.json())

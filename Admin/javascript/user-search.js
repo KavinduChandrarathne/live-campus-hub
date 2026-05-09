@@ -54,7 +54,7 @@ function performSearch() {
     return;
   }
 
-  fetch(`/api/users?search=${encodeURIComponent(searchInput)}`, {
+  fetch(`../api/users?search=${encodeURIComponent(searchInput)}`, {
     headers: {
       'Authorization': 'Bearer ' + token
     }

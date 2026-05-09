@@ -8,13 +8,35 @@ function getAuthToken() {
     return sessionStorage.getItem('authToken') || localStorage.getItem('adminAuthToken') || null;
 }
 
+function getProjectBasePath() {
+    const parts = window.location.pathname.split('/').filter(Boolean);
+    return parts.length > 0 ? '/' + parts[0] : '';
+}
+
+function getApiUrl(path) {
+    const apiRoot = getProjectBasePath() + '/api';
+    if (!path) {
+        return apiRoot;
+    }
+    if (path.startsWith('/api/')) {
+        return apiRoot + path.slice(4);
+    }
+    if (path.startsWith('api/')) {
+        return apiRoot + path.slice(3);
+    }
+    if (path.startsWith('/')) {
+        return path;
+    }
+    return apiRoot + '/' + path.replace(/^\/+/, '');
+}
+
 function fetchApi(url, options = {}) {
     options.headers = options.headers || {};
     const token = getAuthToken();
     if (token) {
         options.headers['Authorization'] = 'Bearer ' + token;
     }
-    return fetch(url, options);
+    return fetch(getApiUrl(url), options);
 }
 
 function getCurrentUser() {
@@ -52,7 +74,7 @@ function refreshCurrentUser() {
     const token = getAuthToken();
     const headers = token ? { 'Authorization': 'Bearer ' + token } : {};
 
-    _userRefreshPromise = fetch('/api/users/current', { headers })
+    _userRefreshPromise = fetch(getApiUrl('/api/users/current'), { headers })
         .then(r => r.json())
         .then(updated => {
             if (updated && updated.success && updated.data && updated.data.email) {
