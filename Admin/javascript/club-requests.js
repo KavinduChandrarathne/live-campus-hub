@@ -229,6 +229,6 @@ function renderRequests(wrapped) {
   if (activeTab) filterRequests(activeTab.dataset.filter);
 }
 
-// no longer used – rendering happens through renderClubRequests
+
 attachGlobalHandlers();
-// page scripts should call renderClubRequests('Club Name');
+

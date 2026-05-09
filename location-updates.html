@@ -98,9 +98,10 @@
   }
 
   function refreshLive() {
-    fetch('Admin/shared/json/transit-updates.json?t='+Date.now())
+    fetch(`/api/transit-updates?route=${encodeURIComponent(loc)}`)
       .then(r => r.json())
-      .then(all => {
+      .then(result => {
+          const all = result.success ? result.data : [];
         const filtered = all.filter(u => {
           const r = (u.route || '').trim().toLowerCase();
           const desired = loc.trim().toLowerCase();

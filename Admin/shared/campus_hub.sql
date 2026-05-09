@@ -230,7 +230,7 @@ CREATE TABLE IF NOT EXISTS calendar_events (
 -- EMERGENCY ALERTS
 -- ======================
 CREATE TABLE IF NOT EXISTS emergency_alerts (
-    id VARCHAR(100) PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     type ENUM('fire','evacuation','hazard','security','flood','other') NOT NULL,
     location VARCHAR(255) NOT NULL,

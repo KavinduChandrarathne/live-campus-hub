@@ -1,5 +1,5 @@
 // Admin Calendar Management System
-// Handles calendar views, event management, admin notifications, and event distribution
+// Handles calendar views, event management, admin notifications and event distribution
 
 let currentDate = new Date();
 let currentView = 'month';
@@ -120,7 +120,7 @@ function initializeEventHandlers() {
  */
 async function loadEvents() {
     try {
-        // For admin, fetch all events (no month/year filtering)
+        // For admin, fetch all events 
         const response = await fetch(`shared/php/get-calendar-events.php?user_id=${currentUser.id}&is_admin=true&category=${currentFilter}`);
         const result = await response.json();
         
@@ -934,7 +934,7 @@ async function deleteEventById(eventId) {
 }
 
 /**
- * Get week start date (Monday)
+ * Get week start date 
  */
 function getWeekStart(date) {
     const d = new Date(date);

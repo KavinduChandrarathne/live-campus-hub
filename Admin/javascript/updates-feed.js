@@ -6,9 +6,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Function to load facility and event updates
 function loadFacilityUpdates() {
-    fetch('shared/json/facility-event-updates.json')
+    const token = localStorage.getItem('adminAuthToken');
+    const headers = token ? { 'Authorization': 'Bearer ' + token } : {};
+    fetch('/api/facility-updates', { headers })
         .then(response => response.json())
-        .then(data => {
+        .then(result => {
+            const data = result.success ? result.data : [];
             const container = document.getElementById('facility-feed');
             container.innerHTML = ''; // Clear existing
 
@@ -33,9 +36,19 @@ function loadFacilityUpdates() {
 
 // Function to load club updates (all for admin)
 function loadClubUpdates() {
-    fetch('shared/json/club-updates.json')
+    const token = localStorage.getItem('adminAuthToken');
+    if (!token) {
+        document.getElementById('club-feed').innerHTML = '<p>Admin authentication required.</p>';
+        return;
+    }
+    fetch('/api/club-updates', {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    })
         .then(response => response.json())
-        .then(data => {
+        .then(result => {
+            const data = result.success ? result.data : [];
             const container = document.getElementById('club-feed');
             container.innerHTML = ''; // Clear existing
 

@@ -2,6 +2,7 @@
 // API endpoint for student/user login via MySQL
 header('Content-Type: application/json');
 require_once 'db.php';
+require_once __DIR__ . '/../../../api/jwt.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(400);
@@ -33,17 +34,29 @@ try {
         exit;
     }
 
-    // Verify password using password_verify for hashed passwords
-    if (!password_verify($password, $user['password'])) {
+    // Verify password using password_verify for hashed passwords or raw password fallback
+    if (!password_verify($password, $user['password']) && $password !== $user['password']) {
         echo json_encode(['success' => false, 'error' => 'Incorrect password']);
         exit;
     }
 
     // Get full user data with rewards and memberships
     $fullUser = getUserWithMemberships($pdo, $user['id']);
+    if ($fullUser && isset($fullUser['password'])) {
+        unset($fullUser['password']);
+    }
+
+    $tokenPayload = [
+        'sub' => $fullUser['id'],
+        'role' => $fullUser['role'],
+        'email' => $fullUser['email'],
+        'studentId' => $fullUser['studentId'] ?? ''
+    ];
+    $token = generateJwt($tokenPayload, 86400 * 7);
 
     echo json_encode([
         'success' => true,
+        'token' => $token,
         'user' => $fullUser
     ]);
     exit;

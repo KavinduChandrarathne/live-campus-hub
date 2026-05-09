@@ -103,13 +103,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Load and display notifications
     function loadNotifications() {
-        const raw = sessionStorage.getItem('currentUser');
-        const studentId = raw ? JSON.parse(raw).studentId : '';
-        const params = new URLSearchParams({ studentId: studentId });
-        
-        fetch('Admin/shared/php/get-notifications.php?' + params.toString())
+        const token = sessionStorage.getItem('authToken');
+        const headers = token ? { 'Authorization': 'Bearer ' + token } : {};
+
+        fetch('/api/notifications', { headers })
             .then(response => response.json())
-            .then(notifications => {
+            .then(result => {
+                const notifications = result.success ? result.data : [];
                 displayNotifications(notifications);
             })
             .catch(error => {

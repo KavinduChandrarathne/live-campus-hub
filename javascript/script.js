@@ -26,39 +26,37 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
     const password = document.querySelector("#loginForm input[type='password']").value;
 
     // fetch from new database login API endpoint
-    const formData = new FormData();
-    formData.append('email', email);
-    formData.append('password', password);
+    const payload = { email, password };
 
-    fetch("Admin/shared/php/api-login.php", {
+    fetch('/api/login', {
         method: 'POST',
-        body: formData
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
     })
         .then(resp => resp.json())
         .then(result => {
-            if (result.success && result.user) {
-                // store user for session
+            if (result.success && result.user && result.token) {
+                // store user and auth token for session
                 sessionStorage.setItem('currentUser', JSON.stringify(result.user));
+                sessionStorage.setItem('authToken', result.token);
 
-                // daily login reward update and get updated user data
-                fetch('Admin/shared/php/update-user-rewards.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: `email=${encodeURIComponent(result.user.email)}&action=dailyLogin`
+                fetch('/api/users/current', {
+                    headers: {
+                        'Authorization': 'Bearer ' + result.token
+                    }
                 })
                 .then(resp => resp.json())
-                .then(rewardResult => {
-                    if (rewardResult.success && rewardResult.user) {
-                        sessionStorage.setItem('currentUser', JSON.stringify(rewardResult.user));
-                        window.dispatchEvent(new CustomEvent('currentUserUpdated', { detail: rewardResult.user }));
-                        showToast(rewardResult.message || 'Login reward processed', 'success');
-                    } else if (rewardResult.error) {
-                        showToast(rewardResult.error, 'error');
+                .then(userResult => {
+                    if (userResult.success && userResult.data) {
+                        sessionStorage.setItem('currentUser', JSON.stringify(userResult.data));
+                        window.dispatchEvent(new CustomEvent('currentUserUpdated', { detail: userResult.data }));
                     }
                     window.location.href = 'dashboard.html';
                 })
                 .catch(err => {
-                    console.error('Reward update failed', err);
+                    console.error('User refresh failed', err);
                     window.location.href = 'dashboard.html';
                 });
             } else {

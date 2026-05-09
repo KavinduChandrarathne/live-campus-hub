@@ -7,9 +7,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Function to load facility and event updates
 function loadFacilityUpdates() {
-    fetch('Admin/shared/json/facility-event-updates.json')
+    fetch('/api/facility-updates')
         .then(response => response.json())
-        .then(data => {
+        .then(result => {
+            const data = result.success ? result.data : [];
             const container = document.getElementById('facility-feed');
             container.innerHTML = ''; // Clear existing
 
@@ -48,36 +49,32 @@ function loadClubUpdates() {
             });
         }
 
-        // Also include accepted join requests in case joinedClubs isn't populated yet
-        fetch('Admin/shared/json/club-join-requests.json?t=' + Date.now())
+        const token = sessionStorage.getItem('authToken');
+        if (!token) {
+            document.getElementById('club-feed').innerHTML = '<p>Authentication required to load club updates.</p>';
+            return;
+        }
+
+        fetch(`/api/club-updates?studentId=${encodeURIComponent(freshUser.studentId)}`, {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        })
             .then(response => response.json())
-            .then(requests => {
-                requests.forEach(req => {
-                    if (req.studentId === (freshUser.studentId || '') && req.status === 'accepted' && req.clubName) {
-                        memberClubs.add(req.clubName.trim().toLowerCase());
-                    }
+            .then(result => {
+                const updates = result.success ? result.data : [];
+                const container = document.getElementById('club-feed');
+                container.innerHTML = ''; // Clear existing
+
+                if (updates.length === 0) {
+                    container.innerHTML = '<p>No club updates available for your clubs.</p>';
+                    return;
+                }
+
+                updates.forEach(update => {
+                    const box = createUpdateBox(update);
+                    container.appendChild(box);
                 });
-
-                return fetch('Admin/shared/json/club-updates.json')
-                    .then(response => response.json())
-                    .then(updates => {
-                        const container = document.getElementById('club-feed');
-                        container.innerHTML = ''; // Clear existing
-
-                        const filteredUpdates = updates
-                            .filter(update => memberClubs.has((update.clubName || '').toLowerCase()))
-                            .sort((a, b) => new Date(b.datetime) - new Date(a.datetime));
-
-                        if (filteredUpdates.length === 0) {
-                            container.innerHTML = '<p>No club updates available for your clubs.</p>';
-                            return;
-                        }
-
-                        filteredUpdates.forEach(update => {
-                            const box = createUpdateBox(update);
-                            container.appendChild(box);
-                        });
-                    });
             })
             .catch(error => {
                 console.error('Error loading club updates:', error);

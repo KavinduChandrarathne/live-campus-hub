@@ -1,25 +1,11 @@
-// list of admin users loaded from JSON
-let adminList = [];
+// Admin login now uses the centralized API with JWT authentication
 
-// fetch the admin list file and cache it
-function loadAdmins() {
-  return fetch('shared/json/admins.json')
-    .then(res => res.json())
-    .then(data => {
-      adminList = data;
-      console.log('Loaded admins:', adminList.map(u => u.email).join(', '));
-    })
-    .catch(err => console.error('Failed to load admin list', err));
-}
-
-// Initialize login page
 function initLoginPage() {
   const loginForm = document.getElementById('loginForm');
   const forgotLink = document.querySelector('.forgot-link');
 
   if (!loginForm) return;
 
-  // Handle form submission
   loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
@@ -31,55 +17,55 @@ function initLoginPage() {
       return;
     }
 
-    // Submit login
     submitLogin(email, password);
   });
 
-  // Forgot password (still demo)
-  forgotLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    alert('Password reset feature coming soon!');
-  });
+  if (forgotLink) {
+    forgotLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      alert('Password reset feature coming soon!');
+    });
+  }
 }
 
-// Submit login
 function submitLogin(email, password) {
   const loginBtn = document.querySelector('.login-btn');
+  if (loginBtn) {
+    loginBtn.disabled = true;
+    loginBtn.textContent = 'Logging in...';
+  }
 
-  // Show loading
-  loginBtn.disabled = true;
-  loginBtn.textContent = 'Logging in...';
-
-  // Simulate network delay
-  setTimeout(() => {
-    const user = adminList.find(u => u.email === email && u.password === password);
-    if (user) {
-      // Success - ensure user has an id field
-      const userData = {
-        id: user.id || user.studentId?.replace('A', '') || 1,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        studentId: user.studentId,
-        dob: user.dob,
-        picture: user.picture
-      };
-      localStorage.setItem('adminLoggedIn', 'true');
-      localStorage.setItem('adminUser', JSON.stringify(userData));
-      window.location.href = 'admin-profile.html';
-    } else {
-      // Failed
-      alert('Invalid credentials\n\nPlease check your email and password.');
-      loginBtn.disabled = false;
-      loginBtn.textContent = 'Login';
+  fetch('/api/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ email, password })
+  })
+    .then(res => res.json())
+    .then(result => {
+      if (result.success && result.user && result.token) {
+        localStorage.setItem('adminAuthToken', result.token);
+        localStorage.setItem('adminUser', JSON.stringify(result.user));
+        window.location.href = 'admin-profile.html';
+        return;
+      }
+      alert(result.error || 'Invalid credentials. Please check your email and password.');
+      if (loginBtn) {
+        loginBtn.disabled = false;
+        loginBtn.textContent = 'Login';
+      }
       document.getElementById('password').value = '';
-    }
-  }, 1000);
+    })
+    .catch(err => {
+      console.error('Admin login failed', err);
+      alert('An error occurred. Please try again later.');
+      if (loginBtn) {
+        loginBtn.disabled = false;
+        loginBtn.textContent = 'Login';
+      }
+    });
 }
 
-// Initialize on load
-// load the admin list first, then wire up the form
-document.addEventListener('DOMContentLoaded', function() {
-  loadAdmins().then(initLoginPage);
-});
+document.addEventListener('DOMContentLoaded', initLoginPage);
 

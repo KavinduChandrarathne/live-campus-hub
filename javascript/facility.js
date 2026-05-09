@@ -1,7 +1,11 @@
-// Fetch and display notifications from shared JSON
-fetch('../Admin/shared/php/get-notifications.php')
+// Fetch and display notifications from the API
+const token = sessionStorage.getItem('authToken');
+fetch('/api/notifications', {
+  headers: token ? { 'Authorization': 'Bearer ' + token } : {}
+})
   .then(response => response.json())
-  .then(data => {
+  .then(result => {
+    const data = result.success ? result.data : [];
     const container = document.querySelector('.facility-cards');
     if (!container) return;
     if (!Array.isArray(data) || data.length === 0) {

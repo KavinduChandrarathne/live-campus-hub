@@ -52,15 +52,3 @@ try {
     echo json_encode(['success' => false, 'message' => 'Failed to create emergency alert']);
 }
 ?>
-
-// Keep only last 100 alerts
-$alerts = array_slice($alerts, 0, 100);
-
-// Write back to file
-if (file_put_contents($alertsFile, json_encode($alerts, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES))) {
-    echo json_encode(['success' => true, 'message' => 'Alert published successfully', 'alert' => $alert]);
-} else {
-    http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Failed to save alert']);
-}
-?>
