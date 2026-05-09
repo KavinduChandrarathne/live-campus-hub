@@ -1,27 +1,11 @@
-// Load users data and get student ID from URL
-let usersData = [];
 let currentUser = null;
 let editingField = null;
 
 document.addEventListener('DOMContentLoaded', function() {
-  loadUsersData();
+  loadUserFromURL();
   setupEventListeners();
   setupBackButton();
 });
-
-// Load users data from JSON
-function loadUsersData() {
-  fetch('shared/json/users.json')
-    .then(response => response.json())
-    .then(data => {
-      usersData = data;
-      loadUserFromURL();
-    })
-    .catch(error => {
-      console.error('Error loading users data:', error);
-      alert('Failed to load users data. Please refresh the page.');
-    });
-}
 
 // Load user by Student ID from URL parameter
 function loadUserFromURL() {
@@ -34,15 +18,31 @@ function loadUserFromURL() {
     return;
   }
 
-  const foundUser = usersData.find(user => user.studentId === studentId);
-
-  if (foundUser) {
-    currentUser = foundUser;
-    displayUserDetails(foundUser);
-  } else {
-    alert('User not found');
+  const token = localStorage.getItem('adminAuthToken');
+  if (!token) {
+    alert('Admin authentication required');
     window.location.href = 'user-search.html';
+    return;
   }
+
+  fetch(`/api/users?studentId=${encodeURIComponent(studentId)}`, {
+    headers: {
+      'Authorization': 'Bearer ' + token
+    }
+  })
+    .then(response => response.json())
+    .then(result => {
+      if (!result.success || !result.data) {
+        throw new Error(result.error || 'User not found');
+      }
+      currentUser = result.data;
+      displayUserDetails(result.data);
+    })
+    .catch(error => {
+      console.error('Error loading user data:', error);
+      alert('Failed to load user data. Please refresh the page.');
+      window.location.href = 'user-search.html';
+    });
 }
 
 // Setup back button

@@ -1,30 +1,26 @@
-// Load users data from JSON file
-let usersData = [];
 let searchResults = [];
 
-// Load users data when page loads
+// Initialize the page
 document.addEventListener('DOMContentLoaded', function() {
-  loadUsersData();
   setupEventListeners();
 });
 
-// Function to load users data from JSON
-function loadUsersData() {
-  fetch('shared/json/users.json')
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Failed to load users data');
+// Setup event listeners for search
+function setupEventListeners() {
+  const searchInput = document.getElementById('studentSearchInput');
+  const searchBtn = document.getElementById('studentSearchBtn');
+
+  if (searchBtn) {
+    searchBtn.addEventListener('click', performSearch);
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        performSearch();
       }
-      return response.json();
-    })
-    .then(data => {
-      usersData = data;
-      console.log('Users data loaded:', usersData);
-    })
-    .catch(error => {
-      console.error('Error loading users data:', error);
-      alert('Failed to load users data. Please refresh the page.');
     });
+  }
 }
 
 // Setup event listeners for search
@@ -52,17 +48,35 @@ function performSearch() {
     return;
   }
 
-  // Search for users with partial match (case-insensitive)
-  searchResults = usersData.filter(user => 
-    user.studentId.toLowerCase().includes(searchInput.toLowerCase())
-  );
-
-  if (searchResults.length > 0) {
-    displaySearchResults(searchResults);
-  } else {
-    alert('No users found. Please check the Student ID.');
-    clearSearchResults();
+  const token = localStorage.getItem('adminAuthToken');
+  if (!token) {
+    alert('Admin authentication required');
+    return;
   }
+
+  fetch(`/api/users?search=${encodeURIComponent(searchInput)}`, {
+    headers: {
+      'Authorization': 'Bearer ' + token
+    }
+  })
+    .then(response => response.json())
+    .then(result => {
+      if (!result.success) {
+        throw new Error(result.error || 'Search failed');
+      }
+      searchResults = result.data || [];
+
+      if (searchResults.length > 0) {
+        displaySearchResults(searchResults);
+      } else {
+        alert('No users found. Please check the Student ID.');
+        clearSearchResults();
+      }
+    })
+    .catch(error => {
+      console.error('Error loading users data:', error);
+      alert('Failed to load users data. Please refresh the page.');
+    });
 }
 
 // Display search results as a list of clickable cards
@@ -107,8 +121,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const logoutBtn = document.getElementById('logoutBtn');
   if (logoutBtn) {
     logoutBtn.addEventListener('click', function() {
-      // Clear session/localStorage if needed
-      localStorage.removeItem('adminToken');
+      localStorage.removeItem('adminAuthToken');
+      localStorage.removeItem('adminUser');
       window.location.href = 'index.html';
     });
   }

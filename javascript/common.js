@@ -4,7 +4,18 @@ let _userRefreshPromise = null;
 let _lastRefresh = 0;
 const REFRESH_INTERVAL = 10000; 
 
+function getAuthToken() {
+    return sessionStorage.getItem('authToken') || localStorage.getItem('adminAuthToken') || null;
+}
 
+function fetchApi(url, options = {}) {
+    options.headers = options.headers || {};
+    const token = getAuthToken();
+    if (token) {
+        options.headers['Authorization'] = 'Bearer ' + token;
+    }
+    return fetch(url, options);
+}
 
 function getCurrentUser() {
     const raw = sessionStorage.getItem('currentUser');
@@ -38,14 +49,16 @@ function refreshCurrentUser() {
         return Promise.resolve(existing);
     }
 
-    // fetch from database API endpoint instead of JSON file
-    _userRefreshPromise = fetch('Admin/shared/php/api-get-user.php?email=' + encodeURIComponent(existing.email))
+    const token = getAuthToken();
+    const headers = token ? { 'Authorization': 'Bearer ' + token } : {};
+
+    _userRefreshPromise = fetch('/api/users/current', { headers })
         .then(r => r.json())
         .then(updated => {
-            if (updated && updated.email) {
-                sessionStorage.setItem('currentUser', JSON.stringify(updated));
-                window.dispatchEvent(new CustomEvent('currentUserUpdated', { detail: updated }));
-                return updated;
+            if (updated && updated.success && updated.data && updated.data.email) {
+                sessionStorage.setItem('currentUser', JSON.stringify(updated.data));
+                window.dispatchEvent(new CustomEvent('currentUserUpdated', { detail: updated.data }));
+                return updated.data;
             }
             return existing;
         })
@@ -54,7 +67,6 @@ function refreshCurrentUser() {
             return existing;
         })
         .finally(() => {
-            // clear promise after a short delay to allow repeat refreshes
             setTimeout(() => { _userRefreshPromise = null; }, 1000);
         });
     return _userRefreshPromise;

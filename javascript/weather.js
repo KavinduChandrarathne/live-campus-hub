@@ -88,8 +88,13 @@ class WeatherWidget {
         }
     }
 
+
+
+
+    
+
     async fetchOpenWeather(lat, lon) {
-        const apiKey = 'replace the api key here'; 
+
         const baseUrl = 'https://api.openweathermap.org/data/2.5';
         const currentUrl = `${baseUrl}/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
         const forecastUrl = `${baseUrl}/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
