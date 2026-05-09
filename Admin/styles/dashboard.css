@@ -260,8 +260,10 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
-  width:44px;
+  gap:10px;
+  min-width:190px;
   height:44px;
+  padding:0 16px;
   background:#fff;
   color:#d32f2f;
   border-radius:8px;
@@ -270,7 +272,7 @@ body{
   transition:0.3s;
   border:2px solid #fff;
   box-shadow:0 2px 8px rgba(0,0,0,0.1);
-  font-size:18px;
+  font-size:16px;
 }
 
 .icon-btn:hover{
@@ -282,6 +284,11 @@ body{
 
 .icon-btn i{
   font-size:18px;
+}
+
+.icon-btn span{
+  font-size:14px;
+  font-weight:700;
 }
 
 /* Weather Section */

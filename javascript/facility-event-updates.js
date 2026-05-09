@@ -51,7 +51,10 @@ function formatDateTime(dt) {
   const ampm = h >= 12 ? "PM" : "AM";
   h = h % 12 || 12;
   if (d.toDateString() === now.toDateString()) {
-    return `Today ${h}.${m} ${ampm}`;
+    return `Today ${h}:${m} ${ampm}`;
   }
-  return `${d.toLocaleDateString()} ${h}.${m} ${ampm}`;
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}/${month}/${day} ${h}:${m} ${ampm}`;
 }

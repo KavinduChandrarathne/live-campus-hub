@@ -498,7 +498,7 @@ nav a:hover::after { transform: scaleX(1); }
 .cards {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 22px;
+    gap: 18px;
     max-width: 1200px;
     margin: 0 auto;
 }
@@ -507,8 +507,8 @@ nav a:hover::after { transform: scaleX(1); }
 .card {
     background: white;
     border-radius: 12px;
-    min-height: 220px; /* ⬅ smaller than before */
-    padding: 24px;
+    min-height: 180px; /* ⬅ smaller than before */
+    padding: 18px;
     text-align: center;
     box-shadow: 0 4px 10px rgba(0,0,0,0.08);
 
@@ -606,7 +606,7 @@ nav a:hover::after { transform: scaleX(1); }
 .facility-cards {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 20px;
 }
 
 .facility-cards .card {
@@ -648,7 +648,9 @@ nav a:hover::after { transform: scaleX(1); }
     grid-row: 1 / span 3;
     align-self: center;
     text-align: right;
-    font-size: 12px;
+    font-size: 14px;
+    margin-top: 8px;
+    white-space: nowrap;
 }
 
 /* RESPONSIVE */
@@ -879,6 +881,8 @@ nav a:hover::after { transform: scaleX(1); }
         grid-row: 3;
         text-align: left;
         margin-top: 8px;
+        font-size: 14px;
+        white-space: nowrap;
     }
 }
 
