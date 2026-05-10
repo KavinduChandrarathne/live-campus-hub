@@ -65,6 +65,40 @@ document.addEventListener('DOMContentLoaded', function () {
     const closeNotifyBtn = document.getElementById('closeNotifyBtn');
     const notificationList = document.getElementById('notificationList');
     const notifyCount = document.getElementById('notifyCount');
+    let lastSeenNotificationTime = Number(localStorage.getItem('lastSeenNotificationTime') || '0');
+
+    function setLastSeenNotificationTime(timestamp) {
+        lastSeenNotificationTime = timestamp;
+        localStorage.setItem('lastSeenNotificationTime', String(timestamp));
+    }
+
+    function getNotificationTimestamp(datetime) {
+        return new Date(datetime.replace(/-/g, '/')).getTime();
+    }
+
+    function getUnviewedNotificationCount(notifications) {
+        if (!notifications || notifications.length === 0) return 0;
+        return notifications.filter((notif) => getNotificationTimestamp(notif.datetime) > lastSeenNotificationTime).length;
+    }
+
+    function updateBadgeCount(notifications) {
+        if (!notifyCount) return;
+        const count = getUnviewedNotificationCount(notifications);
+        if (!count || count <= 0) {
+            notifyCount.textContent = '';
+            notifyCount.classList.add('hidden');
+            return;
+        }
+
+        notifyCount.textContent = count > 9 ? '9+' : String(count);
+        notifyCount.classList.remove('hidden');
+    }
+
+    function clearNotificationBadge() {
+        if (!notifyCount) return;
+        notifyCount.textContent = '';
+        notifyCount.classList.add('hidden');
+    }
 
     if (notifyBtn && notificationPopup) {
         // Open notification popup
@@ -74,6 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (isShowing) {
                 notificationPopup.classList.remove('show');
             } else {
+                clearNotificationBadge();
                 loadNotifications();
                 notificationPopup.classList.add('show');
             }
@@ -114,7 +149,9 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .catch(error => {
                 console.error('Error loading notifications:', error);
-                notificationList.innerHTML = '<div class="notification-empty">Failed to load notifications</div>';
+                if (notificationList) {
+                    notificationList.innerHTML = '<div class="notification-empty">Failed to load notifications</div>';
+                }
             });
     }
 
@@ -209,9 +246,15 @@ document.addEventListener('DOMContentLoaded', function () {
             notificationList.appendChild(item);
         });
 
-        if (notifyCount) {
-            notifyCount.textContent = Math.min(notifications.length, 9) === 9 && notifications.length > 9 ? '9+' : notifications.length;
-            notifyCount.classList.remove('hidden');
+        updateBadgeCount(notifications);
+
+        if (notificationPopup && notificationPopup.classList.contains('show')) {
+            const latestTimestamp = notifications.reduce((max, notif) => {
+                const t = getNotificationTimestamp(notif.datetime);
+                return t > max ? t : max;
+            }, 0);
+            setLastSeenNotificationTime(latestTimestamp || Date.now());
+            clearNotificationBadge();
         }
     }
 
