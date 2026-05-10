@@ -29,6 +29,9 @@ switch ($resource) {
     case 'login':
         handleLogin();
         break;
+    case 'signup':
+        handleSignup();
+        break;
     case 'users':
         handleUsers($segments);
         break;
@@ -116,6 +119,66 @@ function handleLogin(): void {
     } catch (Exception $e) {
         error_log('API login error: ' . $e->getMessage());
         sendJson(['success' => false, 'error' => 'Login failed'], 500);
+    }
+}
+
+function handleSignup(): void {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        sendJson(['success' => false, 'error' => 'Invalid request method'], 405);
+    }
+
+    $data = getRequestPayload();
+    $firstName = trim($data['firstName'] ?? '');
+    $lastName = trim($data['lastName'] ?? '');
+    $faculty = trim($data['faculty'] ?? '');
+    $studentId = trim($data['studentId'] ?? '');
+    $dob = trim($data['dob'] ?? '');
+    $email = trim($data['email'] ?? '');
+    $password = $data['password'] ?? '';
+
+    if (!$firstName || !$lastName || !$faculty || !$studentId || !$dob || !$email || !$password) {
+        sendJson(['success' => false, 'error' => 'All fields are required'], 400);
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        sendJson(['success' => false, 'error' => 'Invalid email format'], 400);
+    }
+
+    global $pdo;
+    try {
+        // Check if email or studentId already exists
+        $stmt = $pdo->prepare('SELECT id FROM users WHERE LOWER(email) = LOWER(:email) OR LOWER(studentId) = LOWER(:studentId) LIMIT 1');
+        $stmt->execute([':email' => $email, ':studentId' => $studentId]);
+        if ($stmt->fetch()) {
+            sendJson(['success' => false, 'error' => 'Email or Student ID already exists'], 409);
+        }
+
+        // Hash password
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+        // Insert user
+        $stmt = $pdo->prepare('INSERT INTO users (firstName, lastName, faculty, studentId, dob, email, password, role) VALUES (:firstName, :lastName, :faculty, :studentId, :dob, :email, :password, :role)');
+        $stmt->execute([
+            ':firstName' => $firstName,
+            ':lastName' => $lastName,
+            ':faculty' => $faculty,
+            ':studentId' => $studentId,
+            ':dob' => $dob,
+            ':email' => $email,
+            ':password' => $hashedPassword,
+            ':role' => 'student'
+        ]);
+
+        $userId = $pdo->lastInsertId();
+
+        // Generate token
+        $tokenPayload = ['sub' => $userId, 'role' => 'student', 'email' => $email, 'studentId' => $studentId];
+        $token = generateJwt($tokenPayload, 86400 * 7);
+
+        sendJson(['success' => true, 'message' => 'Account created successfully', 'token' => $token]);
+    } catch (Exception $e) {
+        error_log('API signup error: ' . $e->getMessage());
+        sendJson(['success' => false, 'error' => 'Signup failed'], 500);
     }
 }
 

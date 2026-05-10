@@ -48,6 +48,43 @@ Example response:
 }
 ```
 
+### POST `/api/signup`
+
+- Required parameters: `firstName`, `lastName`, `faculty`, `studentId`, `dob`, `email`, `password`
+- Request type: `POST`
+- Body: `application/json`
+- Response:
+  - `success`: boolean
+  - `message`: string
+  - `token`: JWT string (on success)
+
+Example request:
+
+```http
+POST /api/signup
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "faculty": "Engineering",
+  "studentId": "S12345",
+  "dob": "2000-01-01",
+  "email": "john.doe@example.com",
+  "password": "password123"
+}
+```
+
+Example response:
+
+```json
+{
+  "success": true,
+  "message": "Account created successfully",
+  "token": "<jwt-token>"
+}
+```
+
 ## Users
 
 ### GET `/api/users/current`
